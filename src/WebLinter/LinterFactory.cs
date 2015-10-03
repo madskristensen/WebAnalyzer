@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace WebLinter
 {
     public static class LinterFactory
     {
-        public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter");
+        public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
         public static object _syncRoot = new object();
 
         public static LintingResult Lint(string fileName)
@@ -26,6 +22,16 @@ namespace WebLinter
 
                 case ".TS":
                     linter = new TsLintLinter();
+                    break;
+
+                case ".COFFEE":
+                case ".LITCOFFEE":
+                case ".ICED":
+                    linter = new CoffeeLinter();
+                    break;
+
+                case ".CSS":
+                    linter = new CssLinter();
                     break;
             }
 

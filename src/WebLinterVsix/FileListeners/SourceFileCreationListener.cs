@@ -12,6 +12,8 @@ namespace WebLinterVsix.FileListeners
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("JavaScript")]
     [ContentType("TypeScript")]
+    [ContentType("CoffeeScript")]
+    [ContentType("CSS")]
     [TextViewRole(PredefinedTextViewRoles.Document)]
     class SourceFileCreationListener : IVsTextViewCreationListener
     {

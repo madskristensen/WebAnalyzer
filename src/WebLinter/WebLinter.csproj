@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="LinterFactory.cs" />
+    <Compile Include="Linters\CssLint.cs" />
+    <Compile Include="Linters\CoffeeLint.cs" />
     <Compile Include="Linters\LinterBase.cs" />
     <Compile Include="Linters\TslintLinter.cs" />
     <Compile Include="Linters\JshintLinter.cs" />

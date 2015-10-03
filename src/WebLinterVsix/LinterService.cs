@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using WebLinter;
 
@@ -14,12 +9,8 @@ namespace WebLinterVsix
     {
         static LinterService()
         {
-            LinterFactory.Initializing += InitiliazingLinters;
-        }
-
-        private static void InitiliazingLinters(object sender, EventArgs e)
-        {
-            StatusText("Installing latest version of the linters...");
+            LinterFactory.Initializing += delegate { StatusText("Extracting latest version of the linters..."); };
+            LinterFactory.Initialized += delegate { VSPackage.Dte.StatusBar.Clear(); };
         }
 
         public static void Lint(string fileName)

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace WebLinter
 {
@@ -15,7 +11,7 @@ namespace WebLinter
 
         public abstract string Name { get; }
 
-        protected void RunProcess(FileInfo file, string command, out string output, out string error)
+        protected void RunProcess(FileInfo file, string command, out string output, out string error, string arguments = "")
         {
             ProcessStartInfo start = new ProcessStartInfo
             {
@@ -24,7 +20,7 @@ namespace WebLinter
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
                 FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(LinterFactory.ExecutionPath, $"node_modules\\.bin\\{command}")}\" \"{file.FullName}\"\"",
+                Arguments = $"/c \"\"{Path.Combine(LinterFactory.ExecutionPath, $"node_modules\\.bin\\{command}")}\" {arguments} \"{file.FullName}\"\"",
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8,
                 RedirectStandardOutput = true,

@@ -1,7 +1,10 @@
 # Roadmap
 
 - [ ] Add sensible defaults
-- [ ] CSSLint support
+- [x] CSSLint support
+- [x] CoffeeLint support
+- [x] JSHint support
+- [x] TSLint support
 
 Features that have a checkmark are complete and available for
 download in the
@@ -16,5 +19,3 @@ on the official Visual Studio extension gallery.
 
 **2015-10-2**
 
-- [x] JSHint support
-- [x] TSLint support

@@ -1,12 +1,14 @@
 @echo off
 
-if exist %~dp0..\src\WebLinter\Node\node_modules.7z goto:EOF
+if exist %~dp0..\src\WebLinter\Node\node_modules.7z goto:done
 
 pushd %~dp0..\src\WebLinter\Node
 
 echo Installing packages...
 call npm install jshint --no-optional --quiet > nul
 call npm install tslint --no-optional --quiet > nul
+call npm install coffeelint --no-optional --quiet > nul
+call npm install csslint --no-optional --quiet > nul
 
 
 echo Deleting unneeded files and folders...

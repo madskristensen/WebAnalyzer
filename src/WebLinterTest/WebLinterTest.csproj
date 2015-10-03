@@ -50,6 +50,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CssLintTest.cs" />
+    <Compile Include="CoffeelintTest.cs" />
     <Compile Include="TslintTest.cs" />
     <Compile Include="JshintTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +63,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="artifacts\csslint\a.css" />
+    <None Include="artifacts\coffeelint\a.coffee" />
     <TypeScriptCompile Include="artifacts\tslint\a.ts" />
     <Content Include="artifacts\jshint\a.js" />
   </ItemGroup>

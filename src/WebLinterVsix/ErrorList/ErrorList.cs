@@ -57,7 +57,7 @@ namespace WebLinterVsix
                 Line = error.LineNumber,
                 Column = error.ColumnNumber,
                 ErrorCategory = error.IsWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error,
-                Category = TaskCategory.BuildCompile,
+                Category = TaskCategory.Html,
                 Document = error.FileName,
                 Priority = TaskPriority.Normal,
                 Text = $"({error.Provider}) {error.Message}",

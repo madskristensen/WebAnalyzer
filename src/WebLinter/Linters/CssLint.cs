@@ -3,13 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace WebLinter
 {
-    internal class TsLintLinter : LinterBase
+    internal class CssLinter : LinterBase
     {
-        private static Regex _rx = new Regex(@"\.ts\[(?<line>[0-9]+), (?<column>[0-9]+)\]: (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static Regex _rx = new Regex(@": line (?<line>[0-9]+), col (?<column>[0-9]+), (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public override string Name
         {
-            get { return "TSLint"; }
+            get { return "CssLint"; }
         }
 
         public override LintingResult Lint(string fileName)
@@ -24,13 +24,13 @@ namespace WebLinter
             }
 
             string output, error;
-            RunProcess(file, "tslint.cmd", out output, out error);
+            RunProcess(file, "csslint.cmd", out output, out error, "--format=compact");
 
             if (!string.IsNullOrEmpty(output))
             {
                 foreach (Match match in _rx.Matches(output))
                 {
-                    AddError(file, result, match);
+                    AddError(file, result, match, -1);
                 }
             }
             else if (!string.IsNullOrEmpty(error))
