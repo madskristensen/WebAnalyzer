@@ -4,6 +4,11 @@
         <Identity Id="36bf2130-106e-40f2-89ff-a2bdac6be879" Version="1.0" Language="en-US" Publisher="Mads Kristensen" />
         <DisplayName>Web Linter</DisplayName>
         <Description xml:space="preserve">Automatically JSHint and TSLint in any project</Description>
+        <License>Resources\LICENSE</License>
+        <ReleaseNotes>https://github.com/madskristensen/WebLinter/blob/master/CHANGELOG.md</ReleaseNotes>
+        <Icon>Resources\icon.png</Icon>
+        <PreviewImage>Resources\preview.png</PreviewImage>
+        <Tags>JSHint, TSLint</Tags>
     </Metadata>
     <Installation>
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
