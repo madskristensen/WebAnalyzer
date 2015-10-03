@@ -1,5 +1,6 @@
 # Roadmap
 
+- [ ] Add sensible defaults
 - [ ] CSSLint support
 
 Features that have a checkmark are complete and available for

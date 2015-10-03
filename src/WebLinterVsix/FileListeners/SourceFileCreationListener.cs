@@ -33,6 +33,7 @@ namespace WebLinterVsix.FileListeners
 
                 if (IsValid(_document.FilePath))
                 {
+                    textView.Properties.AddProperty("lint_filename", _document.FilePath);
                     LinterService.Lint(_document.FilePath);
                 }
             }
@@ -43,14 +44,18 @@ namespace WebLinterVsix.FileListeners
         private void TextviewClosed(object sender, EventArgs e)
         {
             IWpfTextView view = (IWpfTextView)sender;
+            string fileName;
+
+            if (view.Properties.TryGetProperty("lint_filename", out fileName))
+            {
+                ErrorList.CleanErrors(fileName);
+            }
 
             if (view != null)
                 view.Closed -= TextviewClosed;
 
             if (_document != null)
                 _document.FileActionOccurred -= DocumentSaved;
-
-            ErrorList.CleanErrors(_document.FilePath);
         }
 
         private void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
