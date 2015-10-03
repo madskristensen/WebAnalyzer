@@ -59,6 +59,9 @@
     <Compile Include="LinterService.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="VSPackage.cs" />
   </ItemGroup>
   <ItemGroup>

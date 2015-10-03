@@ -9,7 +9,7 @@ namespace WebLinter
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
         public static object _syncRoot = new object();
 
-        public static LintingResult Lint(string fileName)
+        public static LintingResult Lint(string fileName, ISettings settings)
         {
             string extension = Path.GetExtension(fileName).ToUpperInvariant();
             LinterBase linter = null;
@@ -17,21 +17,21 @@ namespace WebLinter
             switch (extension)
             {
                 case ".JS":
-                    linter = new JshintLinter();
+                    linter = new JshintLinter(settings);
                     break;
 
                 case ".TS":
-                    linter = new TsLintLinter();
+                    linter = new TsLintLinter(settings);
                     break;
 
                 case ".COFFEE":
                 case ".LITCOFFEE":
                 case ".ICED":
-                    linter = new CoffeeLinter();
+                    linter = new CoffeeLinter(settings);
                     break;
 
                 case ".CSS":
-                    linter = new CssLinter();
+                    linter = new CssLinter(settings);
                     break;
             }
 
@@ -42,7 +42,7 @@ namespace WebLinter
                     Initialize();
                 }
 
-                return linter.Lint(fileName);
+                return linter.Run(fileName);
             }
 
             return null;

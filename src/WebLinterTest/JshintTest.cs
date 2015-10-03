@@ -10,7 +10,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("JSHint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint("../../artifacts/jshint/a.js");
+            var result = LinterFactory.Lint("../../artifacts/jshint/a.js", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
             Assert.AreEqual(4, result.Errors.Count);
         }
@@ -18,7 +18,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("JSHint")]
         public void FileDontExist()
         {
-            var result = LinterFactory.Lint("../../artifacts/jshint/doesntexist.js");
+            var result = LinterFactory.Lint("../../artifacts/jshint/doesntexist.js", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
         }
     }

@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Options page
 - [x] Add sensible defaults
 - [x] CSSLint support
 - [x] CoffeeLint support

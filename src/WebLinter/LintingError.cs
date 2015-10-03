@@ -19,7 +19,7 @@ namespace WebLinter
         public string Message { get; set; }
         public int LineNumber { get; set; }
         public int ColumnNumber { get; set; }
-        public bool IsWarning { get; set; } = true;
+        public bool IsError { get; set; } = true;
 
         public override string ToString()
         {

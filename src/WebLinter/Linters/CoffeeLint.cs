@@ -7,22 +7,21 @@ namespace WebLinter
     {
         private static Regex _rx = new Regex(@"\[stdin\]:(?<line>[0-9]+):(?<column>[0-9]+): error: (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        public CoffeeLinter(ISettings settings) : base(settings)
+        { }
+
         public override string Name
         {
             get { return "CoffeeLint"; }
         }
 
-        public override LintingResult Lint(string fileName)
+        public override bool IsEnabled
         {
-            FileInfo file = new FileInfo(fileName);
-            var result = new LintingResult(fileName);
+            get { return Settings.CoffeeLintEnable; }
+        }
 
-            if (!file.Exists)
-            {
-                result.Errors.Add(new LintingError(file.FullName, "The file doesn't exist"));
-                return result;
-            }
-
+        protected override LintingResult Lint(FileInfo file)
+        {
             string output, error;
             RunProcess(file, "coffeelint.cmd", out output, out error);
 
@@ -30,15 +29,15 @@ namespace WebLinter
             {
                 foreach (Match match in _rx.Matches(output))
                 {
-                    AddError(file, result, match);
+                    AddError(file, match, Settings.CoffeeLintAsErrors);
                 }
             }
             else if (!string.IsNullOrEmpty(error))
             {
-                result.Errors.Add(new LintingError(file.FullName, error));
+                Result.Errors.Add(new LintingError(file.FullName, error));
             }
 
-            return result;
+            return Result;
         }
     }
 }

@@ -10,7 +10,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint("../../artifacts/coffeelint/a.coffee");
+            var result = LinterFactory.Lint("../../artifacts/coffeelint/a.coffee", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
             Assert.AreEqual(1, result.Errors.Count, $"Found {result.Errors.Count} errors");
         }
@@ -18,7 +18,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public void FileDontExist()
         {
-            var result = LinterFactory.Lint("../../artifacts/coffeelint/doesntexist.coffee");
+            var result = LinterFactory.Lint("../../artifacts/coffeelint/doesntexist.coffee", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
         }
     }

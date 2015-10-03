@@ -7,9 +7,38 @@ namespace WebLinter
 {
     public abstract class LinterBase
     {
-        public abstract LintingResult Lint(string fileName);
+        public LinterBase(ISettings settings)
+        {
+            Settings = settings;
+        }
+
+        public LintingResult Run(string fileName)
+        {
+            Result = new LintingResult(fileName);
+
+            if (!IsEnabled)
+                return Result;
+
+            FileInfo file = new FileInfo(fileName);
+
+            if (!file.Exists)
+            {
+                Result.Errors.Add(new LintingError(file.FullName, "The file doesn't exist"));
+                return Result;
+            }
+
+            return Lint(file);
+        }
+
+        protected abstract LintingResult Lint(FileInfo file);
 
         public abstract string Name { get; }
+
+        public abstract bool IsEnabled { get; }
+
+        protected ISettings Settings { get; }
+
+        protected LintingResult Result { get; private set; }
 
         protected void RunProcess(FileInfo file, string command, out string output, out string error, string arguments = "")
         {
@@ -38,13 +67,14 @@ namespace WebLinter
             error = stderr.Result.Trim();
         }
 
-        protected void AddError(FileInfo file, LintingResult result, Match match)
+        protected void AddError(FileInfo file, Match match, bool isError)
         {
             var e = new LintingError(file.FullName, match.Groups["message"].Value);
             e.LineNumber = int.Parse(match.Groups["line"].Value);
             e.ColumnNumber = int.Parse(match.Groups["column"].Value);
+            e.IsError = isError;
             e.Provider = Name;
-            result.Errors.Add(e);
+            Result.Errors.Add(e);
         }
     }
 }

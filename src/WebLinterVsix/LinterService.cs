@@ -26,7 +26,7 @@ namespace WebLinterVsix
                     ErrorList.CleanErrors(fileName);
                     EnsureDefaults();
 
-                    var result = LinterFactory.Lint(fileName);
+                    var result = LinterFactory.Lint(fileName, VSPackage.Settings);
 
                     ErrorListService.ProcessLintingResults(new[] { result });
                 }

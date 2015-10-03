@@ -56,7 +56,7 @@ namespace WebLinterVsix
             {
                 Line = error.LineNumber - 1,
                 Column = error.ColumnNumber,
-                ErrorCategory = error.IsWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error,
+                ErrorCategory = error.IsError ? TaskErrorCategory.Error : TaskErrorCategory.Warning,
                 Category = TaskCategory.Html,
                 Document = error.FileName,
                 Priority = TaskPriority.Normal,

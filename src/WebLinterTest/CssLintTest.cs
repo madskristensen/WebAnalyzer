@@ -10,7 +10,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint("../../artifacts/csslint/a.css");
+            var result = LinterFactory.Lint("../../artifacts/csslint/a.css", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
             Assert.AreEqual(1, result.Errors.Count, $"Found {result.Errors.Count} errors");
         }
@@ -18,7 +18,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void FileDontExist()
         {
-            var result = LinterFactory.Lint("../../artifacts/csslint/doesntexist.css");
+            var result = LinterFactory.Lint("../../artifacts/csslint/doesntexist.css", Settings.Instance);
             Assert.IsTrue(result.HasErrors);
         }
     }
