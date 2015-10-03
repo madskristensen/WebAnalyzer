@@ -1,0 +1,19 @@
+version: 1.0.{build}
+os: Visual Studio 2015
+
+install:
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  - npm install npm@3.3.3 -g
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm --version
+
+before_build:
+  - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+  - ps: Vsix-TokenReplacement src\WebLinter\Contants.cs 'VERSION = "([0-9\\.]+)"' 'VERSION = "{version}"'
+
+build_script:
+  - nuget restore -Verbosity quiet
+  - msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+
+after_test:
+  - ps: Vsix-PushArtifacts | Vsix-PublishToGallery .\src\WebLinterVsix\**\*.vsix

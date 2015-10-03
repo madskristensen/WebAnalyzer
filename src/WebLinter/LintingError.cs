@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace WebLinter
+{
+   public class LintingError
+    {
+        public LintingError(string fileName, string message)
+        {
+            FileName = fileName;
+            Message = message;
+        }
+
+        public string Provider { get; set; }
+        public string FileName { get; set; }
+        public string Message { get; set; }
+        public int LineNumber { get; set; }
+        public int ColumnNumber { get; set; }
+        public bool IsWarning { get; set; } = true;
+
+        public override string ToString()
+        {
+            return Message;
+        }
+    }
+}
