@@ -13,6 +13,7 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint("../../artifacts/tslint/a.ts");
             Assert.IsTrue(result.HasErrors);
+            Assert.AreEqual(7, result.Errors.Count, $"Found {result.Errors.Count} errors");
             Assert.AreEqual("if statements must be braced", result.Errors.First().Message);
         }
 

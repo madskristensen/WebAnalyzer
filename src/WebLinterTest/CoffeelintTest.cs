@@ -12,7 +12,7 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint("../../artifacts/coffeelint/a.coffee");
             Assert.IsTrue(result.HasErrors);
-            Assert.AreEqual(1, result.Errors.Count);
+            Assert.AreEqual(1, result.Errors.Count, $"Found {result.Errors.Count} errors");
         }
 
         [TestMethod, TestCategory("CoffeeLint")]

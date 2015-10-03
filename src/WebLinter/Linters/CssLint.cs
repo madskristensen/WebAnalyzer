@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace WebLinter
@@ -23,8 +24,9 @@ namespace WebLinter
                 return result;
             }
 
+            string args = $"--format=compact {FindConfigFile(file)}";
             string output, error;
-            RunProcess(file, "csslint.cmd", out output, out error, "--format=compact");
+            RunProcess(file, "csslint.cmd", out output, out error, args);
 
             if (!string.IsNullOrEmpty(output))
             {
@@ -39,6 +41,28 @@ namespace WebLinter
             }
 
             return result;
+        }
+
+        private static string FindConfigFile(FileInfo file)
+        {
+            return "--ignore=known-properties";
+            // return here until the npm package is updated to support the --config flag
+
+            var dir = file.Directory;
+
+            while (dir != null)
+            {
+                string rc = Path.Combine(dir.FullName, ".csslintrc");
+                if (File.Exists(rc))
+                    return $"--config=\"{rc}\"";
+
+                dir = dir.Parent;
+            }
+
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string result = Path.Combine(userFolder, ".csslintrc");
+
+            return $"--config=\"{result}\""; ;
         }
     }
 }

@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Add sensible defaults
+- [x] Add sensible defaults
 - [x] CSSLint support
 - [x] CoffeeLint support
 - [x] JSHint support

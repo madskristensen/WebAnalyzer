@@ -65,10 +65,12 @@
   <ItemGroup>
     <Content Include="artifacts\csslint\a.css" />
     <None Include="artifacts\coffeelint\a.coffee" />
+    <Content Include="artifacts\tslint\tslint.json" />
     <TypeScriptCompile Include="artifacts\tslint\a.ts" />
     <Content Include="artifacts\jshint\a.js" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="artifacts\coffeelint\coffeelint.json" />
     <None Include="artifacts\jshint\.jshintrc" />
   </ItemGroup>
   <Choose>

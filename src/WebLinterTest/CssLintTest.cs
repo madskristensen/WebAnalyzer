@@ -12,7 +12,7 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint("../../artifacts/csslint/a.css");
             Assert.IsTrue(result.HasErrors);
-            Assert.AreEqual(3, result.Errors.Count);
+            Assert.AreEqual(2, result.Errors.Count, $"Found {result.Errors.Count} errors");
         }
 
         [TestMethod, TestCategory("CssLint")]
