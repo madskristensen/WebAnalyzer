@@ -1,0 +1,83 @@
+{
+    "ecmaFeatures": {
+        "jsx": true
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "brace-style": [
+            2,
+            "stroustrup",
+            { "allowSingleLine": true }
+        ],
+        "consistent-return": 0,
+        "curly": 2,
+        "eqeqeq": 2,
+        "indent": 0,
+        "key-spacing": [
+            2,
+            {
+                "beforeColon": false,
+                "afterColon": true
+            }
+        ],
+        "no-multiple-empty-lines": 2,
+        "no-throw-literal": 2,
+        "no-underscore-dangle": 0,
+        "no-unused-vars": [
+            2,
+            {
+                "vars": "all",
+                "args": "none"
+            }
+        ],
+        "no-use-before-define": [ 2, "nofunc" ],
+        "object-curly-spacing": [ 2, "always" ],
+        "quote-props": [ 2, "as-needed" ],
+        "quotes": [ 0, "single" ],
+        "radix": 2,
+        "space-after-keywords": [ 2, "always" ],
+        "space-before-blocks": [ 2, "always" ],
+        "space-in-parens": [ 2, "never" ],
+        "space-unary-ops": [
+            2,
+            {
+                "words": true,
+                "nonwords": false
+            }
+        ],
+        "strict": [ 2, "never" ],
+        "wrap-iife": [ 2, "inside" ],
+
+
+        "react/display-name": 1,
+        "react/forbid-prop-types": 1,
+        "react/jsx-boolean-value": 1,
+        "react/jsx-closing-bracket-location": 1,
+        "react/jsx-curly-spacing": 1,
+        "react/jsx-indent-props": 1,
+        "react/jsx-max-props-per-line": 1,
+        "react/jsx-no-duplicate-props": 1,
+        "react/jsx-no-literals": 0,
+        "react/jsx-no-undef": 1,
+        "react/jsx-quotes": 1,
+        "react/jsx-sort-prop-types": 1,
+        "react/jsx-sort-props": 1,
+        "react/jsx-uses-react": 1,
+        "react/jsx-uses-vars": 1,
+        "react/no-danger": 1,
+        "react/no-did-mount-set-state": 1,
+        "react/no-did-update-set-state": 1,
+        "react/no-direct-mutation-state": 1,
+        "react/no-multi-comp": 1,
+        "react/no-set-state": 1,
+        "react/no-unknown-property": 1,
+        "react/prop-types": 1,
+        "react/react-in-jsx-scope": 0,
+        "react/require-extension": 1,
+        "react/self-closing-comp": 1,
+        "react/sort-comp": 1,
+        "react/wrap-multilines": 1
+    }
+}

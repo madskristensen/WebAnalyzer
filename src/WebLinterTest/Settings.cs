@@ -38,15 +38,15 @@ namespace WebLinterTest
         [DefaultValue(true)]
         public bool CssLintAsErrors { get; set; } = true;
 
-        [Category("JSHint")]
+        [Category("ESLint")]
         [DisplayName("Enabled")]
         [DefaultValue(true)]
-        public bool JSHintEnable { get; set; } = true;
+        public bool ESLintEnable { get; set; } = true;
 
-        [Category("JSHint")]
+        [Category("ESLint")]
         [DisplayName("Show warnings as errors")]
         [DefaultValue(true)]
-        public bool JSHintAsErrors { get; set; } = true;
+        public bool ESLintAsErrors { get; set; } = true;
 
         [Category("TSLint")]
         [DisplayName("Enabled")]

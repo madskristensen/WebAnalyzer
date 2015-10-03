@@ -1,6 +1,6 @@
 ## Web Linter
 
-A Visual Studio extension that runs JSHint and TSLint on JavaScript and
+A Visual Studio extension that runs ESLint and TSLint on JavaScript and
 TypeScript files
 
 [![Build status](https://ci.appveyor.com/api/projects/status/3bc3dv4tsc34mv97?svg=true)](https://ci.appveyor.com/project/madskristensen/weblinter)

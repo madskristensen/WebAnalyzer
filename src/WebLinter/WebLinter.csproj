@@ -43,11 +43,11 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="LinterFactory.cs" />
-    <Compile Include="Linters\CssLint.cs" />
-    <Compile Include="Linters\CoffeeLint.cs" />
+    <Compile Include="Linters\CssLinter.cs" />
+    <Compile Include="Linters\CoffeeLinter.cs" />
     <Compile Include="Linters\LinterBase.cs" />
     <Compile Include="Linters\TslintLinter.cs" />
-    <Compile Include="Linters\JshintLinter.cs" />
+    <Compile Include="Linters\EsLinter.cs" />
     <Compile Include="LintingError.cs" />
     <Compile Include="LintingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

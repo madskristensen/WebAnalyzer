@@ -4,7 +4,7 @@
 - [x] Add sensible defaults
 - [x] CSSLint support
 - [x] CoffeeLint support
-- [x] JSHint support
+- [x] ESLint support
 - [x] TSLint support
 
 Features that have a checkmark are complete and available for

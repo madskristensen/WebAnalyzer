@@ -8,8 +8,8 @@ namespace WebLinter
 {
     public interface ISettings
     {
-        bool JSHintEnable { get; }
-        bool JSHintAsErrors { get; }
+        bool ESLintEnable { get; }
+        bool ESLintAsErrors { get; }
 
         bool TSLintEnable { get; }
         bool TSLintAsErrors { get; }

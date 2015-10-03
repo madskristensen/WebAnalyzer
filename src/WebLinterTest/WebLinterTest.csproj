@@ -54,7 +54,7 @@
     <Compile Include="CoffeelintTest.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TslintTest.cs" />
-    <Compile Include="JshintTest.cs" />
+    <Compile Include="EshintTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -66,13 +66,14 @@
   <ItemGroup>
     <Content Include="artifacts\csslint\a.css" />
     <None Include="artifacts\coffeelint\a.coffee" />
+    <None Include="artifacts\eslint\a.jsx" />
     <Content Include="artifacts\tslint\tslint.json" />
+    <Content Include="artifacts\eslint\.eslintrc" />
     <TypeScriptCompile Include="artifacts\tslint\a.ts" />
-    <Content Include="artifacts\jshint\a.js" />
+    <Content Include="artifacts\eslint\a.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="artifacts\coffeelint\coffeelint.json" />
-    <None Include="artifacts\jshint\.jshintrc" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

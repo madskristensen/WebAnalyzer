@@ -17,7 +17,8 @@ namespace WebLinter
             switch (extension)
             {
                 case ".JS":
-                    linter = new JshintLinter(settings);
+                case ".JSX":
+                    linter = new EsLinter(settings);
                     break;
 
                 case ".TS":

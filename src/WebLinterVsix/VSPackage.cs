@@ -10,7 +10,7 @@ namespace WebLinterVsix
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", WebLinter.Constants.VERSION, IconResourceID = 400)]
-    [ProvideOptionPage(typeof(Settings), "Web", "Linters", 101, 111, true, new[] { "jshint", "tslint", "coffeelint", "csslint" }, ProvidesLocalizedCategoryName = false)]
+    [ProvideOptionPage(typeof(Settings), "Web", "Linters", 101, 111, true, new[] { "eslint", "tslint", "coffeelint", "csslint" }, ProvidesLocalizedCategoryName = false)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [Guid(Constants.PRODUCT_ID)]
     public sealed class VSPackage : Package
