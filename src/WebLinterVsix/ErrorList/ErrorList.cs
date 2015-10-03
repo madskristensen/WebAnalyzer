@@ -54,7 +54,7 @@ namespace WebLinterVsix
         {
             ErrorTask task = new ErrorTask()
             {
-                Line = error.LineNumber,
+                Line = error.LineNumber - 1,
                 Column = error.ColumnNumber,
                 ErrorCategory = error.IsWarning ? TaskErrorCategory.Warning : TaskErrorCategory.Error,
                 Category = TaskCategory.Html,
@@ -75,7 +75,7 @@ namespace WebLinterVsix
                 if (task.Column > 0)
                 {
                     var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
-                    doc.Selection.MoveToLineAndOffset(task.Line, task.Column, false);
+                    doc.Selection.MoveToLineAndOffset(task.Line + 1, task.Column, false);
                 }
             };
 

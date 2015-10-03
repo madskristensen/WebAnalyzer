@@ -30,7 +30,7 @@ namespace WebLinter
             {
                 foreach (Match match in _rx.Matches(output))
                 {
-                    AddError(file, result, match, -1);
+                    AddError(file, result, match);
                 }
             }
             else if (!string.IsNullOrEmpty(error))

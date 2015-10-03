@@ -38,10 +38,10 @@ namespace WebLinter
             error = stderr.Result.Trim();
         }
 
-        protected void AddError(FileInfo file, LintingResult result, Match match, int lineAdjust = 0)
+        protected void AddError(FileInfo file, LintingResult result, Match match)
         {
             var e = new LintingError(file.FullName, match.Groups["message"].Value);
-            e.LineNumber = int.Parse(match.Groups["line"].Value) + lineAdjust;
+            e.LineNumber = int.Parse(match.Groups["line"].Value);
             e.ColumnNumber = int.Parse(match.Groups["column"].Value);
             e.Provider = Name;
             result.Errors.Add(e);

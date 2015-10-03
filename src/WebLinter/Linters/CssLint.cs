@@ -32,7 +32,7 @@ namespace WebLinter
             {
                 foreach (Match match in _rx.Matches(output))
                 {
-                    AddError(file, result, match, -1);
+                    AddError(file, result, match);
                 }
             }
             else if (!string.IsNullOrEmpty(error))
@@ -45,7 +45,7 @@ namespace WebLinter
 
         private static string FindConfigFile(FileInfo file)
         {
-            return "--ignore=known-properties";
+            return "--ignore=known-properties,ids";
             // return here until the npm package is updated to support the --config flag
 
             var dir = file.Directory;
