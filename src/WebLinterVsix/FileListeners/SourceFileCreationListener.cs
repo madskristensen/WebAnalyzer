@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Windows.Threading;
+using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -34,11 +36,15 @@ namespace WebLinterVsix.FileListeners
             {
                 _document.FileActionOccurred += DocumentSaved;
 
-                if (IsValid(_document.FilePath))
+                VSPackage.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    textView.Properties.AddProperty("lint_filename", _document.FilePath);
-                    LinterService.Lint(_document.FilePath);
-                }
+                    if (IsValid(_document.FilePath))
+                    {
+                        textView.Properties.AddProperty("lint_filename", _document.FilePath);
+                        LinterService.Lint(_document.FilePath);
+                    }
+
+                }), DispatcherPriority.ApplicationIdle, null);
             }
 
             textView.Closed += TextviewClosed;
@@ -74,6 +80,29 @@ namespace WebLinterVsix.FileListeners
             // Check if filename is absolute because when debugging, script files are sometimes dynamically created.
             if (string.IsNullOrEmpty(fileName) || !Path.IsPathRooted(fileName))
                 return false;
+
+            string extension = Path.GetExtension(fileName);
+
+            // Minified files should be ignored
+            if (fileName.EndsWith(".min" + extension, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Ignore nested files
+            if (VSPackage.Dte.Solution != null)
+            {
+                var item = VSPackage.Dte.Solution.FindProjectItem(fileName);
+
+                if (item == null)
+                    return false;
+
+                if (item.Collection != null && item.Collection.Parent != null)
+                {
+                    var parent = item.Collection.Parent as ProjectItem;
+
+                    if (parent != null && parent.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
+                        return false;
+                }
+            }
 
             return true;
         }
