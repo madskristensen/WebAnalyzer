@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -7,49 +9,82 @@ namespace WebLinter
 {
     public abstract class LinterBase
     {
-        public LinterBase(ISettings settings)
+        private static Regex _rx;
+
+        public LinterBase(ISettings settings, Regex regex)
         {
             Settings = settings;
+            _rx = regex;
         }
 
-        public LintingResult Run(string fileName)
+        public LintingResult Run(params string[] files)
         {
-            Result = new LintingResult(fileName);
+            Result = new LintingResult(files);
 
             if (!IsEnabled)
                 return Result;
 
-            FileInfo file = new FileInfo(fileName);
+            List<FileInfo> fileInfos = new List<FileInfo>();
 
-            if (!file.Exists)
+            foreach (string file in files)
             {
-                Result.Errors.Add(new LintingError(file.FullName, "The file doesn't exist"));
-                return Result;
+                FileInfo fileInfo = new FileInfo(file);
+
+                if (!fileInfo.Exists)
+                {
+                    Result.Errors.Add(new LintingError(fileInfo.FullName, "The file doesn't exist"));
+                    return Result;
+                }
+
+                fileInfos.Add(fileInfo);
             }
 
-            return Lint(file);
+            return Lint(fileInfos.ToArray());
         }
 
-        protected abstract LintingResult Lint(FileInfo file);
+        protected LintingResult Lint(params FileInfo[] files)
+        {
+            string args = GetArguments(files);
+            string output, error;
+            RunProcess($"{Name}.cmd", out output, out error, args, files);
 
-        public abstract string Name { get; }
+            if (!string.IsNullOrEmpty(output))
+            {
+                foreach (Match match in _rx.Matches(output))
+                {
+                    AddError(match, Settings.CssLintAsErrors);
+                }
+            }
+            else if (!string.IsNullOrEmpty(error))
+            {
+                Result.Errors.Add(new LintingError(files.First().FullName, error));
+            }
 
-        public abstract bool IsEnabled { get; }
+            return Result;
+        }
+
+        protected string Name { get; set; }
+
+        protected virtual string ConfigFileName { get; set; }
+
+        protected virtual bool IsEnabled { get; set; }
 
         protected ISettings Settings { get; }
 
         protected LintingResult Result { get; private set; }
 
-        protected void RunProcess(FileInfo file, string command, out string output, out string error, string arguments = "")
+        protected void RunProcess(string command, out string output, out string error, string arguments = "", params FileInfo[] files)
         {
+            string fileArg = string.Join(" ", files.Select(f => $"\"{f.FullName}\""));
+
             ProcessStartInfo start = new ProcessStartInfo
             {
-                WorkingDirectory = file.Directory.FullName,
+                WorkingDirectory = files.FirstOrDefault().Directory.FullName,
                 UseShellExecute = false,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
                 FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(LinterFactory.ExecutionPath, $"node_modules\\.bin\\{command}")}\" {arguments} \"{file.FullName}\"\"",
+                Arguments = $"/c \"\"{Path.Combine(LinterFactory.ExecutionPath, $"node_modules\\.bin\\{command}")}\" {arguments} {fileArg}\"",
                 StandardOutputEncoding = Encoding.UTF8,
                 StandardErrorEncoding = Encoding.UTF8,
                 RedirectStandardOutput = true,
@@ -67,11 +102,18 @@ namespace WebLinter
             error = stderr.Result.Trim();
         }
 
-        protected void AddError(FileInfo file, Match match, bool isError)
+        protected virtual string GetArguments(FileInfo[] files)
         {
-            var e = new LintingError(file.FullName, match.Groups["message"].Value);
+            return string.Empty;
+        }
+
+        protected void AddError(Match match, bool isError)
+        {
+            string fileName = match.Groups["file"].Value;
+
+            var e = new LintingError(fileName, match.Groups["message"].Value);
             e.LineNumber = int.Parse(match.Groups["line"].Value);
-            e.ColumnNumber = int.Parse(match.Groups["column"].Value);
+            e.ColumnNumber = int.Parse(match.Groups["column"].Success ? match.Groups["column"].Value : "0");
             e.IsError = isError;
             e.Provider = Name;
             Result.Errors.Add(e);

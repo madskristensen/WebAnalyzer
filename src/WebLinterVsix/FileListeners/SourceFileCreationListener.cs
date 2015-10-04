@@ -57,7 +57,7 @@ namespace WebLinterVsix.FileListeners
 
             if (view.Properties.TryGetProperty("lint_filename", out fileName))
             {
-                ErrorList.CleanErrors(fileName);
+                ErrorList.CleanErrors(new[] { fileName });
             }
 
             if (view != null)
@@ -79,6 +79,9 @@ namespace WebLinterVsix.FileListeners
         {
             // Check if filename is absolute because when debugging, script files are sometimes dynamically created.
             if (string.IsNullOrEmpty(fileName) || !Path.IsPathRooted(fileName))
+                return false;
+
+            if (!LinterService.IsFileSupported(fileName))
                 return false;
 
             string extension = Path.GetExtension(fileName);

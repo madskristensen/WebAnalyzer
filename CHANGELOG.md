@@ -7,6 +7,7 @@
 - [x] ESLint support
 - [x] TSLint support
 - [x] Ignore nested and minified files from linting
+- [x] Support multiple files linted at the same time
 
 Features that have a checkmark are complete and available for
 download in the

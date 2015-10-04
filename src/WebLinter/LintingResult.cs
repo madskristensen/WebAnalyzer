@@ -4,12 +4,12 @@ namespace WebLinter
 {
     public class LintingResult
     {
-        public LintingResult(string fileName)
+        public LintingResult(params string[] fileNames)
         {
-            FileName = fileName; ;
+            FileNames = fileNames;
         }
 
-        public string FileName { get; set; }
+        public IEnumerable<string> FileNames { get; set; }
 
         public bool HasErrors
         {

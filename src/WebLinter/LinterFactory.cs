@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
 
@@ -7,11 +8,20 @@ namespace WebLinter
     public static class LinterFactory
     {
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
-        public static object _syncRoot = new object();
 
-        public static LintingResult Lint(string fileName, ISettings settings)
+        private static string[] _supported = new string[] { ".JS", ".JSX", ".TS", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
+        private static object _syncRoot = new object();
+
+        public static bool IsFileSupported(string fileName)
         {
             string extension = Path.GetExtension(fileName).ToUpperInvariant();
+
+            return _supported.Contains(extension);
+        }
+
+        public static LintingResult Lint(ISettings settings, params string[] fileNames)
+        {
+            string extension = Path.GetExtension(fileNames.First()).ToUpperInvariant();
             LinterBase linter = null;
 
             switch (extension)
@@ -43,7 +53,7 @@ namespace WebLinter
                     Initialize();
                 }
 
-                return linter.Run(fileName);
+                return linter.Run(fileNames);
             }
 
             return null;

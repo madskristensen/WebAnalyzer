@@ -26,12 +26,12 @@ namespace WebLinterVsix
         [DefaultValue(false)]
         public bool CssLintAsErrors { get; set; } = false;
 
-        [Category("ESLint")]
+        [Category("JSHint")]
         [DisplayName("Enabled")]
         [DefaultValue(true)]
         public bool ESLintEnable { get; set; } = true;
 
-        [Category("ESLint")]
+        [Category("JSHint")]
         [DisplayName("Show warnings as errors")]
         [DefaultValue(false)]
         public bool ESLintAsErrors { get; set; } = false;

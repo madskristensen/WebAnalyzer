@@ -1,43 +1,43 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace WebLinter
 {
     internal class EsLinter : LinterBase
     {
-        private static Regex _rx = new Regex(@": line (?<line>[0-9]+), col (?<column>[0-9]+), .+ - (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static Regex _rx = new Regex(@"(?<file>.+): line (?<line>[0-9]+), col (?<column>[0-9]+), .+ - (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public EsLinter(ISettings settings) : base(settings)
-        { }
-
-        public override string Name
+        public EsLinter(ISettings settings) : base(settings, _rx)
         {
-            get { return "ESLint"; }
+            Name = "ESLint";
+            ConfigFileName = ".eslintrc";
+            IsEnabled = Settings.ESLintEnable;
         }
 
-        public override bool IsEnabled
+        protected override string GetArguments(FileInfo[] files)
         {
-            get { return Settings.ESLintEnable; }
+            return $"--format=compact {FindConfigFile(files.FirstOrDefault())}";
         }
 
-        protected override LintingResult Lint(FileInfo file)
+        private string FindConfigFile(FileInfo file)
         {
-            string output, error;
-            RunProcess(file, "eslint.cmd", out output, out error, "--format=compact");
+            var dir = file.Directory;
 
-            if (!string.IsNullOrEmpty(output))
+            while (dir != null)
             {
-                foreach (Match match in _rx.Matches(output))
-                {
-                    AddError(file, match, Settings.ESLintAsErrors);
-                }
-            }
-            else if (!string.IsNullOrEmpty(error))
-            {
-                Result.Errors.Add(new LintingError(file.FullName, error));
+                string rc = Path.Combine(dir.FullName, ConfigFileName);
+                if (File.Exists(rc))
+                    return $"--config=\"{rc}\"";
+
+                dir = dir.Parent;
             }
 
-            return Result;
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string result = Path.Combine(userFolder, ConfigFileName);
+
+            return $"--config=\"{result}\""; ;
         }
     }
 }

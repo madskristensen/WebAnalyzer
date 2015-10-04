@@ -17,18 +17,24 @@ namespace WebLinterVsix
             LinterFactory.Initialized += delegate { VSPackage.Dte.StatusBar.Clear(); };
         }
 
+        public static bool IsFileSupported(string fileName)
+        {
+            return LinterFactory.IsFileSupported(fileName);
+        }
+
         public static void Lint(string fileName)
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
                 try
                 {
-                    ErrorList.CleanErrors(fileName);
+                    ErrorList.CleanErrors(new[] { fileName });
                     EnsureDefaults();
 
-                    var result = LinterFactory.Lint(fileName, VSPackage.Settings);
+                    var result = LinterFactory.Lint(VSPackage.Settings, fileName);
 
-                    ErrorListService.ProcessLintingResults(new[] { result });
+                    if (result != null)
+                        ErrorListService.ProcessLintingResults(new[] { result });
                 }
                 catch (Exception ex)
                 {

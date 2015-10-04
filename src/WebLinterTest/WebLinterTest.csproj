@@ -54,7 +54,7 @@
     <Compile Include="CoffeelintTest.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="TslintTest.cs" />
-    <Compile Include="EshintTest.cs" />
+    <Compile Include="EslintTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,11 +64,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="artifacts\csslint\b.css" />
     <Content Include="artifacts\csslint\a.css" />
+    <None Include="artifacts\coffeelint\b.coffee" />
     <None Include="artifacts\coffeelint\a.coffee" />
     <None Include="artifacts\eslint\a.jsx" />
+    <Content Include="artifacts\eslint\b.js" />
     <Content Include="artifacts\tslint\tslint.json" />
-    <Content Include="artifacts\eslint\.eslintrc" />
+    <TypeScriptCompile Include="artifacts\tslint\b.ts" />
     <TypeScriptCompile Include="artifacts\tslint\a.ts" />
     <Content Include="artifacts\eslint\a.js" />
   </ItemGroup>

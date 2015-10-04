@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
@@ -11,27 +12,20 @@ namespace WebLinterVsix
     {
         public static void ProcessLintingResults(IEnumerable<LintingResult> results)
         {
-            VSPackage.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                // bool hasError = false;
-
+            //VSPackage.Dispatcher.BeginInvoke(new Action(() =>
+            //{
                 foreach (var result in results)
                 {
                     if (result.HasErrors)
                     {
-                        //hasError = true;
-                        ErrorList.AddErrors(result.FileName, result.Errors);
-                        //VSPackage._dte.StatusBar.Text = $"Error compiling \"{Path.GetFileName(result.FileName)}\". See Error List for details";
+                        ErrorList.AddErrors(result.Errors);
                     }
                     else
                     {
-                        ErrorList.CleanErrors(result.FileName);
-
-                        //if (!hasError)
-                        //    VSPackage._dte.StatusBar.Text = $"Done compiling \"{Path.GetFileName(result.FileName)}\"";
+                        ErrorList.CleanErrors(result.Errors.Select(e => e.FileName));
                     }
                 }
-            }), DispatcherPriority.ApplicationIdle, null);
+           // }), DispatcherPriority.ApplicationIdle, null);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -11,27 +12,40 @@ namespace WebLinterVsix
     {
         private static Dictionary<string, ErrorListProvider> _providers = new Dictionary<string, ErrorListProvider>();
 
-        public static void AddErrors(string file, IEnumerable<LintingError> errors)
+        public static void AddErrors(IEnumerable<LintingError> errors)
         {
-            CleanErrors(file);
-            var provider = new ErrorListProvider(VSPackage.Package);
+            CleanErrors(errors.Select(e => e.FileName));
 
             foreach (var error in errors)
             {
+                ErrorListProvider provider;
+
+                if (!_providers.ContainsKey(error.FileName))
+                {
+                    provider = new ErrorListProvider(VSPackage.Package);
+                    _providers.Add(error.FileName, provider);
+                }
+                else
+                {
+                    provider = _providers[error.FileName];
+                }
+
                 var task = CreateTask(error, provider);
                 provider.Tasks.Add(task);
             }
-
-            _providers.Add(file, provider);
         }
 
-        public static void CleanErrors(string file)
+        public static void CleanErrors(IEnumerable<string> files)
         {
-            if (_providers.ContainsKey(file))
+            foreach (string file in files)
             {
-                _providers[file].Tasks.Clear();
-                _providers[file].Dispose();
-                _providers.Remove(file);
+                if (_providers.ContainsKey(file))
+                {
+                    _providers[file].Tasks.Clear();
+                    _providers[file].Dispose();
+                    _providers.Remove(file);
+                }
+
             }
         }
 
@@ -71,12 +85,8 @@ namespace WebLinterVsix
             task.Navigate += (s, e) =>
             {
                 provider.Navigate(task, new Guid(EnvDTE.Constants.vsViewKindPrimary));
-
-                if (task.Column > 0)
-                {
-                    var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
-                    doc.Selection.MoveToLineAndOffset(task.Line + 1, task.Column, false);
-                }
+                var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
+                doc.Selection.MoveToLineAndOffset(task.Line + 1, Math.Max(task.Column, 1), false);
             };
 
             return task;
