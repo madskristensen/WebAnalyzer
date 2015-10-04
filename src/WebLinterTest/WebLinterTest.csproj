@@ -68,6 +68,8 @@
     <Content Include="artifacts\csslint\a.css" />
     <None Include="artifacts\coffeelint\b.coffee" />
     <None Include="artifacts\coffeelint\a.coffee" />
+    <None Include="artifacts\csslint\.csslintrc" />
+    <None Include="artifacts\eslint\.eslintrc" />
     <None Include="artifacts\eslint\a.jsx" />
     <Content Include="artifacts\eslint\b.js" />
     <Content Include="artifacts\tslint\tslint.json" />
