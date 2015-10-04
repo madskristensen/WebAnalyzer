@@ -7,13 +7,13 @@ namespace WebLinter
     {
         private static Regex _rx = new Regex(@"(?<file>.+): line (?<line>[0-9]+), col (?<column>[0-9]+), (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        public CssLinter(ISettings settings) : base(settings, _rx)
+        public CssLinter(ISettings settings, string workingDirectory) : base(settings, workingDirectory, _rx)
         {
             Name = "CssLint";
             ConfigFileName = ".csslintrc";
             IsEnabled = Settings.CssLintEnable;
         }
-        
+
         protected override string GetArguments(FileInfo[] files)
         {
             return $"--format=compact --ignore=known-properties,ids";

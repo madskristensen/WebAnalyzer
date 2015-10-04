@@ -11,7 +11,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.js");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/a.js");
             Assert.IsTrue(result.HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName), "File name is empty");
             Assert.AreEqual(3, result.Errors.Count, $"Found {result.Errors.Count} errors");
@@ -20,7 +20,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public void MultipleInput()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.js", "../../artifacts/eslint/b.js");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/a.js", "../../artifacts/eslint/b.js");
             Assert.IsTrue(result.HasErrors);
             Assert.AreEqual(6, result.Errors.Count, $"Found {result.Errors.Count} errors");
         }
@@ -28,7 +28,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public void JSX()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.jsx");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/a.jsx");
             Assert.IsTrue(result.HasErrors);
             Assert.IsTrue(result.Errors.First().Message.Contains("react/display-name"), "Unexpected error message");
             Assert.AreEqual(2, result.Errors.Count, $"Found {result.Errors.Count} errors");
@@ -37,7 +37,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public void FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/doesntexist.js");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/doesntexist.js");
             Assert.IsTrue(result.HasErrors);
         }
     }

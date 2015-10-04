@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.IO;
 using WebLinter;
 
 namespace WebLinterTest
@@ -18,44 +19,18 @@ namespace WebLinterTest
             }
         }
 
-        [Category("CoffeeLint")]
-        [DisplayName("Enabled")]
-        [DefaultValue(true)]
+        public static string CWD
+        {
+            get { return new FileInfo("../../artifacts/").FullName; }
+        }
+
         public bool CoffeeLintEnable { get; set; } = true;
-
-        [Category("CoffeeLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(true)]
         public bool CoffeeLintAsErrors { get; set; } = true;
-
-        [Category("CSSLint")]
-        [DisplayName("Enabled")]
-        [DefaultValue(true)]
         public bool CssLintEnable { get; set; } = true;
-
-        [Category("CssLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(true)]
         public bool CssLintAsErrors { get; set; } = true;
-
-        [Category("ESLint")]
-        [DisplayName("Enabled")]
-        [DefaultValue(true)]
         public bool ESLintEnable { get; set; } = true;
-
-        [Category("ESLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(true)]
         public bool ESLintAsErrors { get; set; } = true;
-
-        [Category("TSLint")]
-        [DisplayName("Enabled")]
-        [DefaultValue(true)]
         public bool TSLintEnable { get; set; } = true;
-
-        [Category("TSLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(true)]
         public bool TSLintAsErrors { get; set; } = true;
     }
 }

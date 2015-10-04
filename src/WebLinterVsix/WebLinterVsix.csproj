@@ -56,6 +56,7 @@
     <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="ErrorList\ErrorListService.cs" />
     <Compile Include="FileListeners\SourceFileCreationListener.cs" />
+    <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="LinterService.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

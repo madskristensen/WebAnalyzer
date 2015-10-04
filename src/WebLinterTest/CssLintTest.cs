@@ -11,7 +11,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/a.css");
             Assert.IsTrue(result.HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName));
             Assert.AreEqual(1, result.Errors.Count, $"Found {result.Errors.Count} errors");
@@ -20,7 +20,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void Multiple()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
             Assert.IsTrue(result.HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName));
             Assert.AreEqual(2, result.Errors.Count, $"Found {result.Errors.Count} errors");
@@ -29,7 +29,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
+            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/doesntexist.css");
             Assert.IsTrue(result.HasErrors);
         }
     }

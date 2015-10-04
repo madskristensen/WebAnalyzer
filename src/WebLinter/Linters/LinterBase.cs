@@ -4,17 +4,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System;
 
 namespace WebLinter
 {
     public abstract class LinterBase
     {
-        private static Regex _rx;
+        private Regex _rx;
+        private string _cwd;
 
-        public LinterBase(ISettings settings, Regex regex)
+        public LinterBase(ISettings settings, string workingDirectory, Regex regex)
         {
             Settings = settings;
             _rx = regex;
+            _cwd = workingDirectory;
         }
 
         public LintingResult Run(params string[] files)
@@ -79,7 +82,7 @@ namespace WebLinter
 
             ProcessStartInfo start = new ProcessStartInfo
             {
-                WorkingDirectory = files.FirstOrDefault().Directory.FullName,
+                WorkingDirectory = _cwd,
                 UseShellExecute = false,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
@@ -105,6 +108,25 @@ namespace WebLinter
         protected virtual string GetArguments(FileInfo[] files)
         {
             return string.Empty;
+        }
+
+        protected virtual string FindConfigFile(FileInfo file)
+        {
+            var dir = file.Directory;
+
+            while (dir != null)
+            {
+                string rc = Path.Combine(dir.FullName, ConfigFileName);
+                if (File.Exists(rc))
+                    return $"--config=\"{rc}\"";
+
+                dir = dir.Parent;
+            }
+
+            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string result = Path.Combine(userFolder, ConfigFileName);
+
+            return $"--config=\"{result}\""; ;
         }
 
         protected void AddError(Match match, bool isError)

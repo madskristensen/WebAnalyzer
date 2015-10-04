@@ -22,9 +22,9 @@ namespace WebLinterVsix
 
         protected override void Initialize()
         {
+            Package = this;
             Dte = GetService(typeof(DTE)) as DTE2;
             Dispatcher = Dispatcher.CurrentDispatcher;
-            Package = this;
             Settings = (Settings)GetDialogPage(typeof(Settings));
 
             Logger.Initialize(this, Constants.VSIX_NAME);

@@ -8,7 +8,6 @@ namespace WebLinter
     public static class LinterFactory
     {
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
-
         private static string[] _supported = new string[] { ".JS", ".JSX", ".TS", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
         private static object _syncRoot = new object();
 
@@ -19,30 +18,32 @@ namespace WebLinter
             return _supported.Contains(extension);
         }
 
-        public static LintingResult Lint(ISettings settings, params string[] fileNames)
+        public static LintingResult Lint(string workingDirectory, ISettings settings, params string[] fileNames)
         {
-            string extension = Path.GetExtension(fileNames.First()).ToUpperInvariant();
+            if (fileNames.Length == 0) return null;
+
+            string extension = Path.GetExtension(fileNames[0]).ToUpperInvariant();
             LinterBase linter = null;
 
             switch (extension)
             {
                 case ".JS":
                 case ".JSX":
-                    linter = new EsLinter(settings);
+                    linter = new EsLinter(settings, workingDirectory);
                     break;
 
                 case ".TS":
-                    linter = new TsLintLinter(settings);
+                    linter = new TsLintLinter(settings, workingDirectory);
                     break;
 
                 case ".COFFEE":
                 case ".LITCOFFEE":
                 case ".ICED":
-                    linter = new CoffeeLinter(settings);
+                    linter = new CoffeeLinter(settings, workingDirectory);
                     break;
 
                 case ".CSS":
-                    linter = new CssLinter(settings);
+                    linter = new CssLinter(settings, workingDirectory);
                     break;
             }
 

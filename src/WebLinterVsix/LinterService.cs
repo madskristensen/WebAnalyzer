@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Threading;
+using EnvDTE;
 using WebLinter;
 
 namespace WebLinterVsix
@@ -31,7 +32,8 @@ namespace WebLinterVsix
                     ErrorList.CleanErrors(new[] { fileName });
                     EnsureDefaults();
 
-                    var result = LinterFactory.Lint(VSPackage.Settings, fileName);
+                    string workingDirectory = GetWorkingDirectory(fileName);
+                    var result = LinterFactory.Lint(workingDirectory, VSPackage.Settings, fileName);
 
                     if (result != null)
                         ErrorListService.ProcessLintingResults(new[] { result });
@@ -42,6 +44,17 @@ namespace WebLinterVsix
                 }
             });
         }
+
+        private static string GetWorkingDirectory(string fileName)
+        {
+            ProjectItem item = VSPackage.Dte.Solution?.FindProjectItem(fileName);
+
+            if (item == null || item.ContainingProject == null || item.ContainingProject.Properties == null)
+                return Path.GetDirectoryName(fileName);
+
+            return item.ContainingProject.GetRootFolder();
+        }
+
 
         private static void StatusText(string message)
         {
