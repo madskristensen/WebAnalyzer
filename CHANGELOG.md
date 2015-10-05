@@ -1,6 +1,8 @@
 # Roadmap
 
 - [ ] Add config files to solution
+- [ ] Red squiggly in the editor
+- [ ] Use Visual Studio's _node.exe_
 
 Features that have a checkmark are complete and available for
 download in the
