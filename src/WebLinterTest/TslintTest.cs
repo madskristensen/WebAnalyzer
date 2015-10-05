@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebLinter;
 
@@ -8,6 +7,12 @@ namespace WebLinterTest
     [TestClass]
     public class TshintTest
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            Telemetry.Enabled = false;
+        }
+
         [TestMethod, TestCategory("TSLint")]
         public void Standard()
         {

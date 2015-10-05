@@ -9,7 +9,7 @@ namespace WebLinter
     public static class LinterFactory
     {
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
-        private static string[] _supported = new string[] { ".JS", ".JSX", ".TS", ".TSX", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
+        private static string[] _supported = new string[] { ".JS", ".ES6", ".JSX", ".TS", ".TSX", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
         private static object _syncRoot = new object();
 
         public static bool IsFileSupported(string fileName)
@@ -33,6 +33,7 @@ namespace WebLinter
                 {
                     case ".JS":
                     case ".JSX":
+                    case ".ES6":
                         dic.Add(new EsLinter(settings, workingDirectory), group);
                         break;
 
@@ -65,7 +66,10 @@ namespace WebLinter
                 foreach (var linter in dic.Keys)
                 {
                     var files = dic[linter].ToArray();
+
                     OnProgress(dic.Keys.Count, count, linter.Name, files.Length);
+                    Telemetry.TrackEvent(linter.Name);
+
                     yield return linter.Run(files);
                     count += 1;
                 }

@@ -42,7 +42,7 @@ namespace WebLinterVsix
             if (ex != null)
             {
                 Log(ex.ToString());
-                //Telemetry.TrackException(ex);
+                Telemetry.TrackException(ex);
             }
         }
 

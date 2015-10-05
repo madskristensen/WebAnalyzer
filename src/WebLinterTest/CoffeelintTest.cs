@@ -7,6 +7,12 @@ namespace WebLinterTest
     [TestClass]
     public class CoffeelintTest
     {
+        [TestInitialize]
+        public void Setup()
+        {
+            Telemetry.Enabled = false;
+        }
+
         [TestMethod, TestCategory("CoffeeLint")]
         public void Standard()
         {
