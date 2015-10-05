@@ -106,9 +106,9 @@ namespace WebLinterVsix
             }), DispatcherPriority.ApplicationIdle, null);
         }
 
-        private static void EnsureDefaults()
+        public static void EnsureDefaults(bool force = false)
         {
-            if (!_defaultsCreated)
+            if (!_defaultsCreated || force)
             {
                 string assembly = Assembly.GetExecutingAssembly().Location;
                 string root = Path.GetDirectoryName(assembly);
@@ -120,8 +120,8 @@ namespace WebLinterVsix
                     string fileName = Path.GetFileName(sourceFile);
                     string destFile = Path.Combine(destFolder, fileName);
 
-                    if (!File.Exists(destFile))
-                        File.Copy(sourceFile, destFile);
+                    if (force || !File.Exists(destFile))
+                        File.Copy(sourceFile, destFile, true);
                 }
 
                 _defaultsCreated = true;

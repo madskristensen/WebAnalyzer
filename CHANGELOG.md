@@ -10,7 +10,9 @@
 - [x] Support multiple files linted at the same time
 - [x] Run from Solution Explorer
 - [x] Command to clear all errors
-- [ ] Add config files to project
+- [x] Edit config files menu commands
+- [x] Reset configuration files to defaults
+- [ ] Add config files to solution
 
 Features that have a checkmark are complete and available for
 download in the

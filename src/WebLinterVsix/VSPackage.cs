@@ -31,6 +31,8 @@ namespace WebLinterVsix
             Logger.Initialize(this, Constants.VSIX_NAME);
             LintFilesCommand.Initialize(this);
             CleanErrorsCommand.Initialize(this);
+            EditConfigFilesCommand.Initialize(this);
+            ResetConfigFilesCommand.Initialize(this);
 
             base.Initialize();
         }

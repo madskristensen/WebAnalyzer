@@ -52,6 +52,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commnads\ResetConfigFilesCommand.cs" />
+    <Compile Include="Commnads\EditConfigFilesCommand.cs" />
     <Compile Include="Commnads\CleanErrorsCommand.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ErrorList\ErrorList.cs" />
@@ -81,6 +83,7 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
       <LastGenOutput>VSCommandTable.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </VSCTCompile>
     <None Include="packages.config" />
     <Content Include="registry.pkgdef">
