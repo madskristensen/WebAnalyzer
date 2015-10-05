@@ -6,44 +6,28 @@ namespace WebLinterVsix
 {
     public class Settings : DialogPage, ISettings
     {
-        [Category("CoffeeLint")]
-        [DisplayName("Enabled")]
+        [Category("Linters")]
+        [DisplayName("Enable CoffeeLint")]
+        [Description("CoffeeLint is a linter for CoffeeScript files")]
         [DefaultValue(true)]
         public bool CoffeeLintEnable { get; set; } = true;
 
-        [Category("CoffeeLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(false)]
-        public bool CoffeeLintAsErrors { get; set; } = false;
-
-        [Category("CSSLint")]
-        [DisplayName("Enabled")]
+        [Category("Linters")]
+        [DisplayName("Enable CSS Lint")]
+        [Description("CoffeeLint is a linter for CSS files")]
         [DefaultValue(true)]
         public bool CssLintEnable { get; set; } = true;
 
-        [Category("CSSLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(false)]
-        public bool CssLintAsErrors { get; set; } = false;
-
-        [Category("JSHint")]
-        [DisplayName("Enabled")]
+        [Category("Linters")]
+        [DisplayName("Enable ESLint")]
+        [Description("CoffeeLint is a linter JavaScript and JSX files")]
         [DefaultValue(true)]
         public bool ESLintEnable { get; set; } = true;
 
-        [Category("JSHint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(false)]
-        public bool ESLintAsErrors { get; set; } = false;
-
-        [Category("TSLint")]
-        [DisplayName("Enabled")]
+        [Category("Linters")]
+        [DisplayName("Enable TSLint")]
+        [Description("CoffeeLint is a linter for TypeScript files")]
         [DefaultValue(true)]
         public bool TSLintEnable { get; set; } = true;
-
-        [Category("TSLint")]
-        [DisplayName("Show warnings as errors")]
-        [DefaultValue(false)]
-        public bool TSLintAsErrors { get; set; } = false;
     }
 }

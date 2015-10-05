@@ -25,12 +25,8 @@ namespace WebLinterTest
         }
 
         public bool CoffeeLintEnable { get; set; } = true;
-        public bool CoffeeLintAsErrors { get; set; } = true;
         public bool CssLintEnable { get; set; } = true;
-        public bool CssLintAsErrors { get; set; } = true;
         public bool ESLintEnable { get; set; } = true;
-        public bool ESLintAsErrors { get; set; } = true;
         public bool TSLintEnable { get; set; } = true;
-        public bool TSLintAsErrors { get; set; } = true;
     }
 }

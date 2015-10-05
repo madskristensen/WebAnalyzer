@@ -55,7 +55,7 @@ namespace WebLinter
             {
                 foreach (Match match in _rx.Matches(output))
                 {
-                    AddError(match, Settings.CssLintAsErrors);
+                    AddError(match);
                 }
             }
             else if (!string.IsNullOrEmpty(error))
@@ -70,6 +70,8 @@ namespace WebLinter
 
         protected virtual string ConfigFileName { get; set; }
 
+        protected virtual string ErrorMatch { get; set; }
+
         protected virtual bool IsEnabled { get; set; }
 
         protected ISettings Settings { get; }
@@ -82,7 +84,7 @@ namespace WebLinter
 
             ProcessStartInfo start = new ProcessStartInfo
             {
-                WorkingDirectory = _cwd,
+                WorkingDirectory = FindWorkingDirectory(files[0]),
                 UseShellExecute = false,
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true,
@@ -110,7 +112,7 @@ namespace WebLinter
             return string.Empty;
         }
 
-        protected virtual string FindConfigFile(FileInfo file)
+        protected virtual string FindWorkingDirectory(FileInfo file)
         {
             var dir = file.Directory;
 
@@ -118,25 +120,22 @@ namespace WebLinter
             {
                 string rc = Path.Combine(dir.FullName, ConfigFileName);
                 if (File.Exists(rc))
-                    return $"--config=\"{rc}\"";
+                    return dir.FullName;
 
                 dir = dir.Parent;
             }
 
-            string userFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string result = Path.Combine(userFolder, ConfigFileName);
-
-            return $"--config=\"{result}\""; ;
+            return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        protected void AddError(Match match, bool isError)
+        protected void AddError(Match match)
         {
             string fileName = match.Groups["file"].Value;
 
             var e = new LintingError(fileName, match.Groups["message"].Value);
             e.LineNumber = int.Parse(match.Groups["line"].Value);
             e.ColumnNumber = int.Parse(match.Groups["column"].Success ? match.Groups["column"].Value : "0");
-            e.IsError = isError;
+            e.IsError = match.Groups["severity"].Success ? match.Groups["severity"].Value == ErrorMatch : false;
             e.Provider = Name;
             Result.Errors.Add(e);
         }

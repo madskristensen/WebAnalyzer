@@ -12,9 +12,11 @@ namespace WebLinterTest
         public void Standard()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/a.css");
-            Assert.IsTrue(result.First().HasErrors);
-            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName));
-            Assert.AreEqual(1, result.First().Errors.Count);
+            var first = result.First();
+            Assert.IsTrue(first.HasErrors);
+            Assert.IsFalse(result.First().Errors.First().IsError, "Severity is not 'warning'");
+            Assert.IsFalse(string.IsNullOrEmpty(first.Errors.First().FileName));
+            Assert.AreEqual(1, first.Errors.Count);
         }
 
         [TestMethod, TestCategory("CssLint")]

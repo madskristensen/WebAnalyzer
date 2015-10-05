@@ -12,6 +12,8 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/a.coffee");
             Assert.IsTrue(result.First().HasErrors);
+            Assert.IsTrue(result.First().Errors.First().IsError, "Severity is not 'error'");
+            Assert.IsFalse(result.First().Errors.ElementAt(1).IsError, "Severity is not 'warning'");
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
             Assert.AreEqual(2, result.First().Errors.Count);
         }

@@ -13,6 +13,7 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/a.js");
             Assert.IsTrue(result.First().HasErrors);
+            Assert.IsTrue(result.First().Errors.First().IsError, "Severity is not 'error'");
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
             Assert.AreEqual(3, result.First().Errors.Count);
         }
