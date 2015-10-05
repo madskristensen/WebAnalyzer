@@ -16,10 +16,10 @@ for changes and roadmap.
 
 ### Features
 - Lints JavaScript, JSX, TypeScript, CoffeeScript and CSS files using:
-  - ESLint
-  - CssLint
-  - CoffeeLint
-  - TSLint
+  - [ESLint](http://eslint.org/)
+  - [CssLint](https://github.com/CSSLint/csslint/wiki)
+  - [CoffeeLint](http://www.coffeelint.org/)
+  - [TSLint](https://github.com/palantir/tslint)
 - Error List integration
 - Runs when a file is opened and when the file is saved
 - Run on a single file, folder or the entire project
