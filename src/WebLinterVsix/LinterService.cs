@@ -16,27 +16,69 @@ namespace WebLinterVsix
         {
             LinterFactory.Initializing += delegate { StatusText("Extracting latest version of the linters..."); };
             LinterFactory.Initialized += delegate { VSPackage.Dte.StatusBar.Clear(); };
+            LinterFactory.Progress += OnProgress;
+        }
+
+        private static void OnProgress(object sender, LintingEventArgs e)
+        {
+            // No reason to show progress for single files
+            if (e.Total == 1) return;
+
+            if (e.Total > e.AmountOfTotal)
+                VSPackage.Dte.StatusBar.Progress(true, $"Running {e.ProviderName} on {e.Files} files...", e.AmountOfTotal + 1, e.Total + 1);
+            else
+                VSPackage.Dte.StatusBar.Progress(false, $"Web Linter completed", e.AmountOfTotal + 1, e.Total + 1);
         }
 
         public static bool IsFileSupported(string fileName)
         {
-            return LinterFactory.IsFileSupported(fileName);
+            // Check if filename is absolute because when debugging, script files are sometimes dynamically created.
+            if (string.IsNullOrEmpty(fileName) || !Path.IsPathRooted(fileName))
+                return false;
+
+            if (!LinterFactory.IsFileSupported(fileName))
+                return false;
+
+            string extension = Path.GetExtension(fileName);
+
+            // Minified files should be ignored
+            if (fileName.EndsWith(".min" + extension, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Ignore nested files
+            if (VSPackage.Dte.Solution != null)
+            {
+                var item = VSPackage.Dte.Solution.FindProjectItem(fileName);
+
+                if (item == null)
+                    return false;
+
+                if (item.Collection != null && item.Collection.Parent != null)
+                {
+                    var parent = item.Collection.Parent as ProjectItem;
+
+                    if (parent != null && parent.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
+                        return false;
+                }
+            }
+
+            return true;
         }
 
-        public static void Lint(string fileName)
+        public static void Lint(params string[] fileNames)
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
                 try
                 {
-                    ErrorList.CleanErrors(new[] { fileName });
+                    ErrorList.CleanErrors(fileNames);
                     EnsureDefaults();
 
-                    string workingDirectory = GetWorkingDirectory(fileName);
-                    var result = LinterFactory.Lint(workingDirectory, VSPackage.Settings, fileName);
+                    string workingDirectory = GetWorkingDirectory(fileNames[0]);
+                    var result = LinterFactory.Lint(workingDirectory, VSPackage.Settings, fileNames);
 
                     if (result != null)
-                        ErrorListService.ProcessLintingResults(new[] { result });
+                        ErrorListService.ProcessLintingResults(result);
                 }
                 catch (Exception ex)
                 {

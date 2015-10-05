@@ -11,16 +11,16 @@ namespace WebLinterTest
         public void Standard()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/a.coffee");
-            Assert.IsTrue(result.HasErrors);
-            Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(3, result.Errors.Count, $"Found {result.Errors.Count} errors");
+            Assert.IsTrue(result.First().HasErrors);
+            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
+            Assert.AreEqual(2, result.First().Errors.Count);
         }
         [TestMethod, TestCategory("CoffeeLint")]
         public void Multiple()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/a.coffee", "../../artifacts/coffeelint/b.coffee");
-            Assert.IsTrue(result.HasErrors);
-            Assert.AreEqual(5, result.Errors.Count, $"Found {result.Errors.Count} errors");
+            Assert.IsTrue(result.First().HasErrors);
+            Assert.AreEqual(3, result.First().Errors.Count);
         }
 
 
@@ -28,7 +28,7 @@ namespace WebLinterTest
         public void FileDontExist()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/doesntexist.coffee");
-            Assert.IsTrue(result.HasErrors);
+            Assert.IsTrue(result.First().HasErrors);
         }
     }
 }

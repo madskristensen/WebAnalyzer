@@ -12,27 +12,27 @@ namespace WebLinterTest
         public void Standard()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/a.ts");
-            Assert.IsTrue(result.HasErrors);
-            Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(7, result.Errors.Count, $"Found {result.Errors.Count} errors");
-            Assert.AreEqual("if statements must be braced", result.Errors.First().Message);
+            Assert.IsTrue(result.First().HasErrors);
+            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
+            Assert.AreEqual(7, result.First().Errors.Count);
+            Assert.AreEqual("if statements must be braced", result.First().Errors.First().Message);
         }
 
         [TestMethod, TestCategory("TSLint")]
         public void Multiple()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/a.ts", "../../artifacts/tslint/b.ts");
-            Assert.IsTrue(result.HasErrors);
-            Assert.IsFalse(string.IsNullOrEmpty(result.Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(14, result.Errors.Count, $"Found {result.Errors.Count} errors");
-            Assert.AreEqual("if statements must be braced", result.Errors.First().Message);
+            Assert.IsTrue(result.First().HasErrors);
+            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
+            Assert.AreEqual(14, result.First().Errors.Count);
+            Assert.AreEqual("if statements must be braced", result.First().Errors.First().Message);
         }
 
         [TestMethod, TestCategory("TSLint")]
         public void FileNotExist()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/doesntexist.js");
-            Assert.IsTrue(result.HasErrors);
+            Assert.IsTrue(result.First().HasErrors);
         }
     }
 }

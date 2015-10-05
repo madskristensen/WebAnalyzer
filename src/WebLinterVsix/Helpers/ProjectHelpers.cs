@@ -24,7 +24,7 @@ namespace WebLinterVsix
             info.IsReadOnly = false;
         }
 
-        public static IEnumerable<ProjectItem> GetSelectedItems()
+        public static IEnumerable<string> GetSelectedItemPaths()
         {
             var items = (Array)_dte.ToolWindows.SolutionExplorer.SelectedItems;
 
@@ -32,17 +32,13 @@ namespace WebLinterVsix
             {
                 ProjectItem item = selItem.Object as ProjectItem;
 
-                if (item != null)
-                    yield return item;
-            }
-        }
-
-        public static IEnumerable<string> GetSelectedItemPaths()
-        {
-            foreach (ProjectItem item in GetSelectedItems())
-            {
                 if (item != null && item.Properties != null)
                     yield return item.Properties.Item("FullPath").Value.ToString();
+
+                Project project = selItem.Object as Project;
+
+                if (project != null)
+                    yield return project.GetRootFolder();
             }
         }
 

@@ -12,7 +12,8 @@ namespace WebLinterVsix
     [InstalledProductRegistration("#110", "#112", WebLinter.Constants.VERSION, IconResourceID = 400)]
     [ProvideOptionPage(typeof(Settings), "Web", "Linters", 101, 111, true, new[] { "eslint", "tslint", "coffeelint", "csslint" }, ProvidesLocalizedCategoryName = false)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
-    [Guid(Constants.PRODUCT_ID)]
+    [Guid(PackageGuids.guidVSPackageString)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class VSPackage : Package
     {
         public static DTE2 Dte;
@@ -28,6 +29,8 @@ namespace WebLinterVsix
             Settings = (Settings)GetDialogPage(typeof(Settings));
 
             Logger.Initialize(this, Constants.VSIX_NAME);
+            LintFilesCommand.Initialize(this);
+            CleanErrorsCommand.Initialize(this);
 
             base.Initialize();
         }

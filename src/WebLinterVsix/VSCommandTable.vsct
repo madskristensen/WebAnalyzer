@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <Extern href="stdidcmd.h"/>
+    <Extern href="vsshlids.h"/>
+    <Include href="KnownImageIds.vsct"/>
+
+    <Commands package="guidVSPackage">
+        <Groups>
+            <Group guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0200" />
+        </Groups>
+
+        <Buttons>
+            <Button guid="WebLinterCmdSet" id="LintFilesCommand" priority="0x0100" type="Button">
+                <Parent guid="WebLinterCmdSet" id="ContextMenuGroup" />
+                <Icon guid="ImageCatalogGuid" id="RunChecked" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <Strings>
+                    <ButtonText>Run Web Linter analyzer</ButtonText>
+                </Strings>
+            </Button>
+            <Button guid="WebLinterCmdSet" id="CleanErrorsCommand" priority="0x0200" type="Button">
+                <Parent guid="WebLinterCmdSet" id="ContextMenuGroup" />
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <Strings>
+                    <ButtonText>Clear all Web Linter errors</ButtonText>
+                </Strings>
+            </Button>
+        </Buttons>
+    </Commands>
+
+    <CommandPlacements>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBITEMNODE"/>
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBFOLDER"/>
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_FOLDERNODE"/>
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_WEBPROJECT"/>
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ANALYZE"/>
+        </CommandPlacement>
+    </CommandPlacements>
+
+    <Symbols>
+        <!-- This is the package guid. -->
+        <GuidSymbol name="guidVSPackage" value="{a9b5a26c-0774-412b-9b0e-8007614a9c73}" />
+
+        <!-- This is the guid used to group the menu commands together -->
+        <GuidSymbol name="WebLinterCmdSet" value="{34114698-c8d5-4a10-abc0-78d72ab6e4a4}">
+            <IDSymbol name="ContextMenuGroup" value="0x1020" />
+            <IDSymbol name="LintFilesCommand" value="0x0100" />
+            <IDSymbol name="CleanErrorsCommand" value="0x0200" />
+        </GuidSymbol>
+    </Symbols>
+</CommandTable>

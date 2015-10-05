@@ -31,23 +31,32 @@ namespace WebLinterVsix.FileListeners
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
+            textView.Closed += TextviewClosed;
 
             if (TextDocumentFactoryService.TryGetTextDocument(textView.TextDataModel.DocumentBuffer, out _document))
             {
-                _document.FileActionOccurred += DocumentSaved;
+                if (!LinterService.IsFileSupported(_document.FilePath))
+                    return;
 
                 VSPackage.Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    if (IsValid(_document.FilePath))
-                    {
-                        textView.Properties.AddProperty("lint_filename", _document.FilePath);
+                    _document.FileActionOccurred += DocumentSaved;
+                    textView.Properties.AddProperty("lint_filename", _document.FilePath);
+
+                    // Don't run linter again if error list already contains errors for the file.
+                    if (!ErrorList.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
                         LinterService.Lint(_document.FilePath);
-                    }
 
                 }), DispatcherPriority.ApplicationIdle, null);
             }
+        }
 
-            textView.Closed += TextviewClosed;
+        private static bool RunOnOpen(string fileName)
+        {
+            if (fileName.Contains("\\node_modules\\") || fileName.Contains("\\bower_components\\"))
+                return false;
+
+            return true;
         }
 
         private void TextviewClosed(object sender, EventArgs e)
@@ -62,52 +71,14 @@ namespace WebLinterVsix.FileListeners
 
             if (view != null)
                 view.Closed -= TextviewClosed;
-
-            if (_document != null)
-                _document.FileActionOccurred -= DocumentSaved;
         }
 
         private void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
         {
-            if (e.FileActionType == FileActionTypes.ContentSavedToDisk && IsValid(e.FilePath))
+            if (e.FileActionType == FileActionTypes.ContentSavedToDisk && LinterService.IsFileSupported(e.FilePath))
             {
                 LinterService.Lint(e.FilePath);
             }
-        }
-
-        private bool IsValid(string fileName)
-        {
-            // Check if filename is absolute because when debugging, script files are sometimes dynamically created.
-            if (string.IsNullOrEmpty(fileName) || !Path.IsPathRooted(fileName))
-                return false;
-
-            if (!LinterService.IsFileSupported(fileName))
-                return false;
-
-            string extension = Path.GetExtension(fileName);
-
-            // Minified files should be ignored
-            if (fileName.EndsWith(".min" + extension, StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            // Ignore nested files
-            if (VSPackage.Dte.Solution != null)
-            {
-                var item = VSPackage.Dte.Solution.FindProjectItem(fileName);
-
-                if (item == null)
-                    return false;
-
-                if (item.Collection != null && item.Collection.Parent != null)
-                {
-                    var parent = item.Collection.Parent as ProjectItem;
-
-                    if (parent != null && parent.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
-                        return false;
-                }
-            }
-
-            return true;
         }
     }
 }

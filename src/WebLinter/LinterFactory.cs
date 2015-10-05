@@ -2,13 +2,14 @@
 using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 namespace WebLinter
 {
     public static class LinterFactory
     {
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
-        private static string[] _supported = new string[] { ".JS", ".JSX", ".TS", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
+        private static string[] _supported = new string[] { ".JS", ".JSX", ".TS", ".TSX", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
         private static object _syncRoot = new object();
 
         public static bool IsFileSupported(string fileName)
@@ -18,46 +19,59 @@ namespace WebLinter
             return _supported.Contains(extension);
         }
 
-        public static LintingResult Lint(string workingDirectory, ISettings settings, params string[] fileNames)
+        public static IEnumerable<LintingResult> Lint(string workingDirectory, ISettings settings, params string[] fileNames)
         {
-            if (fileNames.Length == 0) return null;
+            if (fileNames.Length == 0) yield break;
 
             string extension = Path.GetExtension(fileNames[0]).ToUpperInvariant();
-            LinterBase linter = null;
+            var groupedFiles = fileNames.GroupBy(f => Path.GetExtension(f).ToUpperInvariant());
+            Dictionary<LinterBase, IEnumerable<string>> dic = new Dictionary<LinterBase, IEnumerable<string>>();
 
-            switch (extension)
+            foreach (var group in groupedFiles)
             {
-                case ".JS":
-                case ".JSX":
-                    linter = new EsLinter(settings, workingDirectory);
-                    break;
+                switch (group.Key)
+                {
+                    case ".JS":
+                    case ".JSX":
+                        dic.Add(new EsLinter(settings, workingDirectory), group);
+                        break;
 
-                case ".TS":
-                    linter = new TsLintLinter(settings, workingDirectory);
-                    break;
+                    case ".TS":
+                    case ".TSX":
+                        dic.Add(new TsLintLinter(settings, workingDirectory), group);
+                        break;
 
-                case ".COFFEE":
-                case ".LITCOFFEE":
-                case ".ICED":
-                    linter = new CoffeeLinter(settings, workingDirectory);
-                    break;
+                    case ".COFFEE":
+                    case ".LITCOFFEE":
+                    case ".ICED":
+                        dic.Add(new CoffeeLinter(settings, workingDirectory), group);
+                        break;
 
-                case ".CSS":
-                    linter = new CssLinter(settings, workingDirectory);
-                    break;
+                    case ".CSS":
+                        dic.Add(new CssLinter(settings, workingDirectory), group);
+                        break;
+                }
             }
 
-            if (linter != null)
+            if (dic.Count != 0)
             {
                 lock (_syncRoot)
                 {
                     Initialize();
                 }
 
-                return linter.Run(fileNames);
-            }
+                int count = 0;
 
-            return null;
+                foreach (var linter in dic.Keys)
+                {
+                    var files = dic[linter].ToArray();
+                    OnProgress(dic.Keys.Count, count, linter.Name, files.Length);
+                    yield return linter.Run(files);
+                    count += 1;
+                }
+
+                OnProgress(dic.Keys.Count, count, "Done", 0);
+            }
         }
 
         /// <summary>
@@ -128,6 +142,14 @@ namespace WebLinter
             }
         }
 
+        private static void OnProgress(int total, int amountOfTotal, string providerName, int files)
+        {
+            if (Progress != null)
+            {
+                Progress(null, new LintingEventArgs(total, amountOfTotal, providerName, files));
+            }
+        }
+
         /// <summary>
         /// Fires when the compilers are about to be initialized.
         /// </summary>
@@ -137,5 +159,8 @@ namespace WebLinter
         /// Fires when the compilers have been initialized.
         /// </summary>
         public static event EventHandler<EventArgs> Initialized;
+
+        /// <summary>Fires when progress is made.</summary>
+        public static event EventHandler<LintingEventArgs> Progress;
     }
 }

@@ -1,6 +1,6 @@
 # Roadmap
 
-- [ ] Add sensible defaults
+- [x] Add sensible defaults
 - [x] Options page
 - [x] CSSLint support
 - [x] CoffeeLint support
@@ -8,6 +8,9 @@
 - [x] TSLint support
 - [x] Ignore nested and minified files from linting
 - [x] Support multiple files linted at the same time
+- [x] Run from Solution Explorer
+- [x] Command to clear all errors
+- [ ] Add config files to project
 
 Features that have a checkmark are complete and available for
 download in the
@@ -21,4 +24,3 @@ on the official Visual Studio extension gallery.
 ## 1.0
 
 coming soon...
-

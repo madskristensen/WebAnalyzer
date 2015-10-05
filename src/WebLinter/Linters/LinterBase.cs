@@ -66,7 +66,7 @@ namespace WebLinter
             return Result;
         }
 
-        protected string Name { get; set; }
+        public string Name { get; set; }
 
         protected virtual string ConfigFileName { get; set; }
 

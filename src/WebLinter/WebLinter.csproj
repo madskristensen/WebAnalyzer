@@ -49,6 +49,7 @@
     <Compile Include="Linters\TslintLinter.cs" />
     <Compile Include="Linters\EsLinter.cs" />
     <Compile Include="LintingError.cs" />
+    <Compile Include="LintingEventArgs.cs" />
     <Compile Include="LintingResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

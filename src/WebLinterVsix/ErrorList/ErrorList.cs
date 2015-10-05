@@ -16,22 +16,20 @@ namespace WebLinterVsix
         {
             CleanErrors(errors.Select(e => e.FileName));
 
-            foreach (var error in errors)
+            List<Task> list = new List<Task>(errors.Select(e => CreateTask(e)));
+
+            foreach (var file in list.GroupBy(t => t.Document))
             {
-                ErrorListProvider provider;
+                var provider = new ErrorListProvider(VSPackage.Package);
+                provider.SuspendRefresh();
 
-                if (!_providers.ContainsKey(error.FileName))
+                foreach (var task in file.ToArray())
                 {
-                    provider = new ErrorListProvider(VSPackage.Package);
-                    _providers.Add(error.FileName, provider);
-                }
-                else
-                {
-                    provider = _providers[error.FileName];
+                    provider.Tasks.Add(task);
                 }
 
-                var task = CreateTask(error, provider);
-                provider.Tasks.Add(task);
+                provider.ResumeRefresh();
+                _providers.Add(file.Key, provider);
             }
         }
 
@@ -64,7 +62,17 @@ namespace WebLinterVsix
             _providers.Clear();
         }
 
-        private static ErrorTask CreateTask(LintingError error, ErrorListProvider provider)
+        public static bool HasErrors()
+        {
+            return _providers.Count > 0;
+        }
+
+        public static bool HasErrors(string fileName)
+        {
+            return _providers.ContainsKey(fileName);
+        }
+
+        private static ErrorTask CreateTask(LintingError error)
         {
             ErrorTask task = new ErrorTask()
             {
@@ -82,16 +90,18 @@ namespace WebLinterVsix
             if (item != null && item.ContainingProject != null)
                 AddHierarchyItem(task, item.ContainingProject);
 
-            task.Navigate += (s, e) =>
-            {
-                provider.Navigate(task, new Guid(EnvDTE.Constants.vsViewKindPrimary));
-                var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
-                doc.Selection.MoveToLineAndOffset(task.Line + 1, Math.Max(task.Column, 1), false);
-            };
+            task.Navigate += Task_Navigate;
 
             return task;
         }
 
+        private static void Task_Navigate(object sender, EventArgs e)
+        {
+            var task = (ErrorTask)sender;
+            VSPackage.Dte.ItemOperations.OpenFile(task.Document);
+            var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
+            doc.Selection.MoveToLineAndOffset(task.Line + 1, Math.Max(task.Column, 1), false);
+        }
 
         private static void AddHierarchyItem(ErrorTask task, EnvDTE.Project project)
         {
