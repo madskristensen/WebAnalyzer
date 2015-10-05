@@ -2,7 +2,8 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
-- [ ] Use Visual Studio's _node.exe_
+- [x] Use Visual Studio's _node.exe_
+- [x] Initialize linters when VS opens
 
 Features that have a checkmark are complete and available for
 download in the

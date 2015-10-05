@@ -6,10 +6,10 @@ namespace WebLinter
     {
         public LintingResult(params string[] fileNames)
         {
-            FileNames = fileNames;
+            FileNames.AddRange(fileNames);
         }
 
-        public IEnumerable<string> FileNames { get; set; }
+        public List<string> FileNames { get; set; } = new List<string>();
 
         public bool HasErrors
         {

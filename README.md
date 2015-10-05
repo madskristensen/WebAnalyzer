@@ -72,3 +72,11 @@ them to their defaults by clicking the
 **Reset Configuration Files** command. It will prompt to ask
 if you are sure you want to proceed and, if you click yes,
 all the configuration files will be restored to their defaults.
+
+### Disable linters
+You decide which linters to run by enabling or disabling them
+under **Tools -> Options**.
+
+![Options](art/options.png)
+
+They are all enabled by default.

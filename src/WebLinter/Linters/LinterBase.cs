@@ -45,7 +45,7 @@ namespace WebLinter
             return Lint(fileInfos.ToArray());
         }
 
-        protected LintingResult Lint(params FileInfo[] files)
+        protected virtual LintingResult Lint(params FileInfo[] files)
         {
             string args = GetArguments(files);
             string output, error;
@@ -96,7 +96,7 @@ namespace WebLinter
                 RedirectStandardError = true,
             };
 
-            start.EnvironmentVariables["PATH"] = LinterFactory.ExecutionPath + ";" + start.EnvironmentVariables["PATH"];
+            ModifyPathVariable(start);
 
             Process p = Process.Start(start);
             var stdout = p.StandardOutput.ReadToEndAsync();
@@ -105,6 +105,22 @@ namespace WebLinter
 
             output = stdout.Result.Trim();
             error = stderr.Result.Trim();
+        }
+
+        private static void ModifyPathVariable(ProcessStartInfo start)
+        {
+            string path = start.EnvironmentVariables["PATH"];
+
+            string toolsDir = Environment.GetEnvironmentVariable("VS140COMNTOOLS");
+
+            if (Directory.Exists(toolsDir))
+            {
+                string parent = Directory.GetParent(toolsDir).Parent.FullName;
+                path += ";" + Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External");
+            }
+
+            start.UseShellExecute = false;
+            start.EnvironmentVariables["PATH"] = path;
         }
 
         protected virtual string GetArguments(FileInfo[] files)
@@ -138,6 +154,25 @@ namespace WebLinter
             e.IsError = match.Groups["severity"].Success ? match.Groups["severity"].Value == ErrorMatch : false;
             e.Provider = Name;
             Result.Errors.Add(e);
+        }
+
+        public override bool Equals(Object obj)
+        {
+            LinterBase lb = obj as LinterBase;
+            if (lb == null)
+                return false;
+            else
+                return Name.Equals(lb.Name);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

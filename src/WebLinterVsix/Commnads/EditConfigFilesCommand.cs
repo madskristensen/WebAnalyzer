@@ -51,7 +51,7 @@ namespace WebLinterVsix
             string fileName = GetFileName(button.CommandID.ID);
             string configFile = Path.Combine(folder, fileName);
 
-            VSPackage.Dte.ItemOperations.OpenFile(configFile);
+            WebLinterPackage.Dte.ItemOperations.OpenFile(configFile);
         }
 
         private string GetFileName(int commandId)

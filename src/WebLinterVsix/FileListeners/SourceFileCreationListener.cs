@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Windows.Threading;
-using EnvDTE;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -38,14 +36,14 @@ namespace WebLinterVsix.FileListeners
                 if (!LinterService.IsFileSupported(_document.FilePath))
                     return;
 
-                VSPackage.Dispatcher.BeginInvoke(new Action(() =>
+                WebLinterPackage.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     _document.FileActionOccurred += DocumentSaved;
                     textView.Properties.AddProperty("lint_filename", _document.FilePath);
 
                     // Don't run linter again if error list already contains errors for the file.
                     if (!ErrorList.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
-                        LinterService.Lint(_document.FilePath);
+                        LinterService.Lint(false, _document.FilePath);
 
                 }), DispatcherPriority.ApplicationIdle, null);
             }
@@ -77,7 +75,7 @@ namespace WebLinterVsix.FileListeners
         {
             if (e.FileActionType == FileActionTypes.ContentSavedToDisk && LinterService.IsFileSupported(e.FilePath))
             {
-                LinterService.Lint(e.FilePath);
+                LinterService.Lint(false, e.FilePath);
             }
         }
     }

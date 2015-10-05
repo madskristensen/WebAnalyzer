@@ -17,10 +17,11 @@ namespace WebLinterTest
         public void Standard()
         {
             var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/eslint/a.js");
-            Assert.IsTrue(result.First().HasErrors);
-            Assert.IsTrue(result.First().Errors.First().IsError, "Severity is not 'error'");
-            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(3, result.First().Errors.Count);
+            var first = result.First();
+            Assert.IsTrue(first.HasErrors);
+            Assert.IsTrue(first.Errors.First().IsError, "Severity is not 'error'");
+            Assert.IsFalse(string.IsNullOrEmpty(first.Errors.First().FileName), "File name is empty");
+            Assert.AreEqual(3, first.Errors.Count);
         }
 
         [TestMethod, TestCategory("ESLint")]

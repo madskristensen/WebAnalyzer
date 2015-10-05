@@ -40,7 +40,7 @@ namespace WebLinterVsix
             if (result == DialogResult.Yes)
             {
                 LinterService.EnsureDefaults(true);
-                VSPackage.Dte.StatusBar.Text = "Web Linter configuration files have been reset";
+                WebLinterPackage.Dte.StatusBar.Text = "Web Linter configuration files have been reset";
             }
         }
     }

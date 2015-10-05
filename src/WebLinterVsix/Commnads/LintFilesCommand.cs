@@ -73,7 +73,14 @@ namespace WebLinterVsix
                 }
             }
 
-            LinterService.Lint(files.ToArray());
+            if (files.Any())
+            {
+                LinterService.Lint(true, files.ToArray());
+            }
+            else
+            {
+                WebLinterPackage.Dte.StatusBar.Text = "No files found to lint";
+            }
         }
 
         private static List<string> GetFiles(string path, string pattern)

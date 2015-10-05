@@ -15,7 +15,7 @@ namespace WebLinterVsix
         static LinterService()
         {
             LinterFactory.Initializing += delegate { StatusText("Extracting latest version of the linters..."); };
-            LinterFactory.Initialized += delegate { VSPackage.Dte.StatusBar.Clear(); };
+            LinterFactory.Initialized += delegate { WebLinterPackage.Dte.StatusBar.Clear(); };
             LinterFactory.Progress += OnProgress;
         }
 
@@ -25,9 +25,9 @@ namespace WebLinterVsix
             if (e.Total == 1) return;
 
             if (e.Total > e.AmountOfTotal)
-                VSPackage.Dte.StatusBar.Progress(true, $"Running {e.ProviderName} on {e.Files} files...", e.AmountOfTotal + 1, e.Total + 1);
+                WebLinterPackage.Dte.StatusBar.Progress(true, $"Running {e.ProviderName} on {e.Files} files...", e.AmountOfTotal + 1, e.Total + 1);
             else
-                VSPackage.Dte.StatusBar.Progress(false, $"Web Linter completed", e.AmountOfTotal + 1, e.Total + 1);
+                WebLinterPackage.Dte.StatusBar.Progress(false, $"Web Linter completed", e.AmountOfTotal + 1, e.Total + 1);
         }
 
         public static bool IsFileSupported(string fileName)
@@ -46,9 +46,9 @@ namespace WebLinterVsix
                 return false;
 
             // Ignore nested files
-            if (VSPackage.Dte.Solution != null)
+            if (WebLinterPackage.Dte.Solution != null)
             {
-                var item = VSPackage.Dte.Solution.FindProjectItem(fileName);
+                var item = WebLinterPackage.Dte.Solution.FindProjectItem(fileName);
 
                 if (item == null)
                     return false;
@@ -65,7 +65,7 @@ namespace WebLinterVsix
             return true;
         }
 
-        public static void Lint(params string[] fileNames)
+        public static void Lint(bool showErrorList, params string[] fileNames)
         {
             ThreadPool.QueueUserWorkItem((o) =>
             {
@@ -75,10 +75,10 @@ namespace WebLinterVsix
                     EnsureDefaults();
 
                     string workingDirectory = GetWorkingDirectory(fileNames[0]);
-                    var result = LinterFactory.Lint(workingDirectory, VSPackage.Settings, fileNames);
+                    var result = LinterFactory.Lint(workingDirectory, WebLinterPackage.Settings, fileNames);
 
                     if (result != null)
-                        ErrorListService.ProcessLintingResults(result);
+                        ErrorListService.ProcessLintingResults(result, showErrorList);
                 }
                 catch (Exception ex)
                 {
@@ -89,7 +89,7 @@ namespace WebLinterVsix
 
         private static string GetWorkingDirectory(string fileName)
         {
-            ProjectItem item = VSPackage.Dte.Solution?.FindProjectItem(fileName);
+            ProjectItem item = WebLinterPackage.Dte.Solution?.FindProjectItem(fileName);
 
             if (item == null || item.ContainingProject == null || item.ContainingProject.Properties == null)
                 return Path.GetDirectoryName(fileName);
@@ -100,9 +100,9 @@ namespace WebLinterVsix
 
         private static void StatusText(string message)
         {
-            VSPackage.Dispatcher.BeginInvoke(new Action(() =>
+            WebLinterPackage.Dispatcher.BeginInvoke(new Action(() =>
             {
-                VSPackage.Dte.StatusBar.Text = message;
+                WebLinterPackage.Dte.StatusBar.Text = message;
             }), DispatcherPriority.ApplicationIdle, null);
         }
 

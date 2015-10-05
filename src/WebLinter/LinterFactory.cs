@@ -34,22 +34,22 @@ namespace WebLinter
                     case ".JS":
                     case ".JSX":
                     case ".ES6":
-                        dic.Add(new EsLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new EsLinter(settings, workingDirectory), group);
                         break;
 
                     case ".TS":
                     case ".TSX":
-                        dic.Add(new TsLintLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new TsLintLinter(settings, workingDirectory), group);
                         break;
 
                     case ".COFFEE":
                     case ".LITCOFFEE":
                     case ".ICED":
-                        dic.Add(new CoffeeLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new CoffeeLinter(settings, workingDirectory), group);
                         break;
 
                     case ".CSS":
-                        dic.Add(new CssLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new CssLinter(settings, workingDirectory), group);
                         break;
                 }
             }
@@ -78,16 +78,27 @@ namespace WebLinter
             }
         }
 
+        private static void AddLinter(Dictionary<LinterBase, IEnumerable<string>> dic, LinterBase linter, IEnumerable<string> files)
+        {
+            if (dic.ContainsKey(linter))
+            {
+                dic[linter] = dic[linter].Union(files);
+            }
+            else
+            {
+                dic.Add(linter, files);
+            }
+        }
+
         /// <summary>
         /// Initializes the Node environment.
         /// </summary>
         public static void Initialize()
         {
             var node_modules = Path.Combine(ExecutionPath, "node_modules");
-            var node_exe = Path.Combine(ExecutionPath, "node.exe");
             var log_file = Path.Combine(ExecutionPath, "log.txt");
 
-            if (!Directory.Exists(node_modules) || !File.Exists(node_exe) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 36))
+            if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 36))
             {
                 OnInitializing();
 
@@ -95,7 +106,6 @@ namespace WebLinter
                     Directory.Delete(ExecutionPath, true);
 
                 Directory.CreateDirectory(ExecutionPath);
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.node.7z", "node.7z");
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z");
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe");
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll");

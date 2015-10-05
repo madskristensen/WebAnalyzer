@@ -14,7 +14,7 @@ namespace WebLinterVsix
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [Guid(PackageGuids.guidVSPackageString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class VSPackage : Package
+    public sealed class WebLinterPackage : Package
     {
         public static DTE2 Dte;
         public static Dispatcher Dispatcher;
@@ -35,6 +35,31 @@ namespace WebLinterVsix
             ResetConfigFilesCommand.Initialize(this);
 
             base.Initialize();
+        }
+    }
+
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids80.NoSolution)]
+    public sealed class WebLinterInitPackage : Package
+    {
+        protected override void Initialize()
+        {
+            // Delay execution until VS is idle.
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+            {
+                // Then execute in a background thread.
+                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    try
+                    {
+                        WebLinter.LinterFactory.Initialize();
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log(ex);
+                    }
+                });
+            }), DispatcherPriority.ApplicationIdle, null);
         }
     }
 }

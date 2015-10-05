@@ -10,17 +10,21 @@ namespace WebLinterVsix
 {
     class ErrorList
     {
+        private static IVsSolution _solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
         private static Dictionary<string, ErrorListProvider> _providers = new Dictionary<string, ErrorListProvider>();
 
         public static void AddErrors(IEnumerable<LintingError> errors)
         {
+            if (!errors.Any())
+                return;
+
             CleanErrors(errors.Select(e => e.FileName));
 
             List<Task> list = new List<Task>(errors.Select(e => CreateTask(e)));
 
             foreach (var file in list.GroupBy(t => t.Document))
             {
-                var provider = new ErrorListProvider(VSPackage.Package);
+                var provider = new ErrorListProvider(WebLinterPackage.Package);
                 provider.SuspendRefresh();
 
                 foreach (var task in file.ToArray())
@@ -30,6 +34,14 @@ namespace WebLinterVsix
 
                 provider.ResumeRefresh();
                 _providers.Add(file.Key, provider);
+            }
+        }
+
+        public static void BringToFront()
+        {
+            if (_providers.Any())
+            {
+                _providers.Values.First().BringToFront();
             }
         }
 
@@ -85,7 +97,7 @@ namespace WebLinterVsix
                 Text = $"({error.Provider}) {error.Message}",
             };
 
-            EnvDTE.ProjectItem item = VSPackage.Dte.Solution.FindProjectItem(error.FileName);
+            EnvDTE.ProjectItem item = WebLinterPackage.Dte.Solution.FindProjectItem(error.FileName);
 
             if (item != null && item.ContainingProject != null)
                 AddHierarchyItem(task, item.ContainingProject);
@@ -98,22 +110,20 @@ namespace WebLinterVsix
         private static void Task_Navigate(object sender, EventArgs e)
         {
             var task = (ErrorTask)sender;
-            VSPackage.Dte.ItemOperations.OpenFile(task.Document);
-            var doc = (EnvDTE.TextDocument)VSPackage.Dte.ActiveDocument.Object("textdocument");
+            WebLinterPackage.Dte.ItemOperations.OpenFile(task.Document);
+            var doc = (EnvDTE.TextDocument)WebLinterPackage.Dte.ActiveDocument.Object("textdocument");
             doc.Selection.MoveToLineAndOffset(task.Line + 1, Math.Max(task.Column, 1), false);
         }
 
         private static void AddHierarchyItem(ErrorTask task, EnvDTE.Project project)
         {
-            IVsSolution solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
-
-            if (solution == null || project == null)
+            if (project == null)
                 return;
 
             try
             {
                 IVsHierarchy hierarchyItem = null;
-                if (solution.GetProjectOfUniqueName(project.FullName, out hierarchyItem) == 0)
+                if (_solution.GetProjectOfUniqueName(project.FullName, out hierarchyItem) == 0)
                 {
                     task.HierarchyItem = hierarchyItem;
                 }

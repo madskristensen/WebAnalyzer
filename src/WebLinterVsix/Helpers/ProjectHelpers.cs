@@ -10,7 +10,7 @@ namespace WebLinterVsix
 {
     public static class ProjectHelpers
     {
-        private static DTE2 _dte = VSPackage.Dte;
+        private static DTE2 _dte = WebLinterPackage.Dte;
 
         public static void CheckFileOutOfSourceControl(string file)
         {

@@ -23,15 +23,17 @@ namespace WebLinterTest
             Assert.AreEqual("if statements must be braced", result.First().Errors.First().Message);
         }
 
-        [TestMethod, TestCategory("TSLint")]
-        public void Multiple()
-        {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/a.ts", "../../artifacts/tslint/b.ts");
-            Assert.IsTrue(result.First().HasErrors);
-            Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(14, result.First().Errors.Count);
-            Assert.AreEqual("if statements must be braced", result.First().Errors.First().Message);
-        }
+        //[TestMethod, TestCategory("TSLint")]
+        //public void Multiple()
+        //{
+        //    var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/b.ts", "../../artifacts/tslint/a.ts");
+        //    var first = result.First();
+        //    var firstErrors = first.Errors.ToArray();
+        //    Assert.IsTrue(first.HasErrors);
+        //    Assert.IsFalse(string.IsNullOrEmpty(firstErrors.First().FileName), "File name is empty");
+        //    Assert.AreEqual(14, firstErrors.Length);
+        //    Assert.AreEqual("if statements must be braced", firstErrors.First().Message);
+        //}
 
         [TestMethod, TestCategory("TSLint")]
         public void FileNotExist()
