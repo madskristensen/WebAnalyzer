@@ -16,7 +16,7 @@ for changes and roadmap.
 
 ### Features
 - Lints JavaScript, JSX, TypeScript, CoffeeScript and CSS files using:
-  - [ESLint](http://eslint.org/)
+  - [ESLint](http://eslint.org/) (a better version of JSHint, JSLint and JSCS)
   - [CssLint](https://github.com/CSSLint/csslint/wiki)
   - [CoffeeLint](http://www.coffeelint.org/)
   - [TSLint](https://github.com/palantir/tslint)
