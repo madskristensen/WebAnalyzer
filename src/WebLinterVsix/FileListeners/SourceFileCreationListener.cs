@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text;
@@ -51,7 +52,9 @@ namespace WebLinterVsix.FileListeners
 
         private static bool RunOnOpen(string fileName)
         {
-            if (fileName.Contains("\\node_modules\\") || fileName.Contains("\\bower_components\\"))
+            var patterns = WebLinterPackage.Settings.GetIgnorePatterns();
+
+            if (patterns.Any(p => fileName.Contains(p)))
                 return false;
 
             return true;

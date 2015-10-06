@@ -1,4 +1,4 @@
-## Web Linter
+## Web Analyzer
 
 A Visual Studio extension that runs ESLint and TSLint on JavaScript and
 TypeScript files
@@ -16,8 +16,8 @@ for changes and roadmap.
 
 ### Features
 - Lints JavaScript, JSX, TypeScript, CoffeeScript and CSS files using:
-  - [ESLint](http://eslint.org/) (a better version of JSHint, JSLint and JSCS)
   - [CssLint](https://github.com/CSSLint/csslint/wiki)
+  - [ESLint](http://eslint.org/) (a better version of JSHint, JSLint and JSCS)
   - [CoffeeLint](http://www.coffeelint.org/)
   - [TSLint](https://github.com/palantir/tslint)
 - Error List integration
@@ -26,6 +26,8 @@ for changes and roadmap.
 - Configuration files lets you select what rules to run
 - Both errors and warnings are supported
 - Option to turn off one or more linters
+- Smart logic ignores certain files from linting
+  - This can be further customized
 
 ### Error List
 When an error is found it will show up in the Error List in

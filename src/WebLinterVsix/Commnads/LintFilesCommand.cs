@@ -87,7 +87,9 @@ namespace WebLinterVsix
         {
             var files = new List<string>();
 
-            if (path.Contains("node_modules") || path.Contains("bower_components"))
+            var patterns = WebLinterPackage.Settings.GetIgnorePatterns();
+
+            if (patterns.Any(p => path.Contains(p)))
                 return files;
 
             try
