@@ -10,15 +10,10 @@ namespace WebLinter
 {
     public abstract class LinterBase
     {
-        private Regex _rx;
-        private string _cwd;
-
-        public LinterBase(ISettings settings, string workingDirectory, Regex regex)
+        public LinterBase(ISettings settings)
         {
             Settings = settings;
-            _rx = regex;
-            _cwd = workingDirectory;
-        }
+         }
 
         public LintingResult Run(params string[] files)
         {
@@ -53,10 +48,11 @@ namespace WebLinter
 
             if (!string.IsNullOrEmpty(output))
             {
-                foreach (Match match in _rx.Matches(output))
-                {
-                    AddError(match);
-                }
+                ParseErrors(output);
+                //foreach (Match match in _rx.Matches(output))
+                //{
+                //    AddError(match);
+                //}
             }
             else if (!string.IsNullOrEmpty(error))
             {
@@ -144,17 +140,19 @@ namespace WebLinter
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        protected void AddError(Match match)
-        {
-            string fileName = match.Groups["file"].Value;
+        protected abstract void ParseErrors(string output);
 
-            var e = new LintingError(fileName, match.Groups["message"].Value);
-            e.LineNumber = int.Parse(match.Groups["line"].Value);
-            e.ColumnNumber = int.Parse(match.Groups["column"].Success ? match.Groups["column"].Value : "0");
-            e.IsError = match.Groups["severity"].Success ? match.Groups["severity"].Value == ErrorMatch : false;
-            e.Provider = Name;
-            Result.Errors.Add(e);
-        }
+        //protected void AddError(Match match)
+        //{
+        //    string fileName = match.Groups["file"].Value;
+
+        //    var e = new LintingError(fileName, match.Groups["message"].Value);
+        //    e.LineNumber = int.Parse(match.Groups["line"].Value);
+        //    e.ColumnNumber = int.Parse(match.Groups["column"].Success ? match.Groups["column"].Value : "0");
+        //    e.IsError = match.Groups["severity"].Success ? match.Groups["severity"].Value == ErrorMatch : false;
+        //    e.Provider = Name;
+        //    Result.Errors.Add(e);
+        //}
 
         public override bool Equals(Object obj)
         {

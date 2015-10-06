@@ -30,7 +30,7 @@ namespace WebLinterVsix
             Settings = (Settings)GetDialogPage(typeof(Settings));
 
             _events = Dte.Events.SolutionEvents;
-            _events.AfterClosing += delegate { ErrorList.CleanAllErrors(); };
+            _events.AfterClosing += delegate { ErrorList.Instance.CleanAllErrors(); };
 
             Logger.Initialize(this, Constants.VSIX_NAME);
             LintFilesCommand.Initialize(this);

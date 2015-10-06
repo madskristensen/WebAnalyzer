@@ -58,6 +58,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="ErrorList\ErrorListService.cs" />
+    <Compile Include="ErrorList\LintingErrorSnapshot.cs" />
+    <Compile Include="ErrorList\SinkManager.cs" />
     <Compile Include="FileListeners\SourceFileCreationListener.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="LinterService.cs" />
@@ -85,6 +87,7 @@
       <LastGenOutput>VSCommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="registry.pkgdef">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -124,6 +127,7 @@
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.VisualStudio.CoreUtility.14.0.23205\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
       <Private>True</Private>

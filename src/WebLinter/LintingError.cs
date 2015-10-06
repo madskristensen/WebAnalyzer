@@ -20,6 +20,7 @@ namespace WebLinter
         public int LineNumber { get; set; }
         public int ColumnNumber { get; set; }
         public bool IsError { get; set; } = true;
+        public string ErrorCode { get; set; }
 
         public override string ToString()
         {

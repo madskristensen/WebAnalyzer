@@ -16,7 +16,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/a.coffee");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/a.coffee");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsTrue(result.First().Errors.First().IsError, "Severity is not 'error'");
             Assert.IsFalse(result.First().Errors.ElementAt(1).IsError, "Severity is not 'warning'");
@@ -26,7 +26,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public void Multiple()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/a.coffee", "../../artifacts/coffeelint/b.coffee");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/a.coffee", "../../artifacts/coffeelint/b.coffee");
             Assert.IsTrue(result.First().HasErrors);
             Assert.AreEqual(3, result.First().Errors.Count);
         }
@@ -35,7 +35,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public void FileDontExist()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/coffeelint/doesntexist.coffee");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/doesntexist.coffee");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

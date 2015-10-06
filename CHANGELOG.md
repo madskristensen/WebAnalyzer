@@ -2,6 +2,8 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
+- [x] Use new VS2015 Error List API
+- [x] Shows error codes from each linter
 - [x] Use Visual Studio's _node.exe_
 - [x] Initialize linters when VS opens
 

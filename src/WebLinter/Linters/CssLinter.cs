@@ -1,13 +1,12 @@
 ﻿using System.IO;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace WebLinter
 {
     internal class CssLinter : LinterBase
     {
-        private static Regex _rx = new Regex(@"(?<file>.+): line (?<line>[0-9]+), col (?<column>[0-9]+), (?<severity>Error|Warning) - (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public CssLinter(ISettings settings, string workingDirectory) : base(settings, workingDirectory, _rx)
+        public CssLinter(ISettings settings) : base(settings)
         {
             Name = "CssLint";
             ConfigFileName = ".csslintrc";
@@ -15,9 +14,30 @@ namespace WebLinter
             IsEnabled = Settings.CssLintEnable;
         }
 
+        protected override void ParseErrors(string output)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(output);
+
+            foreach (XmlNode file in doc.SelectNodes("//file"))
+            {
+                string fileName = file.Attributes["name"].InnerText;
+
+                foreach (XmlNode issue in file.SelectNodes("issue"))
+                {
+                    var e = new LintingError(fileName, issue.Attributes["reason"].InnerText);
+                    e.LineNumber = int.Parse(issue.Attributes["line"].InnerText) - 1;
+                    e.ColumnNumber = int.Parse(issue.Attributes["char"].InnerText) - 1;
+                    e.IsError = issue.Attributes["severity"].InnerText == "error";
+                    e.Provider = Name;
+                    Result.Errors.Add(e);
+                }
+            }
+        }
+
         protected override string GetArguments(FileInfo[] files)
         {
-            return $"--format=compact --ignore=known-properties,ids";
+            return $"--format=lint-xml --ignore=known-properties,ids";
         }
     }
 }

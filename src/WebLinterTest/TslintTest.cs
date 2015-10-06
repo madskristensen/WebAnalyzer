@@ -16,7 +16,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("TSLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/a.ts");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/a.ts");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
             Assert.AreEqual(7, result.First().Errors.Count);
@@ -38,7 +38,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("TSLint")]
         public void FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/tslint/doesntexist.js");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/doesntexist.js");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

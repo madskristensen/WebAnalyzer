@@ -43,12 +43,12 @@ namespace WebLinterVsix
         {
             var button = (OleMenuCommand)sender;
 
-            button.Visible = ErrorList.HasErrors();
+            button.Visible = ErrorList.Instance.HasErrors();
         }
 
         private void CleanErrors(object sender, EventArgs e)
         {
-            ErrorList.CleanAllErrors();
+            ErrorList.Instance.CleanAllErrors();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void Standard()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/a.css");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
             var first = result.First();
             Assert.IsTrue(first.HasErrors);
             Assert.IsFalse(result.First().Errors.First().IsError, "Severity is not 'warning'");
@@ -27,16 +27,16 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public void Multiple()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName));
-            Assert.AreEqual(2, result.First().Errors.Count);
+            Assert.AreEqual(3, result.First().Errors.Count);
         }
 
         [TestMethod, TestCategory("CssLint")]
         public void FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.CWD, Settings.Instance, "../../artifacts/csslint/doesntexist.css");
+            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

@@ -2,14 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
     internal class EsLinter : LinterBase
     {
-        private static Regex _rx = new Regex(@"(?<file>.+): line (?<line>[0-9]+), col (?<column>[0-9]+), (?<severity>Error|Warning) - (?<message>.+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public EsLinter(ISettings settings, string workingDirectory) : base(settings, workingDirectory, _rx)
+        public EsLinter(ISettings settings) : base(settings)
         {
             Name = "ESLint";
             ConfigFileName = ".eslintrc";
@@ -17,9 +16,30 @@ namespace WebLinter
             IsEnabled = Settings.ESLintEnable;
         }
 
+        protected override void ParseErrors(string output)
+        {
+            var array = JArray.Parse(output);
+
+            foreach (JObject obj in array)
+            {
+                string fileName = obj["filePath"].Value<string>();
+
+                foreach (JObject error in obj["messages"])
+                {
+                    var e = new LintingError(fileName, error["message"].Value<string>());
+                    e.LineNumber = error["line"].Value<int>() - 1;
+                    e.ColumnNumber = error["column"].Value<int>() - 1;
+                    e.IsError = error["severity"].Value<int>() == 2;
+                    e.ErrorCode = error["ruleId"].Value<string>();
+                    e.Provider = Name;
+                    Result.Errors.Add(e);
+                }
+            }
+        }
+
         protected override string GetArguments(FileInfo[] files)
         {
-            return $"--format=compact";
+            return $"--format=json";
         }
     }
 }

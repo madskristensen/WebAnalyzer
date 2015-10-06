@@ -71,11 +71,10 @@ namespace WebLinterVsix
             {
                 try
                 {
-                    ErrorList.CleanErrors(fileNames);
+                    ErrorList.Instance.CleanErrors(fileNames);
                     EnsureDefaults();
-
-                    string workingDirectory = GetWorkingDirectory(fileNames[0]);
-                    var result = LinterFactory.Lint(workingDirectory, WebLinterPackage.Settings, fileNames);
+                    
+                    var result = LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
 
                     if (result != null)
                         ErrorListService.ProcessLintingResults(result, showErrorList);
@@ -86,17 +85,6 @@ namespace WebLinterVsix
                 }
             });
         }
-
-        private static string GetWorkingDirectory(string fileName)
-        {
-            ProjectItem item = WebLinterPackage.Dte.Solution?.FindProjectItem(fileName);
-
-            if (item == null || item.ContainingProject == null || item.ContainingProject.Properties == null)
-                return Path.GetDirectoryName(fileName);
-
-            return item.ContainingProject.GetRootFolder();
-        }
-
 
         private static void StatusText(string message)
         {

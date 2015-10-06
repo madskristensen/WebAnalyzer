@@ -1,141 +1,168 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
-using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell.TableControl;
+using Microsoft.VisualStudio.Shell.TableManager;
 using WebLinter;
 
 namespace WebLinterVsix
 {
-    class ErrorList
+    class ErrorList : ITableDataSource
     {
-        private static IVsSolution _solution = Package.GetGlobalService(typeof(SVsSolution)) as IVsSolution;
-        private static Dictionary<string, ErrorListProvider> _providers = new Dictionary<string, ErrorListProvider>();
+        private static ErrorList _instance;
+        private readonly ITableManager _manager;
+        private readonly List<SinkManager> _managers = new List<SinkManager>();
 
-        public static void AddErrors(IEnumerable<LintingError> errors)
+        [Import]
+        private ITableManagerProvider TableManagerProvider { get; set; } = null;
+
+        private ErrorList()
+        {
+            var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
+            compositionService.DefaultCompositionService.SatisfyImportsOnce(this);
+
+            _manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);
+            _manager.AddSource(this, StandardTableColumnDefinitions.DetailsExpander,
+                                                   StandardTableColumnDefinitions.ErrorSeverity, StandardTableColumnDefinitions.ErrorCode,
+                                                   StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.BuildTool,
+                                                   StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.ErrorCategory,
+                                                   StandardTableColumnDefinitions.Text, StandardTableColumnDefinitions.DocumentName, StandardTableColumnDefinitions.Line, StandardTableColumnDefinitions.Column);
+        }
+
+        public static ErrorList Instance
+        {
+            get
+            {
+                if (_instance == null)
+                    _instance = new ErrorList();
+
+                return _instance;
+            }
+        }
+
+        #region ITableDataSource members
+        public string SourceTypeIdentifier
+        {
+            get { return StandardTableDataSources.ErrorTableDataSource; }
+        }
+
+        public string Identifier
+        {
+            get { return PackageGuids.guidVSPackageString; }
+        }
+
+        public string DisplayName
+        {
+            get { return Constants.VSIX_NAME; }
+        }
+
+        public IDisposable Subscribe(ITableDataSink sink)
+        {
+            return new SinkManager(this, sink);
+        }
+        #endregion
+
+        public void AddSinkManager(SinkManager manager)
+        {
+            // This call can, in theory, happen from any thread so be appropriately thread safe.
+            // In practice, it will probably be called only once from the UI thread (by the error list tool window).
+            lock (_managers)
+            {
+                _managers.Add(manager);
+            }
+        }
+
+        public void RemoveSinkManager(SinkManager manager)
+        {
+            // This call can, in theory, happen from any thread so be appropriately thread safe.
+            // In practice, it will probably be called only once from the UI thread (by the error list tool window).
+            lock (_managers)
+            {
+                _managers.Remove(manager);
+            }
+        }
+
+        public void UpdateAllSinks()
+        {
+            lock (_managers)
+            {
+                foreach (var manager in _managers)
+                {
+                    manager.UpdateSink(_snapsnots.Values);
+                }
+            }
+        }
+
+        private static Dictionary<string, LintingErrorSnapshot> _snapsnots = new Dictionary<string, LintingErrorSnapshot>();
+
+        public void AddErrors(IEnumerable<LintingError> errors)
         {
             if (!errors.Any())
                 return;
 
             CleanErrors(errors.Select(e => e.FileName));
 
-            List<Task> list = new List<Task>(errors.Select(e => CreateTask(e)));
-
-            foreach (var file in list.GroupBy(t => t.Document))
+            foreach (var error in errors.GroupBy(t => t.FileName))
             {
-                var provider = new ErrorListProvider(WebLinterPackage.Package);
-                provider.SuspendRefresh();
-
-                foreach (var task in file.ToArray())
-                {
-                    provider.Tasks.Add(task);
-                }
-
-                provider.ResumeRefresh();
-                _providers.Add(file.Key, provider);
+                var snapshot = new LintingErrorSnapshot(error.Key, error);
+                _snapsnots.Add(error.Key, snapshot);
             }
+
+            UpdateAllSinks();
         }
 
-        public static void BringToFront()
-        {
-            if (_providers.Any())
-            {
-                _providers.Values.First().BringToFront();
-            }
-        }
-
-        public static void CleanErrors(IEnumerable<string> files)
+        public void CleanErrors(IEnumerable<string> files)
         {
             foreach (string file in files)
             {
-                if (_providers.ContainsKey(file))
+                if (_snapsnots.ContainsKey(file))
                 {
-                    _providers[file].SuspendRefresh();
-                    _providers[file].Tasks.Clear();
-                    _providers[file].ResumeRefresh();
-                    _providers[file].Dispose();
-                    _providers.Remove(file);
-                }
-
-            }
-        }
-
-        public static void CleanAllErrors()
-        {
-            foreach (string file in _providers.Keys)
-            {
-                var provider = _providers[file];
-                if (provider != null)
-                {
-                    provider.SuspendRefresh();
-                    provider.Tasks.Clear();
-                    provider.ResumeRefresh();
-                    provider.Dispose();
+                    _snapsnots[file].Dispose();
+                    _snapsnots.Remove(file);
                 }
             }
 
-            _providers.Clear();
+            UpdateAllSinks();
         }
 
-        public static bool HasErrors()
+        public void CleanAllErrors()
         {
-            return _providers.Count > 0;
-        }
-
-        public static bool HasErrors(string fileName)
-        {
-            return _providers.ContainsKey(fileName);
-        }
-
-        private static ErrorTask CreateTask(LintingError error)
-        {
-            ErrorTask task = new ErrorTask()
+            foreach (string file in _snapsnots.Keys)
             {
-                Line = error.LineNumber - 1,
-                Column = error.ColumnNumber,
-                ErrorCategory = error.IsError ? TaskErrorCategory.Error : TaskErrorCategory.Warning,
-                Category = TaskCategory.Html,
-                Document = error.FileName,
-                Priority = TaskPriority.Normal,
-                Text = $"({error.Provider}) {error.Message}",
-            };
-
-            EnvDTE.ProjectItem item = WebLinterPackage.Dte.Solution.FindProjectItem(error.FileName);
-
-            if (item != null && item.ContainingProject != null)
-                AddHierarchyItem(task, item.ContainingProject);
-
-            task.Navigate += Task_Navigate;
-
-            return task;
-        }
-
-        private static void Task_Navigate(object sender, EventArgs e)
-        {
-            var task = (ErrorTask)sender;
-            WebLinterPackage.Dte.ItemOperations.OpenFile(task.Document);
-            var doc = (EnvDTE.TextDocument)WebLinterPackage.Dte.ActiveDocument.Object("textdocument");
-            doc.Selection.MoveToLineAndOffset(task.Line + 1, Math.Max(task.Column, 1), false);
-        }
-
-        private static void AddHierarchyItem(ErrorTask task, EnvDTE.Project project)
-        {
-            if (project == null)
-                return;
-
-            try
-            {
-                IVsHierarchy hierarchyItem = null;
-                if (_solution.GetProjectOfUniqueName(project.FullName, out hierarchyItem) == 0)
+                var snapshot = _snapsnots[file];
+                if (snapshot != null)
                 {
-                    task.HierarchyItem = hierarchyItem;
+                    snapshot.Dispose();
                 }
             }
-            catch (COMException ex)
+
+            _snapsnots.Clear();
+
+            lock (_managers)
             {
-                Logger.Log(ex);
+                foreach (var manager in _managers)
+                {
+                    manager.Clear();
+                }
             }
+        }
+
+        public void BringToFront()
+        {
+            WebLinterPackage.Dte.ExecuteCommand("View.ErrorList");
+        }
+
+        public bool HasErrors()
+        {
+            return _snapsnots.Count > 0;
+        }
+
+        public bool HasErrors(string fileName)
+        {
+            return _snapsnots.ContainsKey(fileName);
         }
     }
 }

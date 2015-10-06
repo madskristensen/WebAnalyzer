@@ -12,14 +12,14 @@ namespace WebLinterVsix
             {
                 if (result.HasErrors)
                 {
-                    ErrorList.AddErrors(result.Errors);
+                    ErrorList.Instance.AddErrors(result.Errors);
 
                     if (showErrorList)
-                        ErrorList.BringToFront();
+                        ErrorList.Instance.BringToFront();
                 }
                 else
                 {
-                    ErrorList.CleanErrors(result.Errors.Select(e => e.FileName));
+                    ErrorList.Instance.CleanErrors(result.Errors.Select(e => e.FileName));
                 }
             }
         }

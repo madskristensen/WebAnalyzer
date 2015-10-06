@@ -19,7 +19,7 @@ namespace WebLinter
             return _supported.Contains(extension);
         }
 
-        public static IEnumerable<LintingResult> Lint(string workingDirectory, ISettings settings, params string[] fileNames)
+        public static IEnumerable<LintingResult> Lint(ISettings settings, params string[] fileNames)
         {
             if (fileNames.Length == 0) yield break;
 
@@ -34,22 +34,22 @@ namespace WebLinter
                     case ".JS":
                     case ".JSX":
                     case ".ES6":
-                        AddLinter(dic, new EsLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new EsLinter(settings), group);
                         break;
 
                     case ".TS":
                     case ".TSX":
-                        AddLinter(dic, new TsLintLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new TsLintLinter(settings), group);
                         break;
 
                     case ".COFFEE":
                     case ".LITCOFFEE":
                     case ".ICED":
-                        AddLinter(dic, new CoffeeLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new CoffeeLinter(settings), group);
                         break;
 
                     case ".CSS":
-                        AddLinter(dic, new CssLinter(settings, workingDirectory), group);
+                        AddLinter(dic, new CssLinter(settings), group);
                         break;
                 }
             }

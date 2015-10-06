@@ -43,7 +43,7 @@ namespace WebLinterVsix.FileListeners
                     textView.Properties.AddProperty("lint_filename", _document.FilePath);
 
                     // Don't run linter again if error list already contains errors for the file.
-                    if (!ErrorList.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
+                    if (!ErrorList.Instance.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
                         LinterService.Lint(false, _document.FilePath);
 
                 }), DispatcherPriority.ApplicationIdle, null);
@@ -67,7 +67,7 @@ namespace WebLinterVsix.FileListeners
 
             if (view.Properties.TryGetProperty("lint_filename", out fileName))
             {
-                ErrorList.CleanErrors(new[] { fileName });
+                ErrorList.Instance.CleanErrors(new[] { fileName });
             }
 
             if (view != null)
