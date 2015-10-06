@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
@@ -11,7 +10,7 @@ namespace WebLinterVsix
     {
         // General
         [Category("General")]
-        [DisplayName("Ignore folders")]
+        [DisplayName("Ignore patterns")]
         [Description("A comma-separated list of strings. Any file containing one of the strings in the path will be ignored.")]
         [DefaultValue(@"\node_modules\,\bower_components\,\typings\,\lib\")]
         public string IgnoreFolderNames { get; set; } = @"\node_modules\,\bower_components\,\typings\,\lib\";
