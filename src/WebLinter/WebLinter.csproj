@@ -59,7 +59,6 @@
     <Compile Include="Telemetry.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Node\node.7z" />
     <EmbeddedResource Include="Node\prepare.cmd" />
   </ItemGroup>
   <ItemGroup>

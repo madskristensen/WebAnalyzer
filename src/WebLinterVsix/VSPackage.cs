@@ -20,6 +20,7 @@ namespace WebLinterVsix
         public static Dispatcher Dispatcher;
         public static Package Package;
         public static Settings Settings;
+        private SolutionEvents _events;
 
         protected override void Initialize()
         {
@@ -27,6 +28,9 @@ namespace WebLinterVsix
             Dte = GetService(typeof(DTE)) as DTE2;
             Dispatcher = Dispatcher.CurrentDispatcher;
             Settings = (Settings)GetDialogPage(typeof(Settings));
+
+            _events = Dte.Events.SolutionEvents;
+            _events.AfterClosing += delegate { ErrorList.CleanAllErrors(); };
 
             Logger.Initialize(this, Constants.VSIX_NAME);
             LintFilesCommand.Initialize(this);

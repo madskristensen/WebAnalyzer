@@ -51,7 +51,9 @@ namespace WebLinterVsix
             {
                 if (_providers.ContainsKey(file))
                 {
+                    _providers[file].SuspendRefresh();
                     _providers[file].Tasks.Clear();
+                    _providers[file].ResumeRefresh();
                     _providers[file].Dispose();
                     _providers.Remove(file);
                 }
@@ -66,7 +68,9 @@ namespace WebLinterVsix
                 var provider = _providers[file];
                 if (provider != null)
                 {
+                    provider.SuspendRefresh();
                     provider.Tasks.Clear();
+                    provider.ResumeRefresh();
                     provider.Dispose();
                 }
             }
