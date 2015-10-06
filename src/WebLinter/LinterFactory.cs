@@ -21,7 +21,10 @@ namespace WebLinter
 
         public static IEnumerable<LintingResult> Lint(ISettings settings, params string[] fileNames)
         {
-            if (fileNames.Length == 0) yield break;
+            List<LintingResult> list = new List<LintingResult>();
+
+            if (fileNames.Length == 0)
+                return list;
 
             string extension = Path.GetExtension(fileNames[0]).ToUpperInvariant();
             var groupedFiles = fileNames.GroupBy(f => Path.GetExtension(f).ToUpperInvariant());
@@ -70,12 +73,14 @@ namespace WebLinter
                     OnProgress(dic.Keys.Count, count, linter.Name, files.Length);
                     Telemetry.TrackEvent(linter.Name);
 
-                    yield return linter.Run(files);
+                    list.Add(linter.Run(files));
                     count += 1;
                 }
 
                 OnProgress(dic.Keys.Count, count, "Done", 0);
             }
+
+            return list;
         }
 
         private static void AddLinter(Dictionary<LinterBase, IEnumerable<string>> dic, LinterBase linter, IEnumerable<string> files)

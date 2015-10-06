@@ -72,8 +72,19 @@ namespace WebLinterVsix
                 try
                 {
                     ErrorList.Instance.CleanErrors(fileNames);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
+                }
+            });
+
+            ThreadPool.QueueUserWorkItem((o) =>
+            {
+                try
+                {
                     EnsureDefaults();
-                    
+
                     var result = LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
 
                     if (result != null)

@@ -67,7 +67,10 @@ namespace WebLinterVsix.FileListeners
 
             if (view.Properties.TryGetProperty("lint_filename", out fileName))
             {
-                ErrorList.Instance.CleanErrors(new[] { fileName });
+                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                {
+                    ErrorList.Instance.CleanErrors(new[] { fileName });
+                });
             }
 
             if (view != null)

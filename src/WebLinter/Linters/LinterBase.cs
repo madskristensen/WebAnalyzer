@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System;
 
 namespace WebLinter
 {
@@ -141,18 +140,6 @@ namespace WebLinter
         }
 
         protected abstract void ParseErrors(string output);
-
-        //protected void AddError(Match match)
-        //{
-        //    string fileName = match.Groups["file"].Value;
-
-        //    var e = new LintingError(fileName, match.Groups["message"].Value);
-        //    e.LineNumber = int.Parse(match.Groups["line"].Value);
-        //    e.ColumnNumber = int.Parse(match.Groups["column"].Success ? match.Groups["column"].Value : "0");
-        //    e.IsError = match.Groups["severity"].Success ? match.Groups["severity"].Value == ErrorMatch : false;
-        //    e.Provider = Name;
-        //    Result.Errors.Add(e);
-        //}
 
         public override bool Equals(Object obj)
         {

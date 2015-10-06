@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebLinter
 {
-   public class LintingError
+    public class LintingError
     {
         public LintingError(string fileName, string message)
         {

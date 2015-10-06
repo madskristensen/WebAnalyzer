@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using WebLinter;
@@ -8,20 +9,21 @@ namespace WebLinterVsix
 {
     class LintingErrorSnapshot : TableEntriesSnapshotBase
     {
-        private readonly string _filePath;
-
-        public readonly List<LintingError> Errors = new List<LintingError>();
+        private ProjectItem _item;
+        private readonly List<LintingError> _errors = new List<LintingError>();
 
         internal LintingErrorSnapshot(string filePath, IEnumerable<LintingError> errors)
         {
-            _filePath = filePath;
-            Errors.AddRange(errors);
+            FilePath = filePath;
+            _errors.AddRange(errors);
         }
 
         public override int Count
         {
-            get { return Errors.Count; }
+            get { return _errors.Count; }
         }
+
+        public string FilePath { get; }
 
         public override int VersionNumber { get; } = 1;
 
@@ -29,35 +31,35 @@ namespace WebLinterVsix
         {
             content = null;
 
-            if ((index >= 0) && (index < Errors.Count))
+            if ((index >= 0) && (index < _errors.Count))
             {
                 if (columnName == StandardTableKeyNames.DocumentName)
                 {
-                    content = _filePath;
-                  }
+                    content = FilePath;
+                }
                 else if (columnName == StandardTableKeyNames.ErrorCategory)
                 {
                     content = Constants.VSIX_NAME;
-                 }
+                }
                 else if (columnName == StandardTableKeyNames.ErrorSource)
                 {
                     content = "Spelling";
                 }
                 else if (columnName == StandardTableKeyNames.Line)
                 {
-                    content = Errors[index].LineNumber;
+                    content = _errors[index].LineNumber;
                 }
                 else if (columnName == StandardTableKeyNames.Column)
                 {
-                    content = Errors[index].ColumnNumber;
+                    content = _errors[index].ColumnNumber;
                 }
                 else if (columnName == StandardTableKeyNames.Text)
                 {
-                    content = Errors[index].Message;
+                    content = _errors[index].Message;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorSeverity)
                 {
-                    content = Errors[index].IsError ? __VSERRORCATEGORY.EC_ERROR : __VSERRORCATEGORY.EC_WARNING;
+                    content = _errors[index].IsError ? __VSERRORCATEGORY.EC_ERROR : __VSERRORCATEGORY.EC_WARNING;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorSource)
                 {
@@ -65,20 +67,24 @@ namespace WebLinterVsix
                 }
                 else if (columnName == StandardTableKeyNames.BuildTool)
                 {
-                    content = Errors[index].Provider;
+                    content = _errors[index].Provider;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorCode)
                 {
-                    content = Errors[index].ErrorCode;
+                    content = _errors[index].ErrorCode;
+                }
+                else if (columnName == StandardTableKeyNames.ProjectName)
+                {
+                    _item = _item ?? WebLinterPackage.Dte.Solution.FindProjectItem(_errors[index].FileName);
+
+                    if (_item != null && _item.ContainingProject != null)
+                        content = _item.ContainingProject.Name;
                 }
                 else if ((columnName == StandardTableKeyNames.ErrorCodeToolTip) || (columnName == StandardTableKeyNames.HelpLink))
                 {
-                    string url = string.Format("http://www.bing.com/search?q={0} {1}", Errors[index].Provider, Errors[index].ErrorCode);
+                    string url = string.Format("http://www.bing.com/search?q={0} {1}", _errors[index].Provider, _errors[index].ErrorCode);
                     content = Uri.EscapeUriString(url);
                 }
-
-                // We should also be providing values for StandardTableKeyNames.Project & StandardTableKeyNames.ProjectName but that is
-                // beyond the scope of this sample.
             }
 
             return content != null;
