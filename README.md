@@ -11,7 +11,7 @@ or get the
 [nightly build](http://vsixgallery.com/extension/36bf2130-106e-40f2-89ff-a2bdac6be879/)
 
 See the
-[changelog](https://github.com/madskristensen/WebLinter/blob/master/CHANGELOG.md)
+[changelog](CHANGELOG.md)
 for changes and roadmap.
 
 ### Features
