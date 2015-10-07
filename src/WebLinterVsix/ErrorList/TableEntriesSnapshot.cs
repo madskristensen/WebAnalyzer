@@ -71,7 +71,7 @@ namespace WebLinterVsix
                 }
                 else if (columnName == StandardTableKeyNames.BuildTool)
                 {
-                    content = _errors[index].Provider;
+                    content = _errors[index].Provider.Name;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorCode)
                 {

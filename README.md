@@ -33,7 +33,7 @@ for changes and roadmap.
 When an error is found it will show up in the Error List in
 Visual Studio as either an error or a warning.
 
-![Error List](art/errorlist.png)
+![Error list](art/errorlist.png)
 
 The individual rules for each linter can be configured to be
 either an error or a warning.
