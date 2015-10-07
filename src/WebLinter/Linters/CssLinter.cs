@@ -39,7 +39,7 @@ namespace WebLinter
 
         protected override string GetArguments(FileInfo[] files)
         {
-            return $"--format=vs-xml --ignore=known-properties,ids";
+            return $"--format=vs-xml";
         }
     }
 }
