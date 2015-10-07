@@ -5,6 +5,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using WebLinter;
 
 namespace WebLinterVsix
 {
@@ -40,6 +41,16 @@ namespace WebLinterVsix
 
             base.Initialize();
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                NodeServer.Down();
+            }
+
+            base.Dispose(true);
+        }
     }
 
     [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
@@ -56,7 +67,7 @@ namespace WebLinterVsix
                 {
                     try
                     {
-                        WebLinter.LinterFactory.Initialize();
+                        LinterFactory.Initialize();
                     }
                     catch (Exception ex)
                     {

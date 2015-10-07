@@ -2,6 +2,7 @@
 using System.ComponentModel.Design;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
+using WebLinter;
 
 namespace WebLinterVsix
 {
@@ -16,7 +17,7 @@ namespace WebLinterVsix
             OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
             var menuCommandID = new CommandID(PackageGuids.ConfigFileCmdSet, PackageIds.ResetConfigFiles);
-            var menuItem = new OleMenuCommand(CleanErrors, menuCommandID);
+            var menuItem = new OleMenuCommand(ResetConfigurationFiles, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
@@ -32,7 +33,7 @@ namespace WebLinterVsix
             Instance = new ResetConfigFilesCommand(package);
         }
 
-        private void CleanErrors(object sender, EventArgs e)
+        private void ResetConfigurationFiles(object sender, EventArgs e)
         {
             string msg = "This will reset the configuration for all the linters to their defaults.\n\nDo you wish to continue?";
             var result = MessageBox.Show(msg, Constants.VSIX_NAME, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -41,6 +42,7 @@ namespace WebLinterVsix
             {
                 LinterService.EnsureDefaults(true);
                 WebLinterPackage.Dte.StatusBar.Text = "Web Linter configuration files have been reset";
+                Telemetry.TrackEvent($"VS Reset Configs");
             }
         }
     }

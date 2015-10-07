@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using Microsoft.VisualStudio.Shell;
+using WebLinter;
 
 namespace WebLinterVsix
 {
@@ -51,7 +52,11 @@ namespace WebLinterVsix
             string fileName = GetFileName(button.CommandID.ID);
             string configFile = Path.Combine(folder, fileName);
 
-            WebLinterPackage.Dte.ItemOperations.OpenFile(configFile);
+            if (!string.IsNullOrEmpty(configFile))
+            {
+                WebLinterPackage.Dte.ItemOperations.OpenFile(configFile);
+                Telemetry.TrackEvent($"VS Edit {fileName}");
+            }
         }
 
         private string GetFileName(int commandId)

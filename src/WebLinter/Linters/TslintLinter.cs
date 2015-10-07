@@ -31,11 +31,5 @@ namespace WebLinter
                 Result.Errors.Add(le);
             }
         }
-
-        protected override string GetArguments(FileInfo[] files)
-        {
-            // See built-in reporters here https://www.npmjs.com/package/tslint#cli
-            return $"--format=json";
-        }
     }
 }

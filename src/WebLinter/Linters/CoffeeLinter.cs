@@ -38,11 +38,5 @@ namespace WebLinter
                 }
             }
         }
-
-        protected override string GetArguments(FileInfo[] files)
-        {
-            // See built-in reporters here https://github.com/clutchski/coffeelint/tree/master/src/reporters
-            return $"--reporter=raw -f coffeelint.json";
-        }
     }
 }

@@ -8,7 +8,7 @@ namespace WebLinter
 {
     public static class LinterFactory
     {
-        public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), "WebLinter" + Constants.VERSION);
+        public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), Constants.CACHE_NAME + Constants.VERSION);
         private static string[] _supported = new string[] { ".JS", ".ES6", ".JSX", ".TS", ".TSX", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
         private static object _syncRoot = new object();
 
@@ -115,6 +115,7 @@ namespace WebLinter
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe");
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll");
                 SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd");
+                SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js");
 
                 ProcessStartInfo start = new ProcessStartInfo
                 {

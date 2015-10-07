@@ -4,6 +4,7 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.Shell;
+using WebLinter;
 
 namespace WebLinterVsix
 {
@@ -76,6 +77,7 @@ namespace WebLinterVsix
             if (files.Any())
             {
                 LinterService.Lint(true, files.ToArray());
+                Telemetry.TrackEvent($"VS Lint Files");
             }
             else
             {

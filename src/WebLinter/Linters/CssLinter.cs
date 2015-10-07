@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Xml;
+using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
@@ -16,30 +17,27 @@ namespace WebLinter
 
         protected override void ParseErrors(string output)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(output);
+            var root = JObject.Parse(output);
 
-            foreach (XmlNode file in doc.SelectNodes("//file"))
+            foreach (JProperty obj in root.Children<JProperty>())
             {
-                string fileName = file.Attributes["name"].InnerText;
+                string fileName = obj.Name;
 
-                foreach (XmlNode issue in file.SelectNodes("issue"))
+                foreach (JObject error in obj.Value)
                 {
+                    if (error["rollup"] != null)
+                        continue;
+
                     var le = new LintingError(fileName);
-                    le.Message = issue.Attributes["reason"].InnerText;
-                    le.LineNumber = int.Parse(issue.Attributes["line"].InnerText) - 1;
-                    le.ColumnNumber = int.Parse(issue.Attributes["char"].InnerText) - 1;
-                    le.IsError = issue.Attributes["severity"].InnerText == "error";
-                    le.ErrorCode = issue.Attributes["rule"].InnerText;
+                    le.Message = error["message"].Value<string>();
+                    le.LineNumber = error["line"].Value<int>();
+                    le.ColumnNumber = error["col"].Value<int>();
+                    le.IsError = error["type"].Value<string>() == "error";
+                    le.ErrorCode = error["rule"]?["id"].Value<string>();
                     le.Provider = this;
                     Result.Errors.Add(le);
                 }
             }
-        }
-
-        protected override string GetArguments(FileInfo[] files)
-        {
-            return $"--format=vs-xml";
         }
     }
 }

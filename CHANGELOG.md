@@ -2,11 +2,13 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
+- [x] Spin up a node.js server instead of shelling out
 - [x] Use new VS2015 Error List API
 - [x] Shows error codes from each linter
 - [x] Link directly to rule's help page
 - [x] Use Visual Studio's _node.exe_
 - [x] Initialize linters when VS opens
+- [x] Add popular config plugins to ESLint
 
 Features that have a checkmark are complete and available for
 download in the

@@ -35,10 +35,5 @@ namespace WebLinter
                 }
             }
         }
-
-        protected override string GetArguments(FileInfo[] files)
-        {
-            return $"--format=json";
-        }
     }
 }

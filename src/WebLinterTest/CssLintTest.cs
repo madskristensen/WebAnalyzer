@@ -19,7 +19,7 @@ namespace WebLinterTest
             var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
             var first = result.First();
             Assert.IsTrue(first.HasErrors);
-            Assert.IsFalse(result.First().Errors.First().IsError, "Severity is not 'warning'");
+            Assert.IsFalse(result.First().Errors.First().IsError, result.First().Errors.First().ErrorCode + " is not 'warning'");
             Assert.IsFalse(string.IsNullOrEmpty(first.Errors.First().FileName));
             Assert.AreEqual(1, first.Errors.Count);
         }

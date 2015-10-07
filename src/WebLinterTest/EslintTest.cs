@@ -21,7 +21,7 @@ namespace WebLinterTest
             Assert.IsTrue(first.HasErrors);
             Assert.IsTrue(first.Errors.First().IsError, "Severity is not 'error'");
             Assert.IsFalse(string.IsNullOrEmpty(first.Errors.First().FileName), "File name is empty");
-            Assert.AreEqual(3, first.Errors.Count);
+            Assert.AreEqual(1, first.Errors.Count);
         }
 
         [TestMethod, TestCategory("ESLint")]
@@ -29,7 +29,7 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.js", "../../artifacts/eslint/b.js");
             Assert.IsTrue(result.First().HasErrors);
-            Assert.AreEqual(6, result.First().Errors.Count);
+            Assert.AreEqual(2, result.First().Errors.Count);
         }
 
         [TestMethod, TestCategory("ESLint")]
@@ -37,8 +37,8 @@ namespace WebLinterTest
         {
             var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.jsx");
             Assert.IsTrue(result.First().HasErrors);
-            Assert.AreEqual("react/display-name", result.First().Errors.First().ErrorCode, "Unexpected error message");
-            Assert.AreEqual(2, result.First().Errors.Count);
+            Assert.AreEqual("no-undef", result.First().Errors.First().ErrorCode, "Unexpected error message");
+            Assert.AreEqual(5, result.First().Errors.Count);
         }
 
         [TestMethod, TestCategory("ESLint")]

@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace WebLinter
 {
     public abstract class LinterBase
     {
+        private static NodeServer _server = new NodeServer();
+
         public LinterBase(ISettings settings)
         {
             Settings = settings;
@@ -41,18 +46,17 @@ namespace WebLinter
 
         protected virtual LintingResult Lint(params FileInfo[] files)
         {
-            string args = GetArguments(files);
-            string output, error;
-            RunProcess($"{Name}.cmd", out output, out error, args, files);
+            string output;
+            RunProcess(out output, files);
 
             if (!string.IsNullOrEmpty(output))
             {
                 ParseErrors(output);
             }
-            else if (!string.IsNullOrEmpty(error))
-            {
-                Result.Errors.Add(new LintingError(files.First().FullName) { Message = error });
-            }
+            //else if (!string.IsNullOrEmpty(error))
+            //{
+            //    Result.Errors.Add(new LintingError(files.First().FullName) { Message = error });
+            //}
 
             return Result;
         }
@@ -71,54 +75,15 @@ namespace WebLinter
 
         protected LintingResult Result { get; private set; }
 
-        protected void RunProcess(string command, out string output, out string error, string arguments = "", params FileInfo[] files)
+        protected void RunProcess(out string output, params FileInfo[] files)
         {
-            string fileArg = string.Join(" ", files.Select(f => $"\"{f.FullName}\""));
-
-            ProcessStartInfo start = new ProcessStartInfo
+            var postMessage = new
             {
-                WorkingDirectory = FindWorkingDirectory(files[0]),
-                UseShellExecute = false,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe",
-                Arguments = $"/c \"\"{Path.Combine(LinterFactory.ExecutionPath, $"node_modules\\.bin\\{command}")}\" {arguments} {fileArg}\"",
-                StandardOutputEncoding = Encoding.UTF8,
-                StandardErrorEncoding = Encoding.UTF8,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
+                config = Path.Combine(FindWorkingDirectory(files[0]), ConfigFileName),
+                files = files.Select(f => f.FullName)
             };
 
-            ModifyPathVariable(start);
-
-            Process p = Process.Start(start);
-            var stdout = p.StandardOutput.ReadToEndAsync();
-            var stderr = p.StandardError.ReadToEndAsync();
-            p.WaitForExit();
-
-            output = stdout.Result.Trim();
-            error = stderr.Result.Trim();
-        }
-
-        private static void ModifyPathVariable(ProcessStartInfo start)
-        {
-            string path = start.EnvironmentVariables["PATH"];
-
-            string toolsDir = Environment.GetEnvironmentVariable("VS140COMNTOOLS");
-
-            if (Directory.Exists(toolsDir))
-            {
-                string parent = Directory.GetParent(toolsDir).Parent.FullName;
-                path += ";" + Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External");
-            }
-
-            start.UseShellExecute = false;
-            start.EnvironmentVariables["PATH"] = path;
-        }
-
-        protected virtual string GetArguments(FileInfo[] files)
-        {
-            return string.Empty;
+            output = _server.CallServer(Name, postMessage);
         }
 
         protected virtual string FindWorkingDirectory(FileInfo file)

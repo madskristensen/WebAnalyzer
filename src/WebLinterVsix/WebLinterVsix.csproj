@@ -87,7 +87,6 @@
       <LastGenOutput>VSCommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <Content Include="registry.pkgdef">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
