@@ -3,6 +3,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace WebLinter
 {
@@ -19,7 +20,7 @@ namespace WebLinter
             return _supported.Contains(extension);
         }
 
-        public static IEnumerable<LintingResult> Lint(ISettings settings, params string[] fileNames)
+        public static async Task<IEnumerable<LintingResult>> Lint(ISettings settings, params string[] fileNames)
         {
             List<LintingResult> list = new List<LintingResult>();
 
@@ -73,7 +74,7 @@ namespace WebLinter
                     OnProgress(dic.Keys.Count, count, linter.Name, files.Length);
                     Telemetry.TrackEvent(linter.Name);
 
-                    list.Add(linter.Run(files));
+                    list.Add(await linter.Run(files));
                     count += 1;
                 }
 
@@ -95,10 +96,16 @@ namespace WebLinter
             }
         }
 
+        public static void WarmUp()
+        {
+            Initialize();
+            NodeServer.EnsureInitialized();
+        }
+
         /// <summary>
         /// Initializes the Node environment.
         /// </summary>
-        public static void Initialize()
+        private static void Initialize()
         {
             var node_modules = Path.Combine(ExecutionPath, "node_modules");
             var log_file = Path.Combine(ExecutionPath, "log.txt");

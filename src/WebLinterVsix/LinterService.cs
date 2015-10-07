@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows.Threading;
 using EnvDTE;
 using WebLinter;
+using System.Threading.Tasks;
 
 namespace WebLinterVsix
 {
@@ -74,11 +75,13 @@ namespace WebLinterVsix
                 try
                 {
                     EnsureDefaults();
+                    Task.Run(async () =>
+                    {
+                        var result = await LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
 
-                    var result = LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
-
-                    if (result != null)
-                        ErrorListService.ProcessLintingResults(result, showErrorList);
+                        if (result != null)
+                            ErrorListService.ProcessLintingResults(result, showErrorList);
+                    });
                 }
                 catch (Exception ex)
                 {

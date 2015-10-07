@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace WebLinter
@@ -14,14 +15,9 @@ namespace WebLinter
         private static Process _process;
         private static object _syncRoot = new object();
 
-        public NodeServer()
-        {
-            SelectAvailablePort();
-        }
+        public static int BasePort { get; private set; }
 
-        public int BasePort { get; private set; }
-
-        public string CallServer(string path, object postData)
+        public async Task<string> CallServer(string path, object postData)
         {
             EnsureInitialized();
 
@@ -29,7 +25,7 @@ namespace WebLinter
 
             using (WebClient client = new WebClient())
             {
-                return client.UploadString(url, JsonConvert.SerializeObject(postData));
+                return await client.UploadStringTaskAsync(url, JsonConvert.SerializeObject(postData));
             }
         }
 
@@ -43,7 +39,7 @@ namespace WebLinter
             }
         }
 
-        private void EnsureInitialized()
+        internal static void EnsureInitialized()
         {
             //try
             //{
@@ -63,6 +59,8 @@ namespace WebLinter
             {
                 if (_process == null || _process.HasExited)
                 {
+                    SelectAvailablePort();
+
                     ProcessStartInfo start = new ProcessStartInfo("node")
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
@@ -78,7 +76,7 @@ namespace WebLinter
             }
         }
 
-        private void SelectAvailablePort()
+        private static void SelectAvailablePort()
         {
             Random rand = new Random();
             TcpConnectionInformation[] connections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections();

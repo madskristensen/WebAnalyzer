@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebLinter;
 
@@ -14,9 +15,9 @@ namespace WebLinterTest
         }
 
         [TestMethod, TestCategory("TSLint")]
-        public void Standard()
+        public async Task Standard()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/a.ts");
+            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/a.ts");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
             Assert.AreEqual(7, result.First().Errors.Count);
@@ -36,9 +37,9 @@ namespace WebLinterTest
         //}
 
         [TestMethod, TestCategory("TSLint")]
-        public void FileNotExist()
+        public async Task FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/doesntexist.js");
+            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/tslint/doesntexist.js");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace WebLinter
@@ -19,7 +20,7 @@ namespace WebLinter
             Settings = settings;
         }
 
-        public LintingResult Run(params string[] files)
+        public async Task<LintingResult> Run(params string[] files)
         {
             Result = new LintingResult(files);
 
@@ -41,13 +42,12 @@ namespace WebLinter
                 fileInfos.Add(fileInfo);
             }
 
-            return Lint(fileInfos.ToArray());
+            return await Lint(fileInfos.ToArray());
         }
 
-        protected virtual LintingResult Lint(params FileInfo[] files)
+        protected virtual async Task<LintingResult> Lint(params FileInfo[] files)
         {
-            string output;
-            RunProcess(out output, files);
+            string output = await RunProcess(files);
 
             if (!string.IsNullOrEmpty(output))
             {
@@ -75,7 +75,7 @@ namespace WebLinter
 
         protected LintingResult Result { get; private set; }
 
-        protected void RunProcess(out string output, params FileInfo[] files)
+        protected async Task<string> RunProcess(params FileInfo[] files)
         {
             var postMessage = new
             {
@@ -83,7 +83,7 @@ namespace WebLinter
                 files = files.Select(f => f.FullName)
             };
 
-            output = _server.CallServer(Name, postMessage);
+            return await _server.CallServer(Name, postMessage);
         }
 
         protected virtual string FindWorkingDirectory(FileInfo file)

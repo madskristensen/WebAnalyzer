@@ -67,7 +67,7 @@ namespace WebLinterVsix
                 {
                     try
                     {
-                        LinterFactory.Initialize();
+                        LinterFactory.WarmUp();
                     }
                     catch (Exception ex)
                     {

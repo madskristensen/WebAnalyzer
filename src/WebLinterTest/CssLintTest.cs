@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using WebLinter;
 
@@ -14,9 +15,9 @@ namespace WebLinterTest
         }
 
         [TestMethod, TestCategory("CssLint")]
-        public void Standard()
+        public async Task Standard()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
+            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
             var first = result.First();
             Assert.IsTrue(first.HasErrors);
             Assert.IsFalse(result.First().Errors.First().IsError, result.First().Errors.First().ErrorCode + " is not 'warning'");
@@ -25,18 +26,18 @@ namespace WebLinterTest
         }
 
         [TestMethod, TestCategory("CssLint")]
-        public void Multiple()
+        public async Task Multiple()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
+            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName));
             Assert.AreEqual(3, result.First().Errors.Count);
         }
 
         [TestMethod, TestCategory("CssLint")]
-        public void FileNotExist()
+        public async Task FileNotExist()
         {
-            var result = LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
+            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
             Assert.IsTrue(result.First().HasErrors);
         }
     }
