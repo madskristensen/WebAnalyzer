@@ -41,6 +41,7 @@ namespace WebLinterVsix
             if (result == DialogResult.Yes)
             {
                 LinterService.EnsureDefaults(true);
+                WebLinterPackage.Settings.ResetSettings();
                 WebLinterPackage.Dte.StatusBar.Text = "Web Linter configuration files have been reset";
                 Telemetry.TrackEvent($"VS Reset Configs");
             }

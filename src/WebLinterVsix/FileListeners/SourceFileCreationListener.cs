@@ -43,21 +43,11 @@ namespace WebLinterVsix.FileListeners
                     textView.Properties.AddProperty("lint_filename", _document.FilePath);
 
                     // Don't run linter again if error list already contains errors for the file.
-                    if (!TableDataSource.Instance.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
+                    if (!TableDataSource.Instance.HasErrors(_document.FilePath))
                         LinterService.Lint(false, _document.FilePath);
 
                 }), DispatcherPriority.ApplicationIdle, null);
             }
-        }
-
-        private static bool RunOnOpen(string fileName)
-        {
-            var patterns = WebLinterPackage.Settings.GetIgnorePatterns();
-
-            if (patterns.Any(p => fileName.Contains(p)))
-                return false;
-
-            return true;
         }
 
         private void TextviewClosed(object sender, EventArgs e)

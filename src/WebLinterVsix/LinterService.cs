@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -41,8 +42,9 @@ namespace WebLinterVsix
 
             string extension = Path.GetExtension(fileName);
 
-            // Minified files should be ignored
-            if (fileName.EndsWith(".min" + extension, StringComparison.OrdinalIgnoreCase))
+            var patterns = WebLinterPackage.Settings.GetIgnorePatterns();
+
+            if (patterns.Any(p => fileName.Contains(p)))
                 return false;
 
             // Ignore nested files

@@ -27,7 +27,7 @@
             <Menu guid="ConfigFileCmdSet" id="ToolsMenu" priority="0x0100" type="Menu">
                 <Parent guid="ConfigFileCmdSet" id="ToolsGroup" />
                 <Strings>
-                    <ButtonText>Web Linter Configuration</ButtonText>
+                    <ButtonText>Web Analyzer</ButtonText>
                 </Strings>
             </Menu>
         </Menus>
@@ -40,14 +40,14 @@
                 <CommandFlag>IconIsMoniker</CommandFlag>
                 <CommandFlag>DynamicVisibility</CommandFlag>
                 <Strings>
-                    <ButtonText>Run Web Linter analyzer</ButtonText>
+                    <ButtonText>Run Web Analyzer</ButtonText>
                 </Strings>
             </Button>
             <Button guid="WebLinterCmdSet" id="CleanErrorsCommand" priority="0x0200" type="Button">
                 <Parent guid="WebLinterCmdSet" id="ContextMenuGroup" />
                 <CommandFlag>DynamicVisibility</CommandFlag>
                 <Strings>
-                    <ButtonText>Clear all Web Linter errors</ButtonText>
+                    <ButtonText>Clear all Web Analyzer errors</ButtonText>
                 </Strings>
             </Button>
 
@@ -57,7 +57,7 @@
                 <Icon guid="ImageCatalogGuid" id="CleanData" />
                 <CommandFlag>IconIsMoniker</CommandFlag>
                 <Strings>
-                    <ButtonText>Reset Configuration Files...</ButtonText>
+                    <ButtonText>Reset All Settings...</ButtonText>
                 </Strings>
             </Button>
 
@@ -74,7 +74,7 @@
                 <Icon guid="ImageCatalogGuid" id="EditRowLeft" />
                 <CommandFlag>IconIsMoniker</CommandFlag>
                 <Strings>
-                    <ButtonText>Edit ES Lint settings (.eslintrc)</ButtonText>
+                    <ButtonText>Edit ESLint settings (.eslintrc)</ButtonText>
                 </Strings>
             </Button>
             <Button guid="ConfigFileCmdSet" id="EditCoffeeLint" priority="0x0100" type="Button">

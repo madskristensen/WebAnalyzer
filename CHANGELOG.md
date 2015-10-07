@@ -10,6 +10,7 @@
 - [x] Initialize linters when VS opens
 - [x] Add popular config plugins to ESLint
 - [x] Option to ignore nested files
+- [x] Command to reset all settings
 
 Features that have a checkmark are complete and available for
 download in the

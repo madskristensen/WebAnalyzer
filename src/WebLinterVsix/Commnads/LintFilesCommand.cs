@@ -89,11 +89,6 @@ namespace WebLinterVsix
         {
             var files = new List<string>();
 
-            var patterns = WebLinterPackage.Settings.GetIgnorePatterns();
-
-            if (patterns.Any(p => path.Contains(p)))
-                return files;
-
             try
             {
                 files.AddRange(Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly));
