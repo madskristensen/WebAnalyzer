@@ -5,12 +5,12 @@ if exist %~dp0..\src\WebLinter\Node\node_modules.7z goto:done
 pushd %~dp0..\src\WebLinter\Node
 
 echo Installing packages...
-call npm install tslint --no-optional --quiet > nul
 call npm install coffeelint --no-optional --quiet > nul
 call npm install csslint --no-optional --quiet > nul
 call npm install eslint --no-optional --quiet > nul
-call npm install eslint-plugin-react --no-optional --quiet > nul
 call npm install eslint-config-defaults --no-optional --quite > nul
+call npm install eslint-plugin-react --no-optional --quiet > nul
+call npm install tslint --no-optional --quiet > nul
 
 echo Adding custom CSS Lint formatter...
 type csslint-vs-formatter.js >> node_modules\csslint\lib\csslint-node.js

@@ -77,7 +77,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Node\csslint-vs-formatter.js" />
     <EmbeddedResource Include="Node\server.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
