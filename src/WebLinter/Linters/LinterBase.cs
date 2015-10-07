@@ -12,7 +12,7 @@ namespace WebLinter
         public LinterBase(ISettings settings)
         {
             Settings = settings;
-         }
+        }
 
         public LintingResult Run(params string[] files)
         {
@@ -29,7 +29,7 @@ namespace WebLinter
 
                 if (!fileInfo.Exists)
                 {
-                    Result.Errors.Add(new LintingError(fileInfo.FullName, "The file doesn't exist"));
+                    Result.Errors.Add(new LintingError(fileInfo.FullName) { Message = "The file doesn't exist" });
                     return Result;
                 }
 
@@ -48,20 +48,18 @@ namespace WebLinter
             if (!string.IsNullOrEmpty(output))
             {
                 ParseErrors(output);
-                //foreach (Match match in _rx.Matches(output))
-                //{
-                //    AddError(match);
-                //}
             }
             else if (!string.IsNullOrEmpty(error))
             {
-                Result.Errors.Add(new LintingError(files.First().FullName, error));
+                Result.Errors.Add(new LintingError(files.First().FullName) { Message = error });
             }
 
             return Result;
         }
 
         public string Name { get; set; }
+
+        public string HelpLinkFormat { get; set; }
 
         protected virtual string ConfigFileName { get; set; }
 

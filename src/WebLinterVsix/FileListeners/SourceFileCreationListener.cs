@@ -43,7 +43,7 @@ namespace WebLinterVsix.FileListeners
                     textView.Properties.AddProperty("lint_filename", _document.FilePath);
 
                     // Don't run linter again if error list already contains errors for the file.
-                    if (!ErrorList.Instance.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
+                    if (!TableDataSource.Instance.HasErrors(_document.FilePath) && RunOnOpen(_document.FilePath))
                         LinterService.Lint(false, _document.FilePath);
 
                 }), DispatcherPriority.ApplicationIdle, null);
@@ -69,7 +69,7 @@ namespace WebLinterVsix.FileListeners
             {
                 System.Threading.ThreadPool.QueueUserWorkItem((o) =>
                 {
-                    ErrorList.Instance.CleanErrors(new[] { fileName });
+                    TableDataSource.Instance.CleanErrors(new[] { fileName });
                 });
             }
 

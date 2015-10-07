@@ -10,6 +10,7 @@ namespace WebLinter
             Name = "TSLint";
             ConfigFileName = "tslint.json";
             IsEnabled = Settings.TSLintEnable;
+            HelpLinkFormat = "https://github.com/palantir/tslint?rule={0}#supported-rules";
         }
 
         protected override void ParseErrors(string output)
@@ -20,13 +21,14 @@ namespace WebLinter
             {
                 string fileName = obj["name"].Value<string>().Replace("/", "\\");
 
-                var e = new LintingError(fileName, obj["failure"].Value<string>());
-                e.LineNumber = obj["startPosition"]["line"].Value<int>();
-                e.ColumnNumber = obj["startPosition"]["character"].Value<int>();
-                e.IsError = false;
-                e.ErrorCode = obj["ruleName"].Value<string>();
-                e.Provider = Name;
-                Result.Errors.Add(e);
+                var le = new LintingError(fileName);
+                le.Message = obj["failure"].Value<string>();
+                le.LineNumber = obj["startPosition"]["line"].Value<int>();
+                le.ColumnNumber = obj["startPosition"]["character"].Value<int>();
+                le.IsError = false;
+                le.ErrorCode = obj["ruleName"].Value<string>();
+                le.Provider = this;
+                Result.Errors.Add(le);
             }
         }
 

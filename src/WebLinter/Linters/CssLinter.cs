@@ -11,6 +11,7 @@ namespace WebLinter
             ConfigFileName = ".csslintrc";
             ErrorMatch = "Error";
             IsEnabled = Settings.CssLintEnable;
+            HelpLinkFormat = "https://github.com/CSSLint/csslint/wiki/Rules/#{0}";
         }
 
         protected override void ParseErrors(string output)
@@ -24,19 +25,21 @@ namespace WebLinter
 
                 foreach (XmlNode issue in file.SelectNodes("issue"))
                 {
-                    var e = new LintingError(fileName, issue.Attributes["reason"].InnerText);
-                    e.LineNumber = int.Parse(issue.Attributes["line"].InnerText) - 1;
-                    e.ColumnNumber = int.Parse(issue.Attributes["char"].InnerText) - 1;
-                    e.IsError = issue.Attributes["severity"].InnerText == "error";
-                    e.Provider = Name;
-                    Result.Errors.Add(e);
+                    var le = new LintingError(fileName);
+                    le.Message = issue.Attributes["reason"].InnerText;
+                    le.LineNumber = int.Parse(issue.Attributes["line"].InnerText) - 1;
+                    le.ColumnNumber = int.Parse(issue.Attributes["char"].InnerText) - 1;
+                    le.IsError = issue.Attributes["severity"].InnerText == "error";
+                    le.ErrorCode = issue.Attributes["rule"].InnerText;
+                    le.Provider = this;
+                    Result.Errors.Add(le);
                 }
             }
         }
 
         protected override string GetArguments(FileInfo[] files)
         {
-            return $"--format=lint-xml --ignore=known-properties,ids";
+            return $"--format=vs-xml --ignore=known-properties,ids";
         }
     }
 }

@@ -11,6 +11,7 @@ namespace WebLinter
             ConfigFileName = ".eslintrc";
             ErrorMatch = "Error";
             IsEnabled = Settings.ESLintEnable;
+            HelpLinkFormat = "http://eslint.org/docs/rules/{0}";
         }
 
         protected override void ParseErrors(string output)
@@ -23,13 +24,14 @@ namespace WebLinter
 
                 foreach (JObject error in obj["messages"])
                 {
-                    var e = new LintingError(fileName, error["message"].Value<string>());
-                    e.LineNumber = error["line"].Value<int>() - 1;
-                    e.ColumnNumber = error["column"].Value<int>() - 1;
-                    e.IsError = error["severity"].Value<int>() == 2;
-                    e.ErrorCode = error["ruleId"].Value<string>();
-                    e.Provider = Name;
-                    Result.Errors.Add(e);
+                    var le = new LintingError(fileName);
+                    le.Message = error["message"].Value<string>();
+                    le.LineNumber = error["line"].Value<int>() - 1;
+                    le.ColumnNumber = error["column"].Value<int>() - 1;
+                    le.IsError = error["severity"].Value<int>() == 2;
+                    le.ErrorCode = error["ruleId"].Value<string>();
+                    le.Provider = this;
+                    Result.Errors.Add(le);
                 }
             }
         }

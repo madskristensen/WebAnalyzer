@@ -7,12 +7,12 @@ using WebLinter;
 
 namespace WebLinterVsix
 {
-    class LintingErrorSnapshot : TableEntriesSnapshotBase
+    class TableEntriesSnapshot : TableEntriesSnapshotBase
     {
         private ProjectItem _item;
         private readonly List<LintingError> _errors = new List<LintingError>();
 
-        internal LintingErrorSnapshot(string filePath, IEnumerable<LintingError> errors)
+        internal TableEntriesSnapshot(string filePath, IEnumerable<LintingError> errors)
         {
             FilePath = filePath;
             _errors.AddRange(errors);
@@ -43,7 +43,7 @@ namespace WebLinterVsix
                 }
                 else if (columnName == StandardTableKeyNames.ErrorSource)
                 {
-                    content = "Spelling";
+                    content = Constants.VSIX_NAME;
                 }
                 else if (columnName == StandardTableKeyNames.Line)
                 {
@@ -60,6 +60,10 @@ namespace WebLinterVsix
                 else if (columnName == StandardTableKeyNames.ErrorSeverity)
                 {
                     content = _errors[index].IsError ? __VSERRORCATEGORY.EC_ERROR : __VSERRORCATEGORY.EC_WARNING;
+                }
+                else if (columnName == StandardTableKeyNames.Priority)
+                {
+                    content = _errors[index].IsError ? vsTaskPriority.vsTaskPriorityHigh : vsTaskPriority.vsTaskPriorityMedium;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorSource)
                 {
@@ -82,7 +86,17 @@ namespace WebLinterVsix
                 }
                 else if ((columnName == StandardTableKeyNames.ErrorCodeToolTip) || (columnName == StandardTableKeyNames.HelpLink))
                 {
-                    string url = string.Format("http://www.bing.com/search?q={0} {1}", _errors[index].Provider, _errors[index].ErrorCode);
+                    var error = _errors[index];
+                    string url;
+                    if (!string.IsNullOrEmpty(error.Provider.HelpLinkFormat))
+                    {
+                        url = string.Format(error.Provider.HelpLinkFormat, error.ErrorCode);
+                    }
+                    else
+                    {
+                        url = string.Format("http://www.bing.com/search?q={0} {1}", _errors[index].Provider.Name, _errors[index].ErrorCode);
+                    }
+
                     content = Uri.EscapeUriString(url);
                 }
             }

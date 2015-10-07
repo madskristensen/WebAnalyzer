@@ -9,10 +9,10 @@ namespace WebLinterVsix
     class SinkManager : IDisposable
     {
         private readonly ITableDataSink _sink;
-        private ErrorList _errorList;
-        private List<LintingErrorSnapshot> _snapshots = new List<LintingErrorSnapshot>();
+        private TableDataSource _errorList;
+        private List<TableEntriesSnapshot> _snapshots = new List<TableEntriesSnapshot>();
 
-        internal SinkManager(ErrorList errorList, ITableDataSink sink)
+        internal SinkManager(TableDataSource errorList, ITableDataSink sink)
         {
             _sink = sink;
             _errorList = errorList;
@@ -25,7 +25,7 @@ namespace WebLinterVsix
             _sink.RemoveAllSnapshots();
         }
 
-        internal void UpdateSink(IEnumerable<LintingErrorSnapshot> snapshots)
+        internal void UpdateSink(IEnumerable<TableEntriesSnapshot> snapshots)
         {
             foreach (var snapshot in snapshots)
             {

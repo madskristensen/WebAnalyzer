@@ -56,9 +56,9 @@
     <Compile Include="Commnads\EditConfigFilesCommand.cs" />
     <Compile Include="Commnads\CleanErrorsCommand.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="ErrorList\ErrorList.cs" />
+    <Compile Include="ErrorList\TableDataSource.cs" />
     <Compile Include="ErrorList\ErrorListService.cs" />
-    <Compile Include="ErrorList\LintingErrorSnapshot.cs" />
+    <Compile Include="ErrorList\TableEntriesSnapshot.cs" />
     <Compile Include="ErrorList\SinkManager.cs" />
     <Compile Include="FileListeners\SourceFileCreationListener.cs" />
     <Compile Include="Helpers\ProjectHelpers.cs" />

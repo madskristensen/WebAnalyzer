@@ -11,6 +11,7 @@ namespace WebLinter
             ConfigFileName = "coffeelint.json";
             ErrorMatch = "error";
             IsEnabled = Settings.CoffeeLintEnable;
+            HelpLinkFormat = "http://www.coffeelint.org/?rule={0}#options";
         }
 
         protected override void ParseErrors(string output)
@@ -26,13 +27,14 @@ namespace WebLinter
                     if (error["name"] == null) // It's a compiler error
                         continue;
 
-                    var e = new LintingError(fileName, error["message"].Value<string>());
-                    e.LineNumber = error["lineNumber"].Value<int>() - 1;
-                    e.ColumnNumber = 0;
-                    e.IsError = error["level"].Value<string>() == "error";
-                    e.ErrorCode = error["rule"].Value<string>();
-                    e.Provider = Name;
-                    Result.Errors.Add(e);
+                    var le = new LintingError(fileName);
+                    le.Message = error["message"].Value<string>();
+                    le.LineNumber = error["lineNumber"].Value<int>() - 1;
+                    le.ColumnNumber = 0;
+                    le.IsError = error["level"].Value<string>() == "error";
+                    le.ErrorCode = error["rule"].Value<string>();
+                    le.Provider = this;
+                    Result.Errors.Add(le);
                 }
             }
         }

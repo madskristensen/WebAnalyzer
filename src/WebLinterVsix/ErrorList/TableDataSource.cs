@@ -10,34 +10,34 @@ using WebLinter;
 
 namespace WebLinterVsix
 {
-    class ErrorList : ITableDataSource
+    class TableDataSource : ITableDataSource
     {
-        private static ErrorList _instance;
-        private readonly ITableManager _manager;
+        private static TableDataSource _instance;
         private readonly List<SinkManager> _managers = new List<SinkManager>();
+        private static Dictionary<string, TableEntriesSnapshot> _snapsnots = new Dictionary<string, TableEntriesSnapshot>();
 
         [Import]
         private ITableManagerProvider TableManagerProvider { get; set; } = null;
 
-        private ErrorList()
+        private TableDataSource()
         {
             var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
             compositionService.DefaultCompositionService.SatisfyImportsOnce(this);
 
-            _manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);
-            _manager.AddSource(this, StandardTableColumnDefinitions.DetailsExpander,
+            var manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);
+            manager.AddSource(this, StandardTableColumnDefinitions.DetailsExpander,
                                                    StandardTableColumnDefinitions.ErrorSeverity, StandardTableColumnDefinitions.ErrorCode,
                                                    StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.BuildTool,
                                                    StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.ErrorCategory,
                                                    StandardTableColumnDefinitions.Text, StandardTableColumnDefinitions.DocumentName, StandardTableColumnDefinitions.Line, StandardTableColumnDefinitions.Column);
         }
 
-        public static ErrorList Instance
+        public static TableDataSource Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new ErrorList();
+                    _instance = new TableDataSource();
 
                 return _instance;
             }
@@ -96,19 +96,15 @@ namespace WebLinterVsix
             }
         }
 
-        private static Dictionary<string, LintingErrorSnapshot> _snapsnots = new Dictionary<string, LintingErrorSnapshot>();
-
         public void AddErrors(IEnumerable<LintingError> errors)
         {
             if (!errors.Any())
                 return;
-
-            CleanErrors(errors.Select(e => e.FileName));
-
+            
             foreach (var error in errors.GroupBy(t => t.FileName))
             {
-                var snapshot = new LintingErrorSnapshot(error.Key, error);
-                _snapsnots.Add(error.Key, snapshot);
+                var snapshot = new TableEntriesSnapshot(error.Key, error);
+                _snapsnots[error.Key] = snapshot;
             }
 
             UpdateAllSinks();

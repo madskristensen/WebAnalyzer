@@ -4,6 +4,7 @@
 - [ ] Red squiggly in the editor
 - [x] Use new VS2015 Error List API
 - [x] Shows error codes from each linter
+- [x] Link directly to rule's help page
 - [x] Use Visual Studio's _node.exe_
 - [x] Initialize linters when VS opens
 

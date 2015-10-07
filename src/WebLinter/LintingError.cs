@@ -8,13 +8,12 @@ namespace WebLinter
 {
     public class LintingError
     {
-        public LintingError(string fileName, string message)
+        public LintingError(string fileName)
         {
             FileName = fileName;
-            Message = message;
         }
 
-        public string Provider { get; set; }
+        public LinterBase Provider { get; set; }
         public string FileName { get; set; }
         public string Message { get; set; }
         public int LineNumber { get; set; }

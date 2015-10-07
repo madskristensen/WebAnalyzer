@@ -11,6 +11,9 @@ call npm install csslint --no-optional --quiet > nul
 call npm install eslint --no-optional --quiet > nul
 call npm install eslint-plugin-react --no-optional --quiet > nul
 
+echo Adding custom CSS Lint formatter...
+type csslint-vs-formatter.js >> node_modules\csslint\lib\csslint-node.js
+
 
 echo Deleting unneeded files and folders...
 del /s /q *.md > nul

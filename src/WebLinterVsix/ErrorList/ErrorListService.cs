@@ -13,12 +13,12 @@ namespace WebLinterVsix
 
             if (errors.Any())
             {
-                ErrorList.Instance.AddErrors(errors);
+                TableDataSource.Instance.AddErrors(errors);
                 if (showErrorList)
-                    ErrorList.Instance.BringToFront();
+                    TableDataSource.Instance.BringToFront();
             }
 
-            ErrorList.Instance.CleanErrors(clean);
+            TableDataSource.Instance.CleanErrors(clean);
         }
     }
 }
