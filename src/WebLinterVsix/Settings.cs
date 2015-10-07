@@ -15,6 +15,12 @@ namespace WebLinterVsix
         [DefaultValue(@"\node_modules\,\bower_components\,\typings\,\lib\")]
         public string IgnoreFolderNames { get; set; } = @"\node_modules\,\bower_components\,\typings\,\lib\";
 
+        [Category("General")]
+        [DisplayName("Ignore nested files")]
+        [Description("Nested files are files that are nested under other files in Solution Explorer.")]
+        [DefaultValue(true)]
+        public bool IgnoreNestedFiles { get; set; } = true;
+
         // Linters
         [Category("Linters")]
         [DisplayName("Enable CoffeeLint")]

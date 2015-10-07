@@ -46,7 +46,7 @@ namespace WebLinterVsix
                 return false;
 
             // Ignore nested files
-            if (WebLinterPackage.Dte.Solution != null)
+            if (WebLinterPackage.Settings.IgnoreNestedFiles && WebLinterPackage.Dte.Solution != null)
             {
                 var item = WebLinterPackage.Dte.Solution.FindProjectItem(fileName);
 

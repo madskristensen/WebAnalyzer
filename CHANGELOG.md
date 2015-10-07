@@ -9,6 +9,7 @@
 - [x] Use Visual Studio's _node.exe_
 - [x] Initialize linters when VS opens
 - [x] Add popular config plugins to ESLint
+- [x] Option to ignore nested files
 
 Features that have a checkmark are complete and available for
 download in the
