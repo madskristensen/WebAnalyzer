@@ -14,7 +14,7 @@ namespace WebLinterVsix
     {
         private static TableDataSource _instance;
         private readonly List<SinkManager> _managers = new List<SinkManager>();
-        private static Dictionary<string, TableEntriesSnapshot> _snapsnots = new Dictionary<string, TableEntriesSnapshot>();
+        private static Dictionary<string, TableEntriesSnapshot> _snapshots = new Dictionary<string, TableEntriesSnapshot>();
 
         [Import]
         private ITableManagerProvider TableManagerProvider { get; set; } = null;
@@ -91,7 +91,7 @@ namespace WebLinterVsix
             {
                 foreach (var manager in _managers)
                 {
-                    manager.UpdateSink(_snapsnots.Values);
+                    manager.UpdateSink(_snapshots.Values);
                 }
             }
         }
@@ -100,11 +100,11 @@ namespace WebLinterVsix
         {
             if (!errors.Any())
                 return;
-            
+
             foreach (var error in errors.GroupBy(t => t.FileName))
             {
                 var snapshot = new TableEntriesSnapshot(error.Key, error);
-                _snapsnots[error.Key] = snapshot;
+                _snapshots[error.Key] = snapshot;
             }
 
             UpdateAllSinks();
@@ -114,10 +114,10 @@ namespace WebLinterVsix
         {
             foreach (string file in files)
             {
-                if (_snapsnots.ContainsKey(file))
+                if (_snapshots.ContainsKey(file))
                 {
-                    _snapsnots[file].Dispose();
-                    _snapsnots.Remove(file);
+                    _snapshots[file].Dispose();
+                    _snapshots.Remove(file);
                 }
             }
 
@@ -134,16 +134,16 @@ namespace WebLinterVsix
 
         public void CleanAllErrors()
         {
-            foreach (string file in _snapsnots.Keys)
+            foreach (string file in _snapshots.Keys)
             {
-                var snapshot = _snapsnots[file];
+                var snapshot = _snapshots[file];
                 if (snapshot != null)
                 {
                     snapshot.Dispose();
                 }
             }
 
-            _snapsnots.Clear();
+            _snapshots.Clear();
 
             lock (_managers)
             {
@@ -161,12 +161,12 @@ namespace WebLinterVsix
 
         public bool HasErrors()
         {
-            return _snapsnots.Count > 0;
+            return _snapshots.Count > 0;
         }
 
         public bool HasErrors(string fileName)
         {
-            return _snapsnots.ContainsKey(fileName);
+            return _snapshots.ContainsKey(fileName);
         }
     }
 }
