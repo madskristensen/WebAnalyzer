@@ -2,6 +2,8 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
+- [ ] Write `.csslintrc` JSON schema for SchemaStore.org
+- [ ] Write `.eslintrc` JSON schema for SchemaStore.org
 - [x] Running linters in parallel
 - [x] Implemented async/await
 
