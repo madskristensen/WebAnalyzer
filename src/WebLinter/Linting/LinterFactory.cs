@@ -90,7 +90,7 @@ namespace WebLinter
         public static void WarmUp()
         {
             Initialize();
-            NodeServer.EnsureInitialized();
+            LinterBase.Server.EnsureInitialized();
         }
 
         /// <summary>

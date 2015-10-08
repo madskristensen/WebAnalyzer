@@ -20,17 +20,20 @@ namespace WebLinter
             {
                 string fileName = obj.Name;
 
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
+
                 foreach (JObject error in obj.Value)
                 {
                     if (error["rollup"] != null)
                         continue;
 
                     var le = new LintingError(fileName);
-                    le.Message = error["message"].Value<string>();
-                    le.LineNumber = error["line"].Value<int>();
-                    le.ColumnNumber = error["col"].Value<int>();
-                    le.IsError = error["type"].Value<string>() == "error";
-                    le.ErrorCode = error["rule"]?["id"].Value<string>();
+                    le.Message = error["message"]?.Value<string>();
+                    le.LineNumber = error["line"]?.Value<int>() - 1 ?? 0;
+                    le.ColumnNumber = error["col"]?.Value<int>() - 1 ?? 0;
+                    le.IsError = error["type"]?.Value<string>() == "error";
+                    le.ErrorCode = error["rule"]?["id"]?.Value<string>();
                     le.Provider = this;
                     Result.Errors.Add(le);
                 }

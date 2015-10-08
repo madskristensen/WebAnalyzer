@@ -4,6 +4,7 @@
 - [ ] Red squiggly in the editor
 - [ ] Write `.csslintrc` JSON schema for SchemaStore.org
 - [ ] Write `.eslintrc` JSON schema for SchemaStore.org
+- [ ] Add _Clean_ command to Error List context menu
 - [x] Running linters in parallel
 - [x] Implemented async/await
 

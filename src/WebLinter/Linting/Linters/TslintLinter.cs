@@ -18,14 +18,17 @@ namespace WebLinter
 
             foreach (JObject obj in array)
             {
-                string fileName = obj["name"].Value<string>().Replace("/", "\\");
+                string fileName = obj["name"]?.Value<string>().Replace("/", "\\");
+
+                if (string.IsNullOrEmpty(fileName))
+                    continue;
 
                 var le = new LintingError(fileName);
-                le.Message = obj["failure"].Value<string>();
-                le.LineNumber = obj["startPosition"]["line"].Value<int>();
-                le.ColumnNumber = obj["startPosition"]["character"].Value<int>();
+                le.Message = obj["failure"]?.Value<string>();
+                le.LineNumber = obj["startPosition"]?["line"]?.Value<int>() ?? 0;
+                le.ColumnNumber = obj["startPosition"]?["character"]?.Value<int>() ?? 0;
                 le.IsError = false;
-                le.ErrorCode = obj["ruleName"].Value<string>();
+                le.ErrorCode = obj["ruleName"]?.Value<string>();
                 le.Provider = this;
                 Result.Errors.Add(le);
             }

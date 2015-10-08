@@ -15,7 +15,7 @@ namespace WebLinter
         private static Process _process;
         private static object _syncRoot = new object();
 
-        public static int BasePort { get; private set; }
+        public int BasePort { get; private set; }
 
         public async Task<string> CallServer(string path, object postData)
         {
@@ -29,7 +29,7 @@ namespace WebLinter
             }
         }
 
-        public static void Down()
+        public void Down()
         {
             if (_process != null && !_process.HasExited)
             {
@@ -39,7 +39,7 @@ namespace WebLinter
             }
         }
 
-        internal static void EnsureInitialized()
+        internal void EnsureInitialized()
         {
             //try
             //{
@@ -76,7 +76,7 @@ namespace WebLinter
             }
         }
 
-        private static void SelectAvailablePort()
+        private void SelectAvailablePort()
         {
             Random rand = new Random();
             TcpConnectionInformation[] connections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections();

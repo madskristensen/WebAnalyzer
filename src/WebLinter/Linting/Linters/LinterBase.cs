@@ -8,19 +8,19 @@ namespace WebLinter
 {
     public abstract class LinterBase
     {
-        private static NodeServer _server = new NodeServer();
-
         public LinterBase(ISettings settings)
         {
             Settings = settings;
         }
+
+        public static NodeServer Server { get; } = new NodeServer();
 
         public string Name { get; set; }
 
         public string HelpLinkFormat { get; set; }
 
         protected virtual string ConfigFileName { get; set; }
-        
+
         protected virtual bool IsEnabled { get; set; }
 
         protected ISettings Settings { get; }
@@ -69,7 +69,7 @@ namespace WebLinter
 
             return Result;
         }
-        
+
         protected async Task<string> RunProcess(params FileInfo[] files)
         {
             var postMessage = new
@@ -78,7 +78,7 @@ namespace WebLinter
                 files = files.Select(f => f.FullName)
             };
 
-            return await _server.CallServer(Name, postMessage);
+            return await Server.CallServer(Name, postMessage);
         }
 
         protected virtual string FindWorkingDirectory(FileInfo file)
