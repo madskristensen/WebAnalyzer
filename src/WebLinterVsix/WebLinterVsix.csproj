@@ -88,6 +88,10 @@
       <SubType>Designer</SubType>
     </VSCTCompile>
     <None Include="packages.config" />
+    <Content Include="..\WebLinter\bin\$(Configuration)\WebLinter.pdb">
+      <Link>WebLinter.pdb</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="registry.pkgdef">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
