@@ -18,16 +18,12 @@ namespace WebLinterVsix
     public sealed class WebLinterPackage : Package
     {
         public static DTE2 Dte;
-        public static Dispatcher Dispatcher;
-        public static Package Package;
         public static Settings Settings;
         private SolutionEvents _events;
 
         protected override void Initialize()
         {
-            Package = this;
             Dte = GetService(typeof(DTE)) as DTE2;
-            Dispatcher = Dispatcher.CurrentDispatcher;
             Settings = (Settings)GetDialogPage(typeof(Settings));
 
             _events = Dte.Events.SolutionEvents;

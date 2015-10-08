@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
@@ -9,7 +8,6 @@ namespace WebLinter
         {
             Name = "ESLint";
             ConfigFileName = ".eslintrc";
-            ErrorMatch = "Error";
             IsEnabled = Settings.ESLintEnable;
             HelpLinkFormat = "http://eslint.org/docs/rules/{0}";
         }

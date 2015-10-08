@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Windows.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -34,19 +33,20 @@ namespace WebLinterVsix.FileListeners
 
             if (TextDocumentFactoryService.TryGetTextDocument(textView.TextDataModel.DocumentBuffer, out _document))
             {
-                if (!LinterService.IsFileSupported(_document.FilePath))
-                    return;
-
-                WebLinterPackage.Dispatcher.BeginInvoke(new Action(() =>
+                Task.Run(async () =>
                 {
+                    if (!LinterService.IsFileSupported(_document.FilePath))
+                        return;
+
                     _document.FileActionOccurred += DocumentSaved;
                     textView.Properties.AddProperty("lint_filename", _document.FilePath);
 
                     // Don't run linter again if error list already contains errors for the file.
                     if (!TableDataSource.Instance.HasErrors(_document.FilePath))
-                        LinterService.Lint(false, _document.FilePath);
-
-                }), DispatcherPriority.ApplicationIdle, null);
+                    {
+                        await LinterService.Lint(false, _document.FilePath);
+                    }
+                });
             }
         }
 
@@ -57,7 +57,7 @@ namespace WebLinterVsix.FileListeners
 
             if (view.Properties.TryGetProperty("lint_filename", out fileName))
             {
-                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                Task.Run(() =>
                 {
                     TableDataSource.Instance.CleanErrors(new[] { fileName });
                 });
@@ -71,7 +71,10 @@ namespace WebLinterVsix.FileListeners
         {
             if (e.FileActionType == FileActionTypes.ContentSavedToDisk && LinterService.IsFileSupported(e.FilePath))
             {
-                LinterService.Lint(false, e.FilePath);
+                Task.Run(async () =>
+                {
+                    await LinterService.Lint(false, e.FilePath);
+                });
             }
         }
     }

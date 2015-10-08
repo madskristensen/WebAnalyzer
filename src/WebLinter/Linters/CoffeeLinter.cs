@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
@@ -9,7 +8,6 @@ namespace WebLinter
         {
             Name = "CoffeeLint";
             ConfigFileName = "coffeelint.json";
-            ErrorMatch = "error";
             IsEnabled = Settings.CoffeeLintEnable;
             HelpLinkFormat = "http://www.coffeelint.org/?rule={0}#options";
         }

@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Xml;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
@@ -10,7 +8,6 @@ namespace WebLinter
         {
             Name = "CssLint";
             ConfigFileName = ".csslintrc";
-            ErrorMatch = "Error";
             IsEnabled = Settings.CssLintEnable;
             HelpLinkFormat = "https://github.com/CSSLint/csslint/wiki/Rules/#{0}";
         }

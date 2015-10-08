@@ -60,25 +60,16 @@ namespace WebLinter
 
             if (dic.Count != 0)
             {
-                lock (_syncRoot)
-                {
-                    Initialize();
-                }
-
-                int count = 0;
+                Initialize();
+                var tasks = new List<Task<LintingResult>>();
 
                 foreach (var linter in dic.Keys)
                 {
                     var files = dic[linter].ToArray();
-
-                    OnProgress(dic.Keys.Count, count, linter.Name, files.Length);
-                    Telemetry.TrackEvent(linter.Name);
-
-                    list.Add(await linter.Run(files));
-                    count += 1;
+                    tasks.Add(linter.Run(files));
                 }
 
-                OnProgress(dic.Keys.Count, count, "Done", 0);
+                list.AddRange(await Task.WhenAll(tasks));
             }
 
             return list;
@@ -107,39 +98,38 @@ namespace WebLinter
         /// </summary>
         private static void Initialize()
         {
-            var node_modules = Path.Combine(ExecutionPath, "node_modules");
-            var log_file = Path.Combine(ExecutionPath, "log.txt");
-
-            if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 245))
+            lock (_syncRoot)
             {
-                OnInitializing();
+                var node_modules = Path.Combine(ExecutionPath, "node_modules");
+                var log_file = Path.Combine(ExecutionPath, "log.txt");
 
-                if (Directory.Exists(ExecutionPath))
-                    Directory.Delete(ExecutionPath, true);
-
-                Directory.CreateDirectory(ExecutionPath);
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z");
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe");
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll");
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd");
-                SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js");
-
-                ProcessStartInfo start = new ProcessStartInfo
+                if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 245))
                 {
-                    WorkingDirectory = ExecutionPath,
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden,
-                    FileName = "cmd.exe",
-                    Arguments = "/c prepare.cmd"
-                };
+                    if (Directory.Exists(ExecutionPath))
+                        Directory.Delete(ExecutionPath, true);
 
-                Process p = Process.Start(start);
-                p.WaitForExit();
+                    Directory.CreateDirectory(ExecutionPath);
+                    SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z");
+                    SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe");
+                    SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll");
+                    SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd");
+                    SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js");
 
-                // If this file is written, then the initialization was successful.
-                File.WriteAllText(log_file, DateTime.Now.ToLongDateString());
+                    ProcessStartInfo start = new ProcessStartInfo
+                    {
+                        WorkingDirectory = ExecutionPath,
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        FileName = "cmd.exe",
+                        Arguments = "/c prepare.cmd"
+                    };
 
-                OnInitialized();
+                    Process p = Process.Start(start);
+                    p.WaitForExit();
+
+                    // If this file is written, then the initialization was successful.
+                    File.WriteAllText(log_file, DateTime.Now.ToLongDateString());
+                }
             }
         }
 
@@ -152,42 +142,5 @@ namespace WebLinter
                     fs.WriteByte((byte)stream.ReadByte());
             }
         }
-
-        private static void OnInitializing()
-        {
-            if (Initializing != null)
-            {
-                Initializing(null, EventArgs.Empty);
-            }
-        }
-
-        private static void OnInitialized()
-        {
-            if (Initialized != null)
-            {
-                Initialized(null, EventArgs.Empty);
-            }
-        }
-
-        private static void OnProgress(int total, int amountOfTotal, string providerName, int files)
-        {
-            if (Progress != null)
-            {
-                Progress(null, new LintingEventArgs(total, amountOfTotal, providerName, files));
-            }
-        }
-
-        /// <summary>
-        /// Fires when the compilers are about to be initialized.
-        /// </summary>
-        public static event EventHandler<EventArgs> Initializing;
-
-        /// <summary>
-        /// Fires when the compilers have been initialized.
-        /// </summary>
-        public static event EventHandler<EventArgs> Initialized;
-
-        /// <summary>Fires when progress is made.</summary>
-        public static event EventHandler<LintingEventArgs> Progress;
     }
 }

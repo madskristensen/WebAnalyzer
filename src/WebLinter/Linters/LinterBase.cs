@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace WebLinter
 {
@@ -19,6 +14,18 @@ namespace WebLinter
         {
             Settings = settings;
         }
+
+        public string Name { get; set; }
+
+        public string HelpLinkFormat { get; set; }
+
+        protected virtual string ConfigFileName { get; set; }
+        
+        protected virtual bool IsEnabled { get; set; }
+
+        protected ISettings Settings { get; }
+
+        protected LintingResult Result { get; private set; }
 
         public async Task<LintingResult> Run(params string[] files)
         {
@@ -42,6 +49,8 @@ namespace WebLinter
                 fileInfos.Add(fileInfo);
             }
 
+            Telemetry.TrackEvent(Name);
+
             return await Lint(fileInfos.ToArray());
         }
 
@@ -60,21 +69,7 @@ namespace WebLinter
 
             return Result;
         }
-
-        public string Name { get; set; }
-
-        public string HelpLinkFormat { get; set; }
-
-        protected virtual string ConfigFileName { get; set; }
-
-        protected virtual string ErrorMatch { get; set; }
-
-        protected virtual bool IsEnabled { get; set; }
-
-        protected ISettings Settings { get; }
-
-        protected LintingResult Result { get; private set; }
-
+        
         protected async Task<string> RunProcess(params FileInfo[] files)
         {
             var postMessage = new

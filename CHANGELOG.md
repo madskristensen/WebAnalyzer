@@ -2,6 +2,8 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
+- [x] Running linters in parallel
+- [x] Implemented async/await
 
 Features that have a checkmark are complete and available for
 download in the

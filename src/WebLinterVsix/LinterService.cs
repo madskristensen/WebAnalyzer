@@ -1,36 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Threading;
 using EnvDTE;
 using WebLinter;
-using System.Threading.Tasks;
 
 namespace WebLinterVsix
 {
     internal static class LinterService
     {
         private static bool _defaultsCreated;
-
-        static LinterService()
-        {
-            LinterFactory.Initializing += delegate { StatusText("Extracting latest version of the linters..."); };
-            LinterFactory.Initialized += delegate { WebLinterPackage.Dte.StatusBar.Clear(); };
-            LinterFactory.Progress += OnProgress;
-        }
-
-        private static void OnProgress(object sender, LintingEventArgs e)
-        {
-            // No reason to show progress for single files
-            if (e.Total == 1) return;
-
-            if (e.Total > e.AmountOfTotal)
-                WebLinterPackage.Dte.StatusBar.Progress(true, $"Running {e.ProviderName} on {e.Files} files...", e.AmountOfTotal + 1, e.Total + 1);
-            else
-                WebLinterPackage.Dte.StatusBar.Progress(false, $"Web Linter completed", e.AmountOfTotal + 1, e.Total + 1);
-        }
 
         public static bool IsFileSupported(string fileName)
         {
@@ -68,34 +49,29 @@ namespace WebLinterVsix
             return true;
         }
 
-        public static void Lint(bool showErrorList, params string[] fileNames)
+        public static async Task Lint(bool showErrorList, params string[] fileNames)
         {
-            ThreadPool.QueueUserWorkItem((o) =>
+            try
             {
-                try
-                {
-                    EnsureDefaults();
-                    Task.Run(async () =>
-                    {
-                        var result = await LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
+                WebLinterPackage.Dte.StatusBar.Text = "Analyzing...";
+                WebLinterPackage.Dte.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationGeneral);
 
-                        if (result != null)
-                            ErrorListService.ProcessLintingResults(result, showErrorList);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log(ex);
-                }
-            });
-        }
+                EnsureDefaults();
 
-        private static void StatusText(string message)
-        {
-            WebLinterPackage.Dispatcher.BeginInvoke(new Action(() =>
+                var result = await LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
+
+                if (result != null)
+                    ErrorListService.ProcessLintingResults(result, showErrorList);
+            }
+            catch (Exception ex)
             {
-                WebLinterPackage.Dte.StatusBar.Text = message;
-            }), DispatcherPriority.ApplicationIdle, null);
+                Logger.Log(ex);
+            }
+            finally
+            {
+                WebLinterPackage.Dte.StatusBar.Clear();
+                WebLinterPackage.Dte.StatusBar.Animate(false, vsStatusAnimation.vsStatusAnimationGeneral);
+            }
         }
 
         public static void EnsureDefaults(bool force = false)

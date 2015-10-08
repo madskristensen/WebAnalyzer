@@ -25,7 +25,7 @@ namespace WebLinterVsix
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(PackageGuids.WebLinterCmdSet, PackageIds.LintFilesCommand);
-                var menuItem = new OleMenuCommand(LintSelectedFiles, menuCommandID);
+                var menuItem = new OleMenuCommand(async (s, e) => { await LintSelectedFiles(s, e); }, menuCommandID);
                 menuItem.BeforeQueryStatus += BeforeQueryStatus;
                 commandService.AddCommand(menuItem);
             }
@@ -56,7 +56,7 @@ namespace WebLinterVsix
             Instance = new LintFilesCommand(package);
         }
 
-        private void LintSelectedFiles(object sender, EventArgs e)
+        private async System.Threading.Tasks.Task LintSelectedFiles(object sender, EventArgs e)
         {
             var paths = ProjectHelpers.GetSelectedItemPaths();
             List<string> files = new List<string>();
@@ -76,7 +76,7 @@ namespace WebLinterVsix
 
             if (files.Any())
             {
-                LinterService.Lint(true, files.ToArray());
+                await LinterService.Lint(true, files.ToArray());
                 Telemetry.TrackEvent($"VS Lint Files");
             }
             else
