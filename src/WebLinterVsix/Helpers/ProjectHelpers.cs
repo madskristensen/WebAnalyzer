@@ -19,7 +19,14 @@ namespace WebLinterVsix
                 ProjectItem item = selItem.Object as ProjectItem;
 
                 if (item != null && item.Properties != null)
-                    yield return item.Properties.Item("FullPath").Value.ToString();
+                {
+                    string file= item.Properties.Item("FullPath").Value.ToString();
+
+                    if (!string.IsNullOrEmpty(file))
+                        yield return file;
+                    else
+                        continue;
+                }
 
                 Project project = selItem.Object as Project;
 

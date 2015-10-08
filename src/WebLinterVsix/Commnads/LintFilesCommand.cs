@@ -31,6 +31,18 @@ namespace WebLinterVsix
             }
         }
 
+        public static LintFilesCommand Instance { get; private set; }
+
+        private IServiceProvider ServiceProvider
+        {
+            get { return this._package; }
+        }
+
+        public static void Initialize(Package package)
+        {
+            Instance = new LintFilesCommand(package);
+        }
+
         private void BeforeQueryStatus(object sender, EventArgs e)
         {
             var button = (OleMenuCommand)sender;
@@ -42,18 +54,6 @@ namespace WebLinterVsix
             {
                 button.Visible = true;
             }
-        }
-
-        public static LintFilesCommand Instance { get; private set; }
-
-        private IServiceProvider ServiceProvider
-        {
-            get { return this._package; }
-        }
-
-        public static void Initialize(Package package)
-        {
-            Instance = new LintFilesCommand(package);
         }
 
         private async System.Threading.Tasks.Task LintSelectedFiles(object sender, EventArgs e)

@@ -9,6 +9,9 @@
 - [x] Implemented async/await
 - [x] Added _babel-eslint_ support
 - [x] Added _eslint-plugin-filenames_ support
+- [x] Add helplink for ESLint _react_ plugin
+  - See <https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules>
+- [x] Don't show context menu on non-file/folder items
 
 Features that have a checkmark are complete and available for
 download in the

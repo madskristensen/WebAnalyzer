@@ -25,6 +25,11 @@ namespace WebLinter
             return client;
         }
 
+        public static void SetDeviceName(string name)
+        {
+            _telemetry.Context.Device.Model = name;
+        }
+
         /// <summary>Tracks an event to ApplicationInsights.</summary>
         public static void TrackEvent(string message)
         {
