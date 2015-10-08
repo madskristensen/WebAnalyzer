@@ -54,19 +54,19 @@ namespace WebLinterVsix
 
         [Category("Linters")]
         [DisplayName("Enable CSS Lint")]
-        [Description("CoffeeLint is a linter for CSS files")]
+        [Description("CSS Lint is a linter for CSS files")]
         [DefaultValue(true)]
         public bool CssLintEnable { get; set; }
 
         [Category("Linters")]
         [DisplayName("Enable ESLint")]
-        [Description("CoffeeLint is a linter JavaScript and JSX files")]
+        [Description("ESLint is a linter JavaScript and JSX files")]
         [DefaultValue(true)]
         public bool ESLintEnable { get; set; }
 
         [Category("Linters")]
         [DisplayName("Enable TSLint")]
-        [Description("CoffeeLint is a linter for TypeScript files")]
+        [Description("TSLint is a linter for TypeScript files")]
         [DefaultValue(true)]
         public bool TSLintEnable { get; set; }
 
