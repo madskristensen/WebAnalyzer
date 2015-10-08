@@ -98,7 +98,7 @@ namespace WebLinterVsix
 
         public void AddErrors(IEnumerable<LintingError> errors)
         {
-            if (!errors.Any())
+            if (errors == null || !errors.Any())
                 return;
 
             foreach (var error in errors.GroupBy(t => t.FileName))
