@@ -92,3 +92,18 @@ under **Tools -> Options**.
 ![Options](art/options.png)
 
 They are all enabled by default.
+
+## Reset settings
+Resetting the settings will do 2 things:
+
+1. Reset the global per-user linter config files
+2. Set the settings under
+   **Tools -> Options -> Web -> Analyzer** to their default values
+
+You can reset the settings under **Tools -> Web Analyzer**.
+
+If you haven't made any modifications to any settings or
+configuration files, then it can be a good idea to reset the
+settings after updating the extension. Typically newer versions
+of the Web Analyzer extension will have updated configuration
+files with better defaults.

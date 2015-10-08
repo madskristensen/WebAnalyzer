@@ -14,10 +14,18 @@
     },
     "rules": {
 
+        "eqeqeq": 2,
+        "no-console": 0,
+        "no-debugger": 1,
         "no-irregular-whitespace": 0,
         "no-undef": 0,
         "no-unused-vars": 1,
+        "semi": 1,
         "semi-spacing": 1,
+        "valid-jsdoc": [
+            2,
+            { "requireReturn": false }
+        ],
 
         "react/display-name": 2,
         "react/forbid-prop-types": 1,
