@@ -7,6 +7,8 @@
 - [ ] Add _Clean_ command to Error List context menu
 - [x] Running linters in parallel
 - [x] Implemented async/await
+- [x] Added _babel-eslint_ support
+- [x] Added _eslint-plugin-filenames_ support
 
 Features that have a checkmark are complete and available for
 download in the
