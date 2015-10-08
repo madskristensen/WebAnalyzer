@@ -24,6 +24,7 @@ for changes and roadmap.
 - Runs when a file is opened and when the file is saved
 - Run on a single file, folder or the entire project
 - Configuration files lets you select what rules to run
+- Configuration can be specified on project or solution level
 - Both errors and warnings are supported
 - Option to turn off one or more linters
 - Smart logic ignores certain files from linting
@@ -74,6 +75,15 @@ them to their defaults by clicking the
 **Reset Configuration Files** command. It will prompt to ask
 if you are sure you want to proceed and, if you click yes,
 all the configuration files will be restored to their defaults.
+
+### Per project configuration
+You can override the global per-user configuration of each
+linter on a folder, project or solution level. Simply copy
+in each config files (such as `.eslintrc` or `tslint.json`)
+from the user profile folder and into the root of the project
+or solution.
+
+A simple command to do this will be added soon. Stay tuned...
 
 ### Disable linters
 You decide which linters to run by enabling or disabling them
