@@ -5,13 +5,6 @@
 - [ ] Write `.csslintrc` JSON schema for SchemaStore.org
 - [ ] Write `.eslintrc` JSON schema for SchemaStore.org
 - [ ] Add _Clean_ command to Error List context menu
-- [x] Running linters in parallel
-- [x] Implemented async/await
-- [x] Added _babel-eslint_ support
-- [x] Added _eslint-plugin-filenames_ support
-- [x] Add helplink for ESLint _react_ plugin
-  - See <https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules>
-- [x] Don't show context menu on non-file/folder items
 
 Features that have a checkmark are complete and available for
 download in the
@@ -21,6 +14,18 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.2
+
+**2015-10-08**
+
+- [x] Running linters in parallel
+- [x] Implemented async/await
+- [x] Added _babel-eslint_ support
+- [x] Added _eslint-plugin-filenames_ support
+- [x] Add helplink for ESLint _react_ plugin
+  - See <https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules>
+- [x] Don't show context menu on non-file/folder items
 
 ## 1.1
 
