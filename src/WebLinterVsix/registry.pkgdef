@@ -2,6 +2,8 @@
 [$RootKey$\ShellFileAssociations\.eslintrc]
 "DefaultIconMoniker"="KnownMonikers.JSONScript"
 
-// Icons
 [$RootKey$\ShellFileAssociations\.csslintrc]
 "DefaultIconMoniker"="KnownMonikers.JSONScript"
+
+[$RootKey$\ShellFileAssociations\.tsx]
+"DefaultIconMoniker"="KnownMonikers.JSXScript"
