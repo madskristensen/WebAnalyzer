@@ -60,16 +60,14 @@ namespace WebLinter
                 if (_process == null || _process.HasExited)
                 {
                     SelectAvailablePort();
-
-                    ProcessStartInfo start = new ProcessStartInfo("node")
+                    string node = Path.Combine(GetNodeDirectory(), "node");
+                    ProcessStartInfo start = new ProcessStartInfo(node)
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
                         Arguments = $"\"{Path.Combine(LinterFactory.ExecutionPath, "server.js")}\" {BasePort}",
                         UseShellExecute = false,
                         CreateNoWindow = true
                     };
-
-                    ModifyPathVariable(start);
 
                     _process = Process.Start(start);
                 }
@@ -86,19 +84,11 @@ namespace WebLinter
             while (connections.Any(t => t.LocalEndPoint.Port == BasePort));
         }
 
-        private static void ModifyPathVariable(ProcessStartInfo start)
+        private static string GetNodeDirectory()
         {
-            string path = start.EnvironmentVariables["PATH"];
-
             string toolsDir = Environment.GetEnvironmentVariable("VS140COMNTOOLS");
-
-            if (Directory.Exists(toolsDir))
-            {
-                string parent = Directory.GetParent(toolsDir).Parent.FullName;
-                path += ";" + Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External");
-            }
-
-            start.EnvironmentVariables["PATH"] = path;
+            string parent = Directory.GetParent(toolsDir).Parent.FullName;
+            return Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External\Node");
         }
     }
 }
