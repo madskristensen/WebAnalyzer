@@ -60,7 +60,9 @@ namespace WebLinter
                 if (_process == null || _process.HasExited)
                 {
                     SelectAvailablePort();
+
                     string node = Path.Combine(GetNodeDirectory(), "node");
+
                     ProcessStartInfo start = new ProcessStartInfo(node)
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
