@@ -3,7 +3,7 @@
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
-- [ ] Write `.eslintrc` JSON schema for SchemaStore.org
+- [x] Write `.eslintrc` JSON schema for SchemaStore.org
 - [x] Write `.csslintrc` JSON schema for SchemaStore.org
 - [x] Help links for JSX rules from ESLint
 
