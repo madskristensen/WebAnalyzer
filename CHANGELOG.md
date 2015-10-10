@@ -2,7 +2,7 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
-- [ ] Write `.csslintrc` JSON schema for SchemaStore.org
+- [x] Write `.csslintrc` JSON schema for SchemaStore.org
 - [ ] Write `.eslintrc` JSON schema for SchemaStore.org
 - [ ] Add _Clean_ command to Error List context menu
 
