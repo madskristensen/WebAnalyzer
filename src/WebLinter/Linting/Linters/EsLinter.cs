@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 
 namespace WebLinter
 {
@@ -9,7 +10,6 @@ namespace WebLinter
             Name = "ESLint";
             ConfigFileName = ".eslintrc";
             IsEnabled = Settings.ESLintEnable;
-            HelpLinkFormat = "http://eslint.org/docs/rules/{0}";
         }
 
         protected override void ParseErrors(string output)
@@ -31,10 +31,27 @@ namespace WebLinter
                     le.ColumnNumber = error["column"]?.Value<int>() - 1 ?? 0;
                     le.IsError = error["severity"]?.Value<int>() == 2;
                     le.ErrorCode = error["ruleId"]?.Value<string>();
+                    le.HelpLink = GetHelpLink(le.ErrorCode);
                     le.Provider = this;
                     Result.Errors.Add(le);
                 }
             }
+        }
+
+        private string GetHelpLink(string errorCode)
+        {
+            int slash = errorCode.IndexOf('/');
+
+            if (slash == -1)
+                return $"http://eslint.org/docs/rules/{errorCode}";
+
+            string plugin = errorCode.Substring(0, slash).ToLowerInvariant();
+            string error = errorCode.Substring(slash + 1);
+
+            if (plugin == "react")
+                return $"https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/{error}.md";
+
+            return Uri.EscapeUriString($"http://www.bing.com/search?q={Name} {errorCode}");
         }
     }
 }

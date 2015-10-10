@@ -17,8 +17,6 @@ namespace WebLinter
 
         public string Name { get; set; }
 
-        public string HelpLinkFormat { get; set; }
-
         protected virtual string ConfigFileName { get; set; }
 
         protected virtual bool IsEnabled { get; set; }

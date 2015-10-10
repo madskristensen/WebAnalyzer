@@ -9,7 +9,6 @@ namespace WebLinter
             Name = "CssLint";
             ConfigFileName = ".csslintrc";
             IsEnabled = Settings.CssLintEnable;
-            HelpLinkFormat = "https://github.com/CSSLint/csslint/wiki/Rules/#{0}";
         }
 
         protected override void ParseErrors(string output)
@@ -34,6 +33,7 @@ namespace WebLinter
                     le.ColumnNumber = error["col"]?.Value<int>() - 1 ?? 0;
                     le.IsError = error["type"]?.Value<string>() == "error";
                     le.ErrorCode = error["rule"]?["id"]?.Value<string>();
+                    le.HelpLink = $"https://github.com/CSSLint/csslint/wiki/Rules/#{le.ErrorCode}";
                     le.Provider = this;
                     Result.Errors.Add(le);
                 }

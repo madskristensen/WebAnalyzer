@@ -88,9 +88,9 @@ namespace WebLinterVsix
                 {
                     var error = _errors[index];
                     string url;
-                    if (!string.IsNullOrEmpty(error.Provider.HelpLinkFormat))
+                    if (!string.IsNullOrEmpty(error.HelpLink))
                     {
-                        url = string.Format(error.Provider.HelpLinkFormat, error.ErrorCode);
+                        url = error.HelpLink;
                     }
                     else
                     {

@@ -9,7 +9,6 @@ namespace WebLinter
             Name = "CoffeeLint";
             ConfigFileName = "coffeelint.json";
             IsEnabled = Settings.CoffeeLintEnable;
-            HelpLinkFormat = "http://www.coffeelint.org/?rule={0}#options";
         }
 
         protected override void ParseErrors(string output)
@@ -34,6 +33,7 @@ namespace WebLinter
                     le.ColumnNumber = 0;
                     le.IsError = error["level"]?.Value<string>() == "error";
                     le.ErrorCode = error["rule"]?.Value<string>();
+                    le.HelpLink = $"http://www.coffeelint.org/?rule={le.ErrorCode}#options";
                     le.Provider = this;
                     Result.Errors.Add(le);
                 }

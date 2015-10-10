@@ -9,7 +9,6 @@ namespace WebLinter
             Name = "TSLint";
             ConfigFileName = "tslint.json";
             IsEnabled = Settings.TSLintEnable;
-            HelpLinkFormat = "https://github.com/palantir/tslint?rule={0}#supported-rules";
         }
 
         protected override void ParseErrors(string output)
@@ -29,6 +28,7 @@ namespace WebLinter
                 le.ColumnNumber = obj["startPosition"]?["character"]?.Value<int>() ?? 0;
                 le.IsError = false;
                 le.ErrorCode = obj["ruleName"]?.Value<string>();
+                le.HelpLink = $"https://github.com/palantir/tslint?rule={le.ErrorCode}#supported-rules";
                 le.Provider = this;
                 Result.Errors.Add(le);
             }

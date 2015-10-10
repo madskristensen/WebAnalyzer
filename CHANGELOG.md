@@ -2,9 +2,10 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
-- [x] Write `.csslintrc` JSON schema for SchemaStore.org
-- [ ] Write `.eslintrc` JSON schema for SchemaStore.org
 - [ ] Add _Clean_ command to Error List context menu
+- [ ] Write `.eslintrc` JSON schema for SchemaStore.org
+- [x] Write `.csslintrc` JSON schema for SchemaStore.org
+- [x] Help links for JSX rules from ESLint
 
 Features that have a checkmark are complete and available for
 download in the
