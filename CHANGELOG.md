@@ -26,8 +26,6 @@ on the official Visual Studio extension gallery.
 - [x] Implemented async/await
 - [x] Added _babel-eslint_ support
 - [x] Added _eslint-plugin-filenames_ support
-- [x] Add helplink for ESLint _react_ plugin
-  - See https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules
 - [x] Don't show context menu on non-file/folder items
 
 ## 1.1
