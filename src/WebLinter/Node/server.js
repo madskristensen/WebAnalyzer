@@ -1,18 +1,16 @@
 var http = require("http"),
-    url = require("url"),
     fs = require("fs");
 
 var start = function (port) {
     http.createServer(function (req, res) {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
 
-        var path = req.url.substring(1);
-
-        if (path === "ping") {
-            res.end("1");
+        if (!req.url || req.url.length < 2) {
+            response.writeHead(200, { 'Content-Type': 'text/plain' });
+            response.end();
             return;
         }
 
+        var path = req.url.substring(1);
         var body = "";
 
         req.on('data', function (data) {
@@ -20,32 +18,46 @@ var start = function (port) {
         });
 
         req.on('end', function () {
-            var linter = linters[path];
+            try {
+                if (body === "")
+                    return;
 
-            if (linter) {
-                var data = JSON.parse(body);
-                var result = linter(data.config, data.files);
-                res.end(JSON.stringify(result));
+                var linter = linters[path];
+
+                if (linter) {
+                    var data = JSON.parse(body);
+                    var result = linter(data.config, data.files);
+
+                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                    res.write(JSON.stringify(result));
+                }
+            }
+            catch (e) {
+                response.writeHead(500, { 'Content-Type': 'text/plain' });
+                response.write("Server error: " + e.message);
+            }
+            finally {
+                res.end();
             }
         });
 
     }).listen(port);
-}
+};
 
 var linters = {
 
-    eslint: function (config, files) {
+    eslint: function (configFile, files) {
         var CLIEngine = require("eslint").CLIEngine;
-        var cli = new CLIEngine({ configFile: config });
+        var cli = new CLIEngine({ configFile: configFile });
         var report = cli.executeOnFiles(files);
         return report.results;
     },
 
-    tslint: function (config, files) {
+    tslint: function (configFile, files) {
         var tslint = require("tslint");
         var options = {
             formatter: "json",
-            configuration: JSON.parse(fs.readFileSync(config, "utf8"))
+            configuration: JSON.parse(fs.readFileSync(configFile, "utf8"))
         };
 
         var results = [];
@@ -59,12 +71,12 @@ var linters = {
         return results;
     },
 
-    coffeelint: function (config, files) {
+    coffeelint: function (configFile, files) {
         var linter = require("coffeelint");
         var options = {};
         var results = {};
 
-        var config = JSON.parse(fs.readFileSync(config, "utf8"));
+        var config = JSON.parse(fs.readFileSync(configFile, "utf8"));
         options.configFile = undefined;
         for (var key in config) {
             options[key] = config[key];
@@ -80,10 +92,10 @@ var linters = {
         return results;
     },
 
-    csslint: function (config, files) {
+    csslint: function (configFile, files) {
         var linter = require("csslint").CSSLint;
 
-        var options = JSON.parse(fs.readFileSync(config, "utf8"));
+        var options = JSON.parse(fs.readFileSync(configFile, "utf8"));
         var results = {};
 
         for (var i = 0; i < files.length; i++) {
@@ -95,6 +107,6 @@ var linters = {
 
         return results;
     }
-}
+};
 
 start(process.argv[2]);

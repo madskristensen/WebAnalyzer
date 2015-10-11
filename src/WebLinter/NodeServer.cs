@@ -23,9 +23,19 @@ namespace WebLinter
 
             string url = $"{BASE_URL}:{BasePort}/{path.ToLowerInvariant()}";
 
-            using (WebClient client = new WebClient())
+            try
             {
-                return await client.UploadStringTaskAsync(url, JsonConvert.SerializeObject(postData));
+                using (WebClient client = new WebClient())
+                {
+                    string json = JsonConvert.SerializeObject(postData);
+                    return await client.UploadStringTaskAsync(url, json);
+                }
+            }
+            catch (WebException ex)
+            {
+                Telemetry.TrackException(ex);
+                Down();
+                return string.Empty;
             }
         }
 
