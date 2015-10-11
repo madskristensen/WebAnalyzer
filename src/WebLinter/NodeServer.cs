@@ -11,7 +11,7 @@ namespace WebLinter
 {
     public class NodeServer
     {
-        private const string BASE_URL = "http://localhost.";
+        private const string BASE_URL = "http://localhost";
         private static Process _process;
         private static object _syncRoot = new object();
 
@@ -27,7 +27,6 @@ namespace WebLinter
             {
                 using (WebClient client = new WebClient())
                 {
-                    client.Proxy = WebRequest.GetSystemWebProxy();
                     string json = JsonConvert.SerializeObject(postData);
                     return await client.UploadStringTaskAsync(url, json);
                 }
