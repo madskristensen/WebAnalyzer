@@ -87,6 +87,22 @@
       <LastGenOutput>VSCommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <Content Include="..\WebLinterTest\artifacts\.csslintrc">
+      <Link>Resources\Defaults\.csslintrc</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\WebLinterTest\artifacts\.eslintrc">
+      <Link>Resources\Defaults\.eslintrc</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\WebLinterTest\artifacts\coffeelint.json">
+      <Link>Resources\Defaults\coffeelint.json</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\WebLinterTest\artifacts\tslint.json">
+      <Link>Resources\Defaults\tslint.json</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
     <Content Include="..\WebLinter\bin\$(Configuration)\WebLinter.pdb">
       <Link>WebLinter.pdb</Link>
@@ -94,18 +110,6 @@
     </Content>
     <Content Include="registry.pkgdef">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\Defaults\.csslintrc">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\Defaults\coffeelint.json">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\Defaults\tslint.json">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\Defaults\.eslintrc">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vsixmanifest">

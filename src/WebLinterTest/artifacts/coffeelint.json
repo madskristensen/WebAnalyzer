@@ -34,7 +34,7 @@
     "indentation": {
         "name": "indentation",
         "value": 2,
-        "level": "warn"
+        "level": "error"
     },
     "camel_case_classes": {
         "name": "camel_case_classes",

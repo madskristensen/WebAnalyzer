@@ -39,7 +39,7 @@ namespace WebLinterTest
             var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.jsx");
             Assert.IsTrue(result.First().HasErrors);
             Assert.AreEqual("react/display-name", result.First().Errors.First().ErrorCode, "Unexpected error message");
-            Assert.AreEqual(2, result.First().Errors.Count);
+            Assert.AreEqual(1, result.First().Errors.Count);
         }
 
         [TestMethod, TestCategory("ESLint")]
