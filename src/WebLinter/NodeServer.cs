@@ -27,6 +27,7 @@ namespace WebLinter
             {
                 using (WebClient client = new WebClient())
                 {
+                    client.Proxy = WebRequest.GetSystemWebProxy();
                     string json = JsonConvert.SerializeObject(postData);
                     return await client.UploadStringTaskAsync(url, json);
                 }
