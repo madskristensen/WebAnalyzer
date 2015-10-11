@@ -138,8 +138,7 @@ namespace WebLinter
             using (Stream stream = typeof(LinterFactory).Assembly.GetManifestResourceStream(resourceName))
             using (FileStream fs = new FileStream(Path.Combine(path, fileName), FileMode.Create))
             {
-                for (int i = 0; i < stream.Length; i++)
-                    fs.WriteByte((byte)stream.ReadByte());
+                stream.CopyTo(fs);
             }
         }
     }
