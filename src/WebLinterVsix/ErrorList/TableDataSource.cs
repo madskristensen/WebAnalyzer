@@ -101,7 +101,9 @@ namespace WebLinterVsix
             if (errors == null || !errors.Any())
                 return;
 
-            foreach (var error in errors.GroupBy(t => t.FileName))
+            var cleanErrors = errors.Where(e => e != null && !string.IsNullOrEmpty(e.FileName));
+
+            foreach (var error in cleanErrors.GroupBy(t => t.FileName))
             {
                 var snapshot = new TableEntriesSnapshot(error.Key, error);
                 _snapshots[error.Key] = snapshot;
