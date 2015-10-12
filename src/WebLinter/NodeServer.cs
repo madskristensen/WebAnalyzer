@@ -99,8 +99,14 @@ namespace WebLinter
         private static string GetNodeDirectory()
         {
             string toolsDir = Environment.GetEnvironmentVariable("VS140COMNTOOLS");
-            string parent = Directory.GetParent(toolsDir).Parent.FullName;
-            return Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External\Node");
+
+            if (!string.IsNullOrEmpty(toolsDir))
+            {
+                string parent = Directory.GetParent(toolsDir).Parent.FullName;
+                return Path.Combine(parent, @"IDE\Extensions\Microsoft\Web Tools\External\Node");
+            }
+
+            return string.Empty;
         }
     }
 }
