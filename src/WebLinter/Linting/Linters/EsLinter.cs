@@ -40,16 +40,19 @@ namespace WebLinter
 
         private string GetHelpLink(string errorCode)
         {
-            int slash = errorCode.IndexOf('/');
+            if (!string.IsNullOrEmpty(errorCode))
+            {
+                int slash = errorCode.IndexOf('/');
 
-            if (slash == -1)
-                return $"http://eslint.org/docs/rules/{errorCode}";
+                if (slash == -1)
+                    return $"http://eslint.org/docs/rules/{errorCode}";
 
-            string plugin = errorCode.Substring(0, slash).ToLowerInvariant();
-            string error = errorCode.Substring(slash + 1);
+                string plugin = errorCode.Substring(0, slash).ToLowerInvariant();
+                string error = errorCode.Substring(slash + 1);
 
-            if (plugin == "react")
-                return $"https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/{error}.md";
+                if (plugin == "react")
+                    return $"https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/{error}.md";
+            }
 
             return Uri.EscapeUriString($"http://www.bing.com/search?q={Name} {errorCode}");
         }
