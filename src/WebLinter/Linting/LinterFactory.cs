@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace WebLinter
@@ -60,7 +60,7 @@ namespace WebLinter
 
             if (dic.Count != 0)
             {
-                Initialize();
+                await Initialize();
                 var tasks = new List<Task<LintingResult>>();
 
                 foreach (var linter in dic.Keys)
@@ -87,18 +87,14 @@ namespace WebLinter
             }
         }
 
-        public static void WarmUp()
-        {
-            Initialize();
-            LinterBase.Server.EnsureInitialized();
-        }
-
         /// <summary>
         /// Initializes the Node environment.
         /// </summary>
-        private static void Initialize()
+        public static async Task Initialize()
         {
-            lock (_syncRoot)
+            var mutex = new AsyncLock();
+
+            using (await mutex.LockAsync())
             {
                 var node_modules = Path.Combine(ExecutionPath, "node_modules");
                 var log_file = Path.Combine(ExecutionPath, "log.txt");
@@ -109,11 +105,17 @@ namespace WebLinter
                         Directory.Delete(ExecutionPath, true);
 
                     Directory.CreateDirectory(ExecutionPath);
-                    SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z");
-                    SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe");
-                    SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll");
-                    SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd");
-                    SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js");
+
+                    var tasks = new List<Task>
+                    {
+                        SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z"),
+                        SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe"),
+                        SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll"),
+                        SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd"),
+                        SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js"),
+                    };
+
+                    await Task.WhenAll(tasks.ToArray());
 
                     ProcessStartInfo start = new ProcessStartInfo
                     {
@@ -125,20 +127,23 @@ namespace WebLinter
                     };
 
                     Process p = Process.Start(start);
-                    p.WaitForExit();
+                    await p.WaitForExitAsync();
 
                     // If this file is written, then the initialization was successful.
-                    File.WriteAllText(log_file, DateTime.Now.ToLongDateString());
+                    using (var writer = new StreamWriter(log_file))
+                    {
+                        await writer.WriteAsync(DateTime.Now.ToLongDateString());
+                    }
                 }
             }
         }
 
-        private static void SaveResourceFile(string path, string resourceName, string fileName)
+        private static async Task SaveResourceFile(string path, string resourceName, string fileName)
         {
             using (Stream stream = typeof(LinterFactory).Assembly.GetManifestResourceStream(resourceName))
             using (FileStream fs = new FileStream(Path.Combine(path, fileName), FileMode.Create))
             {
-                stream.CopyTo(fs);
+                await stream.CopyToAsync(fs);
             }
         }
     }

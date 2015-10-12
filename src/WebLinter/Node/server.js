@@ -5,13 +5,19 @@ var start = function (port) {
     http.createServer(function (req, res) {
 
         if (!req.url || req.url.length < 2) {
-            response.writeHead(200, { 'Content-Type': 'text/plain' });
-            response.end();
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end();
             return;
         }
 
         var path = req.url.substring(1);
         var body = "";
+
+        if (path === "ping") {
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end("pong");
+            return;
+        }
 
         req.on('data', function (data) {
             body += data;
@@ -33,8 +39,8 @@ var start = function (port) {
                 }
             }
             catch (e) {
-                response.writeHead(500, { 'Content-Type': 'text/plain' });
-                response.write("Server error: " + e.message);
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.write("Server error: " + e.message);
             }
             finally {
                 res.end();

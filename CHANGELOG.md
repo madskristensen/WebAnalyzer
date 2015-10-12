@@ -3,7 +3,9 @@
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
+- [x] Clean errors when VS _Build|Clean_ command runs
 - [x] New logo
+- [x] Node.js server initializes async
 
 Features that have a checkmark are complete and available for
 download in the

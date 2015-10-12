@@ -61,11 +61,11 @@ namespace WebLinterVsix
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
             {
                 // Then execute in a background thread.
-                System.Threading.ThreadPool.QueueUserWorkItem((o) =>
+                System.Threading.Tasks.Task.Run(async () =>
                 {
                     try
                     {
-                        LinterFactory.WarmUp();
+                        await LinterFactory.Initialize();
                     }
                     catch (Exception ex)
                     {

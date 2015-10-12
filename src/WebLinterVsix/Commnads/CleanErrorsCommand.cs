@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using WebLinter;
 
@@ -8,23 +9,26 @@ namespace WebLinterVsix
     internal sealed class CleanErrorsCommand
     {
         private readonly Package _package;
+        private readonly BuildEvents _events;
 
         private CleanErrorsCommand(Package package)
         {
-            if (package == null)
-            {
-                throw new ArgumentNullException("package");
-            }
-
             _package = package;
+            _events = WebLinterPackage.Dte.Events.BuildEvents;
+            _events.OnBuildBegin += OnBuildBegin;
 
             OleMenuCommandService commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (commandService != null)
+            var menuCommandID = new CommandID(PackageGuids.WebLinterCmdSet, PackageIds.CleanErrorsCommand);
+            var menuItem = new OleMenuCommand(CleanErrors, menuCommandID);
+            menuItem.BeforeQueryStatus += BeforeQueryStatus;
+            commandService.AddCommand(menuItem);
+        }
+
+        private void OnBuildBegin(vsBuildScope Scope, vsBuildAction Action)
+        {
+            if (Action != vsBuildAction.vsBuildActionDeploy)
             {
-                var menuCommandID = new CommandID(PackageGuids.WebLinterCmdSet, PackageIds.CleanErrorsCommand);
-                var menuItem = new OleMenuCommand(CleanErrors, menuCommandID);
-                menuItem.BeforeQueryStatus += BeforeQueryStatus;
-                commandService.AddCommand(menuItem);
+                TableDataSource.Instance.CleanAllErrors();
             }
         }
 

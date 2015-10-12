@@ -19,7 +19,7 @@ namespace WebLinter
 
         public async Task<string> CallServer(string path, object postData)
         {
-            EnsureInitialized();
+            await EnsureInitialized();
 
             string url = $"{BASE_URL}:{BasePort}/{path.ToLowerInvariant()}";
 
@@ -49,25 +49,11 @@ namespace WebLinter
             }
         }
 
-        internal void EnsureInitialized()
+        private async Task EnsureInitialized()
         {
-            //try
-            //{
-            //    string url = $"{BASE_URL}:{BasePort}/ping";
-            //    using (WebClient client = new WebClient())
-            //    {
-            //        string ping = client.DownloadString(url);
-
-            //        if (ping == "1")
-            //            return;
-            //    }
-            //}
-            //catch (Exception)
-            //{ /* Server isn't running */}
-
-            lock (_syncRoot)
+            if (_process == null || _process.HasExited)
             {
-                if (_process == null || _process.HasExited)
+                try
                 {
                     SelectAvailablePort();
 
@@ -82,7 +68,24 @@ namespace WebLinter
                     };
 
                     _process = Process.Start(start);
+
+                    await SendPing();
                 }
+                catch (Exception ex)
+                {
+                    Telemetry.TrackException(ex);
+                    Down();
+                }
+            }
+        }
+
+        private async Task SendPing()
+        {
+            using (WebClient client = new WebClient())
+            {
+                string url = $"{BASE_URL}:{BasePort}/ping";
+                string ping = await client.DownloadStringTaskAsync(url);
+                Debug.WriteLine(ping);
             }
         }
 

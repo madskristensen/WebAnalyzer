@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Helpers\AsyncLock.cs" />
+    <Compile Include="Helpers\AsyncProcess.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Linting\LinterFactory.cs" />
     <Compile Include="Linting\Linters\CssLinter.cs" />

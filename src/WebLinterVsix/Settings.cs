@@ -18,6 +18,7 @@ namespace WebLinterVsix
             // General
             IgnoreFolderNames = @"\node_modules\,\bower_components\,\typings\,\lib\,.min.";
             IgnoreNestedFiles = true;
+            CleanErrorsOnBuild = true;
 
             // Linters
             CoffeeLintEnable = true;
@@ -44,6 +45,12 @@ namespace WebLinterVsix
         [Description("Nested files are files that are nested under other files in Solution Explorer.")]
         [DefaultValue(true)]
         public bool IgnoreNestedFiles { get; set; }
+
+        [Category("General")]
+        [DisplayName("Clean errors on build")]
+        [Description("Clean the analyzer errors when 'Build', 'Rebuild' or 'Clean' is executed.")]
+        [DefaultValue(true)]
+        public bool CleanErrorsOnBuild { get; set; }
 
         // Linters
         [Category("Linters")]
