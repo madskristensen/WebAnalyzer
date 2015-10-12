@@ -3,11 +3,6 @@
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
-- [x] Write `.eslintrc` JSON schema for SchemaStore.org
-- [x] Write `.csslintrc` JSON schema for SchemaStore.org
-- [x] Help links for JSX rules from ESLint
-- [x] Fixed proxy server issue (#3)
-- [x] Better default settings for linters
 
 Features that have a checkmark are complete and available for
 download in the
@@ -17,6 +12,17 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.3
+
+**2015-10-11**
+
+- [x] Write `.eslintrc` JSON schema for SchemaStore.org
+- [x] Write `.csslintrc` JSON schema for SchemaStore.org
+- [x] Help links for JSX rules from ESLint
+- [x] Fixed proxy server issue (#3)
+- [x] Better default settings for linters
+- [x] Lots of tweaks and improvements
 
 ## 1.2
 
