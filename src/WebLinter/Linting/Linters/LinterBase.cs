@@ -76,7 +76,7 @@ namespace WebLinter
                 files = files.Select(f => f.FullName)
             };
 
-            return await Server.CallServer(Name, postMessage);
+            return await Server.CallServerAsync(Name, postMessage);
         }
 
         protected virtual string FindWorkingDirectory(FileInfo file)

@@ -17,7 +17,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public async Task Standard()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.js");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/eslint/a.js");
             var first = result.First();
             Assert.IsTrue(first.HasErrors);
             Assert.IsFalse(first.Errors.First().IsError, "Severity is not 'warning'");
@@ -28,7 +28,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public async Task MultipleInput()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.js", "../../artifacts/eslint/b.js");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/eslint/a.js", "../../artifacts/eslint/b.js");
             Assert.IsTrue(result.First().HasErrors);
             Assert.AreEqual(8, result.First().Errors.Count);
         }
@@ -36,7 +36,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public async Task JSX()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/a.jsx");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/eslint/a.jsx");
             Assert.IsTrue(result.First().HasErrors);
             Assert.AreEqual("react/display-name", result.First().Errors.First().ErrorCode, "Unexpected error message");
             Assert.AreEqual(1, result.First().Errors.Count);
@@ -45,7 +45,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("ESLint")]
         public async Task FileNotExist()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/eslint/doesntexist.js");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/eslint/doesntexist.js");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

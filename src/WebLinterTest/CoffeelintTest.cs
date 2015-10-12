@@ -17,7 +17,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public async Task Standard()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/a.coffee");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/coffeelint/a.coffee");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsTrue(result.First().Errors.First().IsError, "Severity is not 'error'");
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName), "File name is empty");
@@ -26,7 +26,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public async Task Multiple()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/a.coffee", "../../artifacts/coffeelint/b.coffee");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/coffeelint/a.coffee", "../../artifacts/coffeelint/b.coffee");
             Assert.IsTrue(result.First().HasErrors);
             Assert.AreEqual(3, result.First().Errors.Count);
         }
@@ -35,7 +35,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CoffeeLint")]
         public async Task FileDontExist()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/coffeelint/doesntexist.coffee");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/coffeelint/doesntexist.coffee");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

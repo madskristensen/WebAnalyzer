@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Threading;
 using EnvDTE;
 using WebLinter;
 
@@ -49,16 +48,16 @@ namespace WebLinterVsix
             return true;
         }
 
-        public static async Task Lint(bool showErrorList, params string[] fileNames)
+        public static async Task LintAsync(bool showErrorList, params string[] fileNames)
         {
             try
             {
                 WebLinterPackage.Dte.StatusBar.Text = "Analyzing...";
                 WebLinterPackage.Dte.StatusBar.Animate(true, vsStatusAnimation.vsStatusAnimationGeneral);
 
-                await EnsureDefaults();
+                await EnsureDefaultsAsync();
 
-                var result = await LinterFactory.Lint(WebLinterPackage.Settings, fileNames);
+                var result = await LinterFactory.LintAsync(WebLinterPackage.Settings, fileNames);
 
                 if (result != null)
                     ErrorListService.ProcessLintingResults(result, showErrorList);
@@ -74,32 +73,44 @@ namespace WebLinterVsix
             }
         }
 
-        public static async Task EnsureDefaults(bool force = false)
+        public static async Task EnsureDefaultsAsync(bool force = false)
         {
             if (!_defaultsCreated || force)
             {
-                string assembly = Assembly.GetExecutingAssembly().Location;
-                string root = Path.GetDirectoryName(assembly);
-                string sourceFolder = Path.Combine(root, "Resources\\Defaults");
+                string sourceFolder = GetVsixFolder();
                 string destFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 
-                foreach (string sourceFile in Directory.EnumerateFiles(sourceFolder))
+                try
                 {
-                    string fileName = Path.GetFileName(sourceFile);
-                    string destFile = Path.Combine(destFolder, fileName);
-
-                    if (force || !File.Exists(destFile))
+                    foreach (string sourceFile in Directory.EnumerateFiles(sourceFolder))
                     {
-                        using (var source = File.Open(sourceFile, FileMode.Open))
-                        using (var dest = File.Create(destFile))
+                        string fileName = Path.GetFileName(sourceFile);
+                        string destFile = Path.Combine(destFolder, fileName);
+
+                        if (force || !File.Exists(destFile))
                         {
-                            await source.CopyToAsync(dest);
+                            using (var source = File.Open(sourceFile, FileMode.Open))
+                            using (var dest = File.Create(destFile))
+                            {
+                                await source.CopyToAsync(dest);
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex);
                 }
 
                 _defaultsCreated = true;
             }
+        }
+
+        private static string GetVsixFolder()
+        {
+            string assembly = Assembly.GetExecutingAssembly().Location;
+            string root = Path.GetDirectoryName(assembly);
+            return Path.Combine(root, "Resources\\Defaults");
         }
     }
 }

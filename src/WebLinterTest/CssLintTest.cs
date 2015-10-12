@@ -17,7 +17,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public async Task Standard()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/csslint/a.css");
             var first = result.First();
             Assert.IsTrue(first.HasErrors);
             Assert.IsFalse(result.First().Errors.First().IsError, result.First().Errors.First().ErrorCode + " is not 'warning'");
@@ -28,7 +28,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public async Task Multiple()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/csslint/a.css", "../../artifacts/csslint/b.css");
             Assert.IsTrue(result.First().HasErrors);
             Assert.IsFalse(string.IsNullOrEmpty(result.First().Errors.First().FileName));
             Assert.AreEqual(3, result.First().Errors.Count);
@@ -37,7 +37,7 @@ namespace WebLinterTest
         [TestMethod, TestCategory("CssLint")]
         public async Task FileNotExist()
         {
-            var result = await LinterFactory.Lint(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
+            var result = await LinterFactory.LintAsync(Settings.Instance, "../../artifacts/csslint/doesntexist.css");
             Assert.IsTrue(result.First().HasErrors);
         }
     }

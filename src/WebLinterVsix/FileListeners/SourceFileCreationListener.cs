@@ -44,7 +44,7 @@ namespace WebLinterVsix.FileListeners
                     // Don't run linter again if error list already contains errors for the file.
                     if (!TableDataSource.Instance.HasErrors(_document.FilePath))
                     {
-                        await LinterService.Lint(false, _document.FilePath);
+                        await LinterService.LintAsync(false, _document.FilePath);
                     }
                 });
             }
@@ -53,28 +53,26 @@ namespace WebLinterVsix.FileListeners
         private void TextviewClosed(object sender, EventArgs e)
         {
             IWpfTextView view = (IWpfTextView)sender;
-            string fileName;
 
-            if (view.Properties.TryGetProperty("lint_filename", out fileName))
+            System.Threading.ThreadPool.QueueUserWorkItem((o) =>
             {
-                Task.Run(() =>
+                string fileName;
+
+                if (view != null && view.Properties.TryGetProperty("lint_filename", out fileName))
                 {
                     TableDataSource.Instance.CleanErrors(new[] { fileName });
-                });
-            }
+                }
+            });
 
             if (view != null)
                 view.Closed -= TextviewClosed;
         }
 
-        private void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
+        private async void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
         {
-            if (e.FileActionType == FileActionTypes.ContentSavedToDisk && LinterService.IsFileSupported(e.FilePath))
+            if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
             {
-                Task.Run(async () =>
-                {
-                    await LinterService.Lint(false, e.FilePath);
-                });
+                await LinterService.LintAsync(false, e.FilePath);
             }
         }
     }

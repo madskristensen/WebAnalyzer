@@ -65,7 +65,7 @@ namespace WebLinterVsix
                 {
                     try
                     {
-                        await LinterFactory.Initialize();
+                        await LinterFactory.InitializeAsync();
                     }
                     catch (Exception ex)
                     {

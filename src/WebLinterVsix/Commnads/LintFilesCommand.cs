@@ -76,7 +76,7 @@ namespace WebLinterVsix
 
             if (files.Any())
             {
-                await LinterService.Lint(true, files.ToArray());
+                await LinterService.LintAsync(true, files.ToArray());
                 Telemetry.TrackEvent($"VS Lint Files");
             }
             else

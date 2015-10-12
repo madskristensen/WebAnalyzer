@@ -17,9 +17,9 @@ namespace WebLinter
 
         public int BasePort { get; private set; }
 
-        public async Task<string> CallServer(string path, object postData)
+        public async Task<string> CallServerAsync(string path, object postData)
         {
-            await EnsureInitialized();
+            await EnsureInitializedAsync();
 
             string url = $"{BASE_URL}:{BasePort}/{path.ToLowerInvariant()}";
 
@@ -49,7 +49,7 @@ namespace WebLinter
             }
         }
 
-        private async Task EnsureInitialized()
+        private async Task EnsureInitializedAsync()
         {
             if (_process == null || _process.HasExited)
             {
@@ -69,7 +69,7 @@ namespace WebLinter
 
                     _process = Process.Start(start);
 
-                    await SendPing();
+                    await SendPingAsync();
                 }
                 catch (Exception ex)
                 {
@@ -79,7 +79,7 @@ namespace WebLinter
             }
         }
 
-        private async Task SendPing()
+        private async Task SendPingAsync()
         {
             using (WebClient client = new WebClient())
             {

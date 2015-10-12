@@ -20,12 +20,10 @@ namespace WebLinter
             return _supported.Contains(extension);
         }
 
-        public static async Task<IEnumerable<LintingResult>> Lint(ISettings settings, params string[] fileNames)
+        public static async Task<LintingResult[]> LintAsync(ISettings settings, params string[] fileNames)
         {
-            List<LintingResult> list = new List<LintingResult>();
-
             if (fileNames.Length == 0)
-                return list;
+                return new LintingResult[0];
 
             string extension = Path.GetExtension(fileNames[0]).ToUpperInvariant();
             var groupedFiles = fileNames.GroupBy(f => Path.GetExtension(f).ToUpperInvariant());
@@ -60,19 +58,12 @@ namespace WebLinter
 
             if (dic.Count != 0)
             {
-                await Initialize();
-                var tasks = new List<Task<LintingResult>>();
+                await InitializeAsync();
 
-                foreach (var linter in dic.Keys)
-                {
-                    var files = dic[linter].ToArray();
-                    tasks.Add(linter.Run(files));
-                }
-
-                list.AddRange(await Task.WhenAll(tasks));
+                return await Task.WhenAll(dic.Select(group => group.Key.Run(group.Value.ToArray())));
             }
 
-            return list;
+            return new LintingResult[0];
         }
 
         private static void AddLinter(Dictionary<LinterBase, IEnumerable<string>> dic, LinterBase linter, IEnumerable<string> files)
@@ -90,7 +81,7 @@ namespace WebLinter
         /// <summary>
         /// Initializes the Node environment.
         /// </summary>
-        public static async Task Initialize()
+        public static async Task InitializeAsync()
         {
             var mutex = new AsyncLock();
 
@@ -108,11 +99,11 @@ namespace WebLinter
 
                     var tasks = new List<Task>
                     {
-                        SaveResourceFile(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z"),
-                        SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe"),
-                        SaveResourceFile(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll"),
-                        SaveResourceFile(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd"),
-                        SaveResourceFile(ExecutionPath, "WebLinter.Node.server.js", "server.js"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.node_modules.7z", "node_modules.7z"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.7z.exe", "7z.exe"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.server.js", "server.js"),
                     };
 
                     await Task.WhenAll(tasks.ToArray());
@@ -138,7 +129,7 @@ namespace WebLinter
             }
         }
 
-        private static async Task SaveResourceFile(string path, string resourceName, string fileName)
+        private static async Task SaveResourceFileAsync(string path, string resourceName, string fileName)
         {
             using (Stream stream = typeof(LinterFactory).Assembly.GetManifestResourceStream(resourceName))
             using (FileStream fs = new FileStream(Path.Combine(path, fileName), FileMode.Create))
