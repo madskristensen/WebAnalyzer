@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -91,12 +92,34 @@ namespace WebLinter
 
         private void SelectAvailablePort()
         {
-            Random rand = new Random();
-            TcpConnectionInformation[] connections = IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpConnections();
+            // Creates the Socket to send data over a TCP connection.
 
-            do
-                BasePort = rand.Next(1024, 65535);
-            while (connections.Any(t => t.LocalEndPoint.Port == BasePort));
+            try
+            {
+                using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+                {
+                    IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+                    socket.Bind(endPoint);
+                    IPEndPoint endPointUsed = (IPEndPoint)socket.LocalEndPoint;
+                    BasePort = endPointUsed.Port;
+                }
+            }
+            catch (SocketException)
+            {
+                /* Couldn't get an available IPv4 port */
+                try
+                {
+                    using (Socket socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Stream, ProtocolType.Tcp))
+                    {
+                        IPEndPoint endPoint = new IPEndPoint(IPAddress.IPv6Any, 0);
+                        socket.Bind(endPoint);
+                        IPEndPoint endPointUsed = (IPEndPoint)socket.LocalEndPoint;
+                        BasePort = endPointUsed.Port;
+                    }
+                }
+                catch (SocketException)
+                { /* Couldn't get an available IPv6 port either */ }
+            }
         }
 
         private static string GetNodeDirectory()

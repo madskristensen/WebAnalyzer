@@ -6,6 +6,7 @@
 - [x] Clean errors when VS _Build|Clean_ command runs
 - [x] New logo
 - [x] Node.js server initializes async
+- [x] Strengthened the port resolver
 
 Features that have a checkmark are complete and available for
 download in the
