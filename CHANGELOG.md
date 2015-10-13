@@ -3,10 +3,6 @@
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
-- [x] Clean errors when VS _Build|Clean_ command runs
-- [x] New logo
-- [x] Node.js server initializes async
-- [x] Strengthened the port resolver
 
 Features that have a checkmark are complete and available for
 download in the
@@ -16,6 +12,16 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.3 Update
+
+**2015-10-13**
+
+- [x] Clean errors when VS _Build|Clean_ command runs
+- [x] New logo
+- [x] Node.js server initializes async
+- [x] Strengthened the port resolver
+- [x] Fixed exceptions logged by telemetry
 
 ## 1.3
 
