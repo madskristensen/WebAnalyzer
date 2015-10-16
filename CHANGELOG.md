@@ -4,7 +4,6 @@
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
 - [ ] Documentation on extending ESLint
-- [x] Don't run on _Web Compiler_ and _Bundler & Minifier_ output
 
 Features that have a checkmark are complete and available for
 download in the
@@ -14,6 +13,14 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.4
+
+**2015-10-16**
+
+- [x] Don't run on _Web Compiler_ and _Bundler & Minifier_ output
+- [x] Stabilized the node server
+- [x] Lots of tweaks and fixes
 
 ## 1.3 Update
 
