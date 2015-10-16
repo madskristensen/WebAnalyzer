@@ -31,6 +31,10 @@ namespace WebLinterVsix.FileListeners
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             textView.Closed += TextviewClosed;
 
+            bool generated;
+            if (textView.Properties.TryGetProperty("generated", out generated) && generated)
+                return;
+
             if (TextDocumentFactoryService.TryGetTextDocument(textView.TextDataModel.DocumentBuffer, out _document))
             {
                 Task.Run(async () =>

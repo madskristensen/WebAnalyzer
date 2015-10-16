@@ -15,6 +15,7 @@ namespace WebLinter
         private const string BASE_URL = "http://localhost";
         private static Process _process;
         private static object _syncRoot = new object();
+        private static AsyncLock _mutex = new AsyncLock();
 
         public int BasePort { get; private set; }
 
@@ -52,10 +53,14 @@ namespace WebLinter
 
         private async Task EnsureInitializedAsync()
         {
-            if (_process == null || _process.HasExited)
+            using (await _mutex.LockAsync())
             {
+                if (_process != null && !_process.HasExited)
+                    return;
+
                 try
                 {
+                    Down();
                     SelectAvailablePort();
 
                     string node = Path.Combine(GetNodeDirectory(), "node");
@@ -69,8 +74,6 @@ namespace WebLinter
                     };
 
                     _process = Process.Start(start);
-
-                    await SendPingAsync();
                 }
                 catch (Exception ex)
                 {
