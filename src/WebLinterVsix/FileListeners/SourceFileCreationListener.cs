@@ -31,6 +31,8 @@ namespace WebLinterVsix.FileListeners
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             textView.Closed += TextviewClosed;
 
+            // Both "Web Compiler" and "Bundler & Minifier" extensions add this property on their
+            // generated output files. Generated output should be ignored from linting
             bool generated;
             if (textView.Properties.TryGetProperty("generated", out generated) && generated)
                 return;
