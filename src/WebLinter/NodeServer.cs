@@ -41,11 +41,18 @@ namespace WebLinter
 
         public void Down()
         {
-            if (_process != null && !_process.HasExited)
+            if (_process != null)
             {
-                _process.Kill();
-                _process.Dispose();
-                _process = null;
+                try
+                {
+                    if (!_process.HasExited)
+                        _process.Kill();
+                }
+                finally
+                {
+                    _process.Dispose();
+                    _process = null;
+                }
             }
         }
 
@@ -72,6 +79,9 @@ namespace WebLinter
                     };
 
                     _process = Process.Start(start);
+
+                    // Give the node server some time to initialize
+                    await Task.Delay(100);
                 }
                 catch (Exception ex)
                 {
