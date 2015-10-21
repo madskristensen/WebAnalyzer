@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -17,23 +19,29 @@ namespace WebLinter
 
         public int BasePort { get; private set; }
 
-        public async Task<string> CallServerAsync(string path, object postData)
+        public async Task<string> CallServerAsync(string path, ServerPostData postData)
         {
             await EnsureInitializedAsync();
 
             string url = $"{BASE_URL}:{BasePort}/{path.ToLowerInvariant()}";
+            string json = JsonConvert.SerializeObject(postData);
 
             try
             {
                 using (WebClient client = new WebClient())
                 {
-                    string json = JsonConvert.SerializeObject(postData);
                     return await client.UploadStringTaskAsync(url, json);
                 }
             }
             catch (WebException ex)
             {
                 Telemetry.TrackException(ex);
+                Dictionary<string, string> props = new Dictionary<string, string>();
+                props.Add("url", url);
+                props.Add("config", Path.GetFileName(postData.Config));
+                props.Add("extension", Path.GetExtension(postData.Files.FirstOrDefault()));
+                props.Add("exception", ex.Message);
+                Telemetry.TrackEvent("Error", props);
                 Down();
                 return string.Empty;
             }

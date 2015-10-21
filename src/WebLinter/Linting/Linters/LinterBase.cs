@@ -29,7 +29,7 @@ namespace WebLinter
         {
             Result = new LintingResult(files);
 
-            if (!IsEnabled)
+            if (!IsEnabled || !files.Any())
                 return Result;
 
             List<FileInfo> fileInfos = new List<FileInfo>();
@@ -70,10 +70,10 @@ namespace WebLinter
 
         protected async Task<string> RunProcess(params FileInfo[] files)
         {
-            var postMessage = new
+            var postMessage = new ServerPostData
             {
-                config = Path.Combine(FindWorkingDirectory(files[0]), ConfigFileName),
-                files = files.Select(f => f.FullName)
+                Config = Path.Combine(FindWorkingDirectory(files[0]), ConfigFileName),
+                Files = files.Select(f => f.FullName)
             };
 
             return await Server.CallServerAsync(Name, postMessage);

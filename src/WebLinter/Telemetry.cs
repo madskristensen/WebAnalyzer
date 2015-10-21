@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.ApplicationInsights;
 
 namespace WebLinter
@@ -31,12 +32,12 @@ namespace WebLinter
         }
 
         /// <summary>Tracks an event to ApplicationInsights.</summary>
-        public static void TrackEvent(string message)
+        public static void TrackEvent(string message, IDictionary<string, string> properties = null)
         {
 #if !DEBUG
             if (Enabled)
             {
-                _telemetry.TrackEvent(message);
+                _telemetry.TrackEvent(message, properties: properties);
             }
 #endif
         }
