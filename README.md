@@ -29,6 +29,7 @@ for changes and roadmap.
 - Option to turn off one or more linters
 - Smart logic ignores certain files from linting
   - This can be further customized
+- Support for [Web Compiler](https://visualstudiogallery.msdn.microsoft.com/3b329021-cd7a-4a01-86fc-714c2d05bb6c) and [Bundler &amp; Minifier](https://visualstudiogallery.msdn.microsoft.com/9ec27da7-e24b-4d56-8064-fd7e88ac1c40)
 
 ### Error List
 When an error is found it will show up in the Error List in
