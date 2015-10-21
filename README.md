@@ -102,6 +102,8 @@ Resetting the settings will do 2 things:
 
 You can reset the settings under **Tools -> Web Analyzer**.
 
+![Reset Options](art/options-reset.png)
+
 If you haven't made any modifications to any settings or
 configuration files, then it can be a good idea to reset the
 settings after updating the extension. Typically newer versions
