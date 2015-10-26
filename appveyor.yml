@@ -19,7 +19,7 @@ after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery .\src\WebLinterVsix\**\*.vsix
 
 before_deploy:
-  - ps: Vsix-CreateChocolatyPackage
+  - ps: Vsix-CreateChocolatyPackage -packageId webanalyzer
 
 deploy:
   - provider: Environment
