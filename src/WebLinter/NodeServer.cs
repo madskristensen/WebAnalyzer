@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -36,12 +34,6 @@ namespace WebLinter
             catch (WebException ex)
             {
                 Telemetry.TrackException(ex);
-                Dictionary<string, string> props = new Dictionary<string, string>();
-                props.Add("url", url);
-                props.Add("config", Path.GetFileName(postData.Config));
-                props.Add("extension", Path.GetExtension(postData.Files.FirstOrDefault()));
-                props.Add("exception", ex.Message);
-                Telemetry.TrackEvent("Error", props);
                 Down();
                 return string.Empty;
             }
