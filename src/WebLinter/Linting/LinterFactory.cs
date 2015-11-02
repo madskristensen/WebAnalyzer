@@ -90,7 +90,7 @@ namespace WebLinter
                 var node_modules = Path.Combine(ExecutionPath, "node_modules");
                 var log_file = Path.Combine(ExecutionPath, "log.txt");
 
-                if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 315))
+                if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 235))
                 {
                     if (Directory.Exists(ExecutionPath))
                         Directory.Delete(ExecutionPath, true);
