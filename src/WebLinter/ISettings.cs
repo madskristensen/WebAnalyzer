@@ -6,6 +6,8 @@
 
         bool TSLintEnable { get; }
 
+        bool TSLintWarningsAsErrors { get; }
+
         bool CoffeeLintEnable { get; }
 
         bool CssLintEnable { get; }

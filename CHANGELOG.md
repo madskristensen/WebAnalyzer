@@ -4,6 +4,7 @@
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
 - [ ] Documentation on extending ESLint
+- [x] Option to show TSLint warnings as errors (#8)
 
 Features that have a checkmark are complete and available for
 download in the
