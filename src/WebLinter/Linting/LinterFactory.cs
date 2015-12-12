@@ -12,6 +12,7 @@ namespace WebLinter
         public static readonly string ExecutionPath = Path.Combine(Path.GetTempPath(), Constants.CACHE_NAME + Constants.VERSION);
         private static string[] _supported = new string[] { ".JS", ".ES6", ".JSX", ".TS", ".TSX", ".COFFEE", ".LITCOFFEE", ".ICED", ".CSS" };
         private static object _syncRoot = new object();
+        private static AsyncLock mutex = new AsyncLock();
 
         public static bool IsFileSupported(string fileName)
         {
@@ -83,8 +84,6 @@ namespace WebLinter
         /// </summary>
         public static async Task InitializeAsync()
         {
-            var mutex = new AsyncLock();
-
             using (await mutex.LockAsync())
             {
                 var node_modules = Path.Combine(ExecutionPath, "node_modules");
