@@ -92,7 +92,7 @@ namespace WebLinter
                 if (!Directory.Exists(node_modules) || !File.Exists(log_file) || (Directory.Exists(node_modules) && Directory.GetDirectories(node_modules).Length < 235))
                 {
                     if (Directory.Exists(ExecutionPath))
-                        Pri.LongPath.Directory.Delete(ExecutionPath, recursive: true);
+                        Directory.Delete(ExecutionPath, recursive: true);
 
                     Directory.CreateDirectory(ExecutionPath);
 
