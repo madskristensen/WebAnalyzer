@@ -60,10 +60,6 @@ namespace WebLinter
             {
                 ParseErrors(output);
             }
-            //else if (!string.IsNullOrEmpty(error))
-            //{
-            //    Result.Errors.Add(new LintingError(files.First().FullName) { Message = error });
-            //}
 
             return Result;
         }

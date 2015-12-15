@@ -76,7 +76,7 @@ namespace WebLinter
                         CreateNoWindow = true
                     };
 
-                    start.EnvironmentVariables["PATH"] += GetNodeDirectory();
+                    start.EnvironmentVariables["PATH"] += (";" + GetNodeDirectory());
                     _process = Process.Start(start);
 
                     // Give the node server some time to initialize
