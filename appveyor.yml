@@ -13,7 +13,7 @@ before_build:
 
 build_script:
   - nuget restore -Verbosity quiet
-  - msbuild /p:configuration=Debug /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery .\src\WebLinterVsix\**\*.vsix
