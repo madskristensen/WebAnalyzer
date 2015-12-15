@@ -11,6 +11,7 @@ namespace WebLinterVsix.FileListeners
 {
     [Export(typeof(IVsTextViewCreationListener))]
     [ContentType("JavaScript")]
+    [ContentType("Node.js")]
     [ContentType("TypeScript")]
     [ContentType("CoffeeScript")]
     [ContentType("JSX")]
