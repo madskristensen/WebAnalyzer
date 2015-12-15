@@ -54,7 +54,7 @@ namespace WebLinterVsix
 
             if (!string.IsNullOrEmpty(configFile))
             {
-                WebLinterPackage.Dte.ItemOperations.OpenFile(configFile);
+                WebLinterPackage.Dte.ExecuteCommand("File.OpenFile", "\"" + configFile + "\"");
                 Telemetry.TrackEvent($"VS Edit {fileName}");
             }
         }
