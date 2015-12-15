@@ -4,7 +4,6 @@
 - [ ] Red squiggly in the editor
 - [ ] Add _Clean_ command to Error List context menu
 - [ ] Documentation on extending ESLint
-- [x] Option to show TSLint warnings as errors (#8)
 
 Features that have a checkmark are complete and available for
 download in the
@@ -14,6 +13,14 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.5
+
+**2015-12-15**
+
+- [x] Option to show TSLint warnings as errors (#8)
+- [x] Updated TSLint to include the TypeScript module
+- [x] Defaults to using globablly installed node.exe
 
 ## 1.4
 
