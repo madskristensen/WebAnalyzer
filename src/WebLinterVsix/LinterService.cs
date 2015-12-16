@@ -36,6 +36,10 @@ namespace WebLinterVsix
                 if (item == null)
                     return false;
 
+                // item.Collection is not supported in Node.js projects
+                if (item.ContainingProject.Kind.Equals("{9092aa53-fb77-4645-b42d-1ccca6bd08bd}", StringComparison.OrdinalIgnoreCase))
+                    return true;
+
                 if (item.Collection != null && item.Collection.Parent != null)
                 {
                     var parent = item.Collection.Parent as ProjectItem;
