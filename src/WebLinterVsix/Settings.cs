@@ -16,7 +16,7 @@ namespace WebLinterVsix
         private void SetDefaults()
         {
             // General
-            IgnoreFolderNames = @"\node_modules\,\bower_components\,\typings\,\lib\,.min.";
+            IgnoreFolderNames = @"\node_modules\,\bower_components\,\typings\,\lib\,\vendor\,.min.";
             IgnoreNestedFiles = true;
             CleanErrorsOnBuild = true;
 
@@ -37,7 +37,7 @@ namespace WebLinterVsix
         [Category("Advanced settings")]
         [DisplayName("Ignore patterns")]
         [Description("A comma-separated list of strings. Any file containing one of the strings in the path will be ignored.")]
-        [DefaultValue(@"\node_modules\,\bower_components\,\typings\,\lib\,.min.")]
+        [DefaultValue(@"\node_modules\,\bower_components\,\typings\,\lib\,\vendor\,.min.")]
         public string IgnoreFolderNames { get; set; }
 
         [Category("Advanced settings")]
