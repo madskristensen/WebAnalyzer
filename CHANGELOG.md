@@ -6,7 +6,6 @@
 - [ ] Documentation on extending ESLint
 - [ ] Support for _.eslintrc.json_ configs (#14)
 - [ ] Report syntax errors in config files (#10)
-- [x] Support for Node.js projects
 
 Features that have a checkmark are complete and available for
 download in the
@@ -16,6 +15,12 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.6
+
+**2016-01-05**
+
+- [x] Support for Node.js projects
 
 ## 1.5
 
