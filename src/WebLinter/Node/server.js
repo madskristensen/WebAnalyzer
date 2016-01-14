@@ -63,7 +63,7 @@ var linters = {
         var tslint = require("tslint");
         var options = {
             formatter: "json",
-            configuration: JSON.parse(fs.readFileSync(configFile, "utf8"))
+            configuration: JSON.parse(fs.readFileSync(configFile, "utf8").trim())
         };
 
         var results = [];
