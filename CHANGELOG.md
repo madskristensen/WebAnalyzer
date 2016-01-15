@@ -21,6 +21,7 @@ on the official Visual Studio extension gallery.
 **2016-01-05**
 
 - [x] Support for Node.js projects
+- [x] Fixed issue with BOM in tslint.json
 
 ## 1.5
 
