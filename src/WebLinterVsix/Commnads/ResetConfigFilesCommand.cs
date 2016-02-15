@@ -36,7 +36,7 @@ namespace WebLinterVsix
         private async void ResetConfigurationFiles(object sender, EventArgs e)
         {
             string msg = "This will reset the configuration for all the linters to their defaults.\n\nDo you wish to continue?";
-            var result = MessageBox.Show(msg, Constants.VSIX_NAME, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show(msg, Vsix.Name, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (result == DialogResult.Yes)
             {

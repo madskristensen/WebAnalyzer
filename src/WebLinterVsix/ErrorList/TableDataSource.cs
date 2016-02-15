@@ -56,7 +56,7 @@ namespace WebLinterVsix
 
         public string DisplayName
         {
-            get { return Constants.VSIX_NAME; }
+            get { return Vsix.Name; }
         }
 
         public IDisposable Subscribe(ITableDataSink sink)

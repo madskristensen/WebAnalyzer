@@ -39,11 +39,11 @@ namespace WebLinterVsix
                 }
                 else if (columnName == StandardTableKeyNames.ErrorCategory)
                 {
-                    content = Constants.VSIX_NAME;
+                    content = Vsix.Name;
                 }
                 else if (columnName == StandardTableKeyNames.ErrorSource)
                 {
-                    content = Constants.VSIX_NAME;
+                    content = Vsix.Name;
                 }
                 else if (columnName == StandardTableKeyNames.Line)
                 {
