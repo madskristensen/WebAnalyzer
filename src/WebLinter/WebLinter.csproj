@@ -76,6 +76,7 @@
     <EmbeddedResource Include="Node\node_modules.7z" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Node\node.7z" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -68,7 +68,7 @@ namespace WebLinter
                     Down();
                     SelectAvailablePort();
 
-                    ProcessStartInfo start = new ProcessStartInfo("node.exe")
+                    ProcessStartInfo start = new ProcessStartInfo(Path.Combine(LinterFactory.ExecutionPath, "node.exe"))
                     {
                         WindowStyle = ProcessWindowStyle.Hidden,
                         Arguments = $"\"{Path.Combine(LinterFactory.ExecutionPath, "server.js")}\" {BasePort}",
@@ -76,7 +76,6 @@ namespace WebLinter
                         CreateNoWindow = true
                     };
 
-                    start.EnvironmentVariables["PATH"] += (";" + GetNodeDirectory());
                     _process = Process.Start(start);
 
                     // Give the node server some time to initialize

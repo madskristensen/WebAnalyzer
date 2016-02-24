@@ -103,6 +103,7 @@ namespace WebLinter
                         SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.7z.dll", "7z.dll"),
                         SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.prepare.cmd", "prepare.cmd"),
                         SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.server.js", "server.js"),
+                        SaveResourceFileAsync(ExecutionPath, "WebLinter.Node.node.7z", "node.7z"),
                     };
 
                     await Task.WhenAll(tasks.ToArray());
