@@ -35,7 +35,6 @@
     "no-empty": true,
     "no-eval": true,
     "no-string-literal": true,
-    "no-trailing-comma": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
     "no-unused-variable": true,

@@ -6,15 +6,17 @@ pushd %~dp0..\src\WebLinter\Node
 
 echo Installing packages...
 call npm install ^
-     babel-eslint ^
-     coffeelint ^
-     csslint ^
-     eslint ^
-     eslint-config-defaults ^
-     eslint-plugin-filenames ^
-     eslint-plugin-react ^
-     tslint ^
-     typescript ^
+     babel-eslint@4.1.8 ^
+     coffeelint@1.14.2 ^
+     csslint@0.10.0 ^
+     eslint@2.0.0 ^
+     eslint-config-defaults@9.0.0 ^
+     eslint-config-standard@4.4.0 ^
+     eslint-plugin-react@3.16.1 ^
+     eslint-plugin-standard@1.3.1 ^
+     espree@3.0.1 ^
+     tslint@3.3.0 ^
+     typescript@1.7.5 ^
      --no-optional --quiet > nul
 
 
