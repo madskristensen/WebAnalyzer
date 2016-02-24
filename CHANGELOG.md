@@ -2,10 +2,12 @@
 
 - [ ] Add config files to solution
 - [ ] Red squiggly in the editor
-- [ ] Add _Clean_ command to Error List context menu
 - [ ] Documentation on extending ESLint
 - [ ] Support for _.eslintrc.json_ configs (#14)
 - [ ] Report syntax errors in config files (#10)
+- [x] Added icon to _Clean_ command
+- [x] Add _Clean_ command to Error List context menu
+- [x] Embed node.exe
 
 Features that have a checkmark are complete and available for
 download in the

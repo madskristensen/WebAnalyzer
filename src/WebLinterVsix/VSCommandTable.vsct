@@ -39,13 +39,17 @@
                 <Icon guid="ImageCatalogGuid" id="RunChecked" />
                 <CommandFlag>IconIsMoniker</CommandFlag>
                 <CommandFlag>DynamicVisibility</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
                 <Strings>
                     <ButtonText>Run Web Analyzer</ButtonText>
                 </Strings>
             </Button>
             <Button guid="WebLinterCmdSet" id="CleanErrorsCommand" priority="0x0200" type="Button">
                 <Parent guid="WebLinterCmdSet" id="ContextMenuGroup" />
+                <Icon guid="ImageCatalogGuid" id="ClearWindowContent" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
                 <CommandFlag>DynamicVisibility</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
                 <Strings>
                     <ButtonText>Clear all Web Analyzer errors</ButtonText>
                 </Strings>
@@ -114,6 +118,9 @@
         </CommandPlacement>
         <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0100">
             <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ANALYZE"/>
+        </CommandPlacement>
+        <CommandPlacement guid="WebLinterCmdSet" id="ContextMenuGroup" priority="0x0600">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ERRORLIST"/>
         </CommandPlacement>
     </CommandPlacements>
 
