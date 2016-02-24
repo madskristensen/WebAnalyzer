@@ -90,16 +90,6 @@ namespace WebLinter
             }
         }
 
-        private async Task SendPingAsync()
-        {
-            using (WebClient client = new WebClient())
-            {
-                string url = $"{BASE_URL}:{BasePort}/ping";
-                string ping = await client.DownloadStringTaskAsync(url);
-                Debug.WriteLine(ping);
-            }
-        }
-
         private void SelectAvailablePort()
         {
             // Creates the Socket to send data over a TCP connection.
@@ -127,8 +117,11 @@ namespace WebLinter
                         BasePort = endPointUsed.Port;
                     }
                 }
-                catch (SocketException)
-                { /* Couldn't get an available IPv6 port either */ }
+                catch (SocketException ex)
+                {
+                    Telemetry.TrackException(ex);
+                    /* Couldn't get an available IPv6 port either */
+                }
             }
         }
 
