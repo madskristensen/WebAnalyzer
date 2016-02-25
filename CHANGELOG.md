@@ -5,9 +5,6 @@
 - [ ] Documentation on extending ESLint
 - [ ] Support for _.eslintrc.json_ configs (#14)
 - [ ] Report syntax errors in config files (#10)
-- [x] Added icon to _Clean_ command
-- [x] Add _Clean_ command to Error List context menu
-- [x] Embed node.exe
 
 Features that have a checkmark are complete and available for
 download in the
@@ -17,6 +14,15 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.7
+
+**2016-02-25**
+
+- [x] Added icon to _Clean_ command
+- [x] Add _Clean_ command to Error List context menu
+- [x] Embed node.exe
+- [x] Fixed issue with node.exe couldn't be found (#16, #20)
 
 ## 1.6
 
