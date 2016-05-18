@@ -83,6 +83,12 @@ namespace WebLinterVsix
         [DefaultValue(false)]
         public bool TSLintWarningsAsErrors { get; set; }
 
+        [Category("Upgrade")]
+        [DisplayName("Show prompt to upgrade")]
+        [Description("If true, will show a prompt to upgrade when opening any file supported by the Web Analyzer.")]
+        [DefaultValue(false)]
+        public bool ShowPromptToUpgrade { get; set; } = true;
+
         public IEnumerable<string> GetIgnorePatterns()
         {
             var raw = IgnoreFolderNames.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
